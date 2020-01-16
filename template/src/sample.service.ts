@@ -11,9 +11,9 @@ import moleculer, { Errors } from 'moleculer';
 import { Action, Event, Service } from 'moleculer-decorators';
 import Validator, { ValidationError } from 'fastest-validator';
 
-let validator = new Validator();
-let eventSchema = { id: 'string' };
-let eventSchemaCheck = validator.compile(eventSchema);
+const validator = new Validator();
+const eventSchema = { id: 'string' };
+const eventSchemaCheck = validator.compile(eventSchema);
 
 // Define our sample service
 @Service({
@@ -41,20 +41,35 @@ class SampleService extends moleculer.Service {
     return `Welcome ${ctx.params.name}!`;
   }
 
-  @Event({ group: 'sampleGroup' }) sampleEvent(
+  @Event() event1(payload: any, sender: string, eventName: string) {
+    if (payload) {
+      this.logger.error(
+        `Validation check failed! event ${eventName} does not take any payload!`
+      );
+      throw new Errors.ValidationError(
+        'Event parameter check failed',
+        'ERR_VALIDATION',
+        payload
+      );
+    }
+
+    this.logger.info(`Got event ${eventName} from sender ${sender};`);
+  }
+
+  @Event() event2(
     payload: typeof eventSchema,
     sender: string,
     eventName: string
   ) {
-    let schemaCheck: boolean | ValidationError[] = eventSchemaCheck(
+    const schemaCheck: boolean | ValidationError[] = eventSchemaCheck(
       payload
     );
     if (schemaCheck !== true) {
       this.logger.error(
-        'Validation check failed! ' +
-          JSON.stringify(
+        `Validation check failed! 
+          ${JSON.stringify(
             schemaCheck.map(data => Object.assign(data, {}))
-          )
+          )}`
       );
       throw new Errors.ValidationError(
         'Event parameter check failed',

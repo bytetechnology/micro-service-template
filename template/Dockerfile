@@ -11,8 +11,12 @@ WORKDIR /root
 
 # Copy our stuff over
 COPY . .
+
 # Install npm modules
 RUN npm install
+
+# Build
+RUN npm run build
 
 # Our run command
 CMD ["npm", "run", "start"]

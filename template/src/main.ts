@@ -9,7 +9,7 @@
 import { TypedServiceBroker } from 'moleculer-service-ts';
 
 // Our stuff
-import ApiService from './sample.service'; // eslint-disable-line import/extensions
+import SampleService from './sample.service'; // eslint-disable-line import/extensions
 import moleculerBrokerConfig from './moleculer.broker.config'; // eslint-disable-line import/extensions
 
 // Import our service names, actions, and events
@@ -29,7 +29,7 @@ const moleculerBroker: TypedServiceBroker<
 );
 
 // Create our service
-moleculerBroker.createService(ApiService);
+moleculerBroker.createService(SampleService);
 
 // Start the broker and go into in REPL mode for non-production environments
 moleculerBroker.start().then(() => {

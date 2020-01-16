@@ -16,12 +16,12 @@ export type ServiceName = 'sample';
 export type ServiceAction =
   | GenericActionWithoutParameters<'sample.hello', string>
   | GenericActionWithParameters<
-      'order.welcome',
+      'sample.welcome',
       { name: string },
       string
     >;
 
 // These are the events we emit
 export type ServiceEvent =
-  | GenericEventWithoutPayload<'sample.event1'>
-  | GenericEventWithPayload<'sample.event2', { id: string }>;
+  | GenericEventWithoutPayload<'event1'>
+  | GenericEventWithPayload<'event2', { id: string }>;

@@ -4,12 +4,11 @@
   "description": "sample microservice",
   "scripts": {
     "build": "tsc",
-    "dev": "node -r esm -r ts-node/register src/main.ts",
+    "dev": "NODE_ENV=dev node -r esm -r ts-node/register src/main.ts",
     "debug": "node --inspect-brk -r esm -r ts-node/register src/main.ts",
     "start": "NODE_ENV=production node -r esm dist/main.js",
-    "ci": "jest --watch",
-    "test": "jest --coverage",
-    "lint": "eslint src/**/*.ts"
+    "test": "NODE_ENV=test jest --coverage --forceExit --detectOpenHandles",
+    "lint": "eslint \"src/**/*.ts\""
   },
   "keywords": [
     "microservices",
@@ -18,8 +17,8 @@
   "author": "Ujwal Setlur",
   "devDependencies": {
     "@types/bluebird": "3.5.29",
-    "@types/jest": "24.0.25",
-    "@types/node": "13.1.6",
+    "@types/jest": "24.9.0",
+    "@types/node": "13.1.7",
     "@types/node-fetch": "2.5.4",
     "@typescript-eslint/eslint-plugin": "2.16.0",
     "@typescript-eslint/parser": "2.16.0",
@@ -29,7 +28,6 @@
     "eslint-plugin-import": "2.20.0",
     "eslint-plugin-prettier": "3.1.2",
     "jest": "24.9.0",
-    "jest-cli": "24.9.0",
     "moleculer-repl": "0.6.2",
     "prettier": "1.19.1",
     "ts-jest": "24.3.0",
@@ -39,10 +37,10 @@
   "dependencies": {
     "amqplib": "0.5.5",
     "esm": "3.2.25",
+    "fastest-validator": "1.0.0",
     "moleculer": "0.14.0-beta7",
     "moleculer-decorators": "1.1.1",
-    "moleculer-service-ts": "1.0.1",
-    "reflect-metadata": "0.1.13",
+    "moleculer-service-ts": "1.0.2",
     "winston": "3.2.1",
     "winston-gelf-transporter": "1.0.1"
   },
@@ -50,23 +48,29 @@
     "node": ">= 8.x.x"
   },
   "jest": {
-    "coverageDirectory": "<rootDir>/coverage",
     "testEnvironment": "node",
+    "rootDir": ".",
+    "coverageDirectory": "test/coverage",
+    "roots": [
+      "./test"
+    ],
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": ".*\\.(test|spec).(ts|js)$",
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "./tsconfig.json"
+      }
+    },
+    "setupFiles": [],
     "moduleFileExtensions": [
       "ts",
       "tsx",
-      "js"
-    ],
-    "transform": {
-      "^.+\\.(ts|tsx)$": "ts-jest"
-    },
-    "testMatch": [
-      "**/*.spec.(ts|js)"
-    ],
-    "globals": {
-      "ts-jest": {
-        "tsConfig": "tsconfig.json"
-      }
-    }
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }
