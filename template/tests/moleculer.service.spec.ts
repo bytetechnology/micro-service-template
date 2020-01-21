@@ -1,8 +1,5 @@
 import { TypedServiceBroker } from 'moleculer-service-ts'; // eslint-disable-line import/extensions
-import {
-  Errors,
-  ServiceBroker as UntypedServiceBroker
-} from 'moleculer';
+import { ServiceBroker as UntypedServiceBroker } from 'moleculer';
 
 import {
   ServiceAction,
