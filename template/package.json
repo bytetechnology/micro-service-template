@@ -8,7 +8,8 @@
     "debug": "node --inspect-brk -r esm -r ts-node/register src/main.ts",
     "start": "NODE_ENV=production node -r esm dist/main.js",
     "test": "NODE_ENV=test jest --coverage --forceExit --detectOpenHandles",
-    "lint": "eslint \"src/**/*.ts\""
+    "lint": "eslint \"src/**/*.ts\"",
+    "format": "prettier --write \"{src,{tests,mocks}}/**/*.{js,ts}\""
   },
   "keywords": [
     "microservices",
@@ -50,9 +51,9 @@
   "jest": {
     "testEnvironment": "node",
     "rootDir": ".",
-    "coverageDirectory": "test/coverage",
+    "coverageDirectory": "tests/coverage",
     "roots": [
-      "./test"
+      "./tests"
     ],
     "transform": {
       "^.+\\.tsx?$": "ts-jest"

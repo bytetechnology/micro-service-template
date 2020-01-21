@@ -65,16 +65,10 @@ class SampleService extends moleculer.Service {
       payload
     );
     if (schemaCheck !== true) {
-      this.logger.error(
-        `Validation check failed! 
-          ${JSON.stringify(
-            schemaCheck.map(data => Object.assign(data, {}))
-          )}`
-      );
       throw new Errors.ValidationError(
         'Event parameter check failed',
         'ERR_VALIDATION',
-        schemaCheck.map(data => Object.assign(data, {}))
+        schemaCheck
       );
     }
 
