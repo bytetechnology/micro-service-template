@@ -33,7 +33,7 @@ moleculerBroker.createService(SampleService);
 
 // Start the broker and go into in REPL mode for non-production environments
 moleculerBroker.start().then(() => {
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.NODE_ENV === 'development') {
     moleculerBroker.repl();
   }
 });

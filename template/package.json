@@ -4,7 +4,7 @@
   "description": "sample microservice",
   "scripts": {
     "build": "tsc",
-    "dev": "NODE_ENV=dev node -r esm -r ts-node/register src/main.ts",
+    "dev": "NODE_ENV=development node -r esm -r ts-node/register src/main.ts",
     "debug": "node --inspect-brk -r esm -r ts-node/register src/main.ts",
     "start": "NODE_ENV=production node -r esm dist/main.js",
     "test": "NODE_ENV=test jest --coverage --forceExit --detectOpenHandles",
