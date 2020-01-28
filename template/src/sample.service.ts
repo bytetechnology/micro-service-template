@@ -41,7 +41,11 @@ class SampleService extends moleculer.Service {
     return `Welcome ${ctx.params.name}!`;
   }
 
-  @Event() event1(payload: any, sender: string, eventName: string) {
+  @Event() eventWithoutPayload(
+    payload: never,
+    sender: string,
+    eventName: string
+  ) {
     if (payload) {
       this.logger.error(
         `Validation check failed! event ${eventName} does not take any payload!`
@@ -56,7 +60,7 @@ class SampleService extends moleculer.Service {
     this.logger.info(`Got event ${eventName} from sender ${sender};`);
   }
 
-  @Event() event2(
+  @Event() eventWithPayload(
     payload: typeof eventSchema,
     sender: string,
     eventName: string

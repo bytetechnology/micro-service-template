@@ -27,9 +27,11 @@ LABEL maintainer="Byte Technology"
 WORKDIR /opt/byte/{{projectName}}
 # Copy package.json
 COPY --from=builder /opt/byte/{{projectName}}/package.json .
+# Copy package-lock.json
+COPY --from=builder /opt/byte/{{projectName}}/package-lock.json .
 # Copy the dist directory
 COPY --from=builder /opt/byte/{{projectName}}/dist dist/.
 # Install only packages needed by production
-RUN npm install --only=production
+RUN npm ci --only=production
 # Our run command
 CMD ["npm", "run", "start"]

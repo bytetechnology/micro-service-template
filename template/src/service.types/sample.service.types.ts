@@ -23,5 +23,5 @@ export type ServiceAction =
 
 // These are the events we emit
 export type ServiceEvent =
-  | GenericEventWithoutPayload<'event1'>
-  | GenericEventWithPayload<'event2', { id: string }>;
+  | GenericEventWithoutPayload<'eventWithoutPayload'>
+  | GenericEventWithPayload<'eventWithPayload', { id: string }>;

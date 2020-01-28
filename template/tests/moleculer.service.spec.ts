@@ -41,9 +41,9 @@ describe('{{projectName}}', () => {
 
   test('Action without parameter', async () => {
     // emit an event as well so that that can get tested. no return on event
-    typedBroker.emit('event1', undefined, 'sample');
+    typedBroker.emit('eventWithoutPayload', undefined, 'sample');
     // Bypass moleculer-service-ts package and emit an illegal event
-    untypedBroker.emit('event1', { id: '1234' });
+    untypedBroker.emit('eventWithoutPayload', { id: '1234' });
 
     // call an action without a parameter object
     const response: string = await typedBroker.call('sample.hello');
@@ -52,9 +52,9 @@ describe('{{projectName}}', () => {
 
   test('Action with required parameter', async () => {
     // emit an event as well so that that can get tested. no return on event
-    typedBroker.emit('event2', { id: '1234' });
+    typedBroker.emit('eventWithPayload', { id: '1234' });
     // Bypass moleculer-service-ts package and emit an illegal event
-    untypedBroker.emit('event2');
+    untypedBroker.emit('eventWithPayload');
 
     // call an action with a parameter object
     const response: string = await typedBroker.call(
