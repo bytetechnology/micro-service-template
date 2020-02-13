@@ -8,6 +8,7 @@ This is a moleculer template for Byte Technology micro-services. This will provi
 ```moleculer init "bytetechnology/micro-service-template" micro-sample```
 
 ## Requirements
+- Moleculer CLI is installed `npm install -g moleculer-cli`
 - ```BYTE_SW_MICRO_REPO_PATH``` environment variable defined and pointing to where your repositories are located. Please see [micro-dev-environment](https://github.com/bytetechnology/micro-dev-environment) for more details.
 - Core services as defined in the [micro-dev-environment](https://github.com/bytetechnology/micro-dev-environment) should be up and running.
   - ```docker-compose up -d -p byte-dev```
