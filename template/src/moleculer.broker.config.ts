@@ -63,8 +63,8 @@ const brokerConfig: BrokerOptions = {
   // More info: https://moleculer.services/docs/0.14/networking.html
   transporter: {
     options: {
-      url: `amqp://${process.env.RABBITMQ_HOST ||
-        'rabbitmq'}:${process.env.RABBITMQ_PORT || 5672}`
+      url: `amqp://${process.env.RABBITMQ_HOST || 'rabbitmq'}:${process.env
+        .RABBITMQ_PORT || 5672}`
     },
     type: 'AMQP'
   },
