@@ -2,25 +2,25 @@
  * Sample service for the Byte Technology cloud backend.
  * Uses the moleculer microservices framework.
  *
- * Copyright Byte Technology 2019. All rights reserved.
- * Author: Ujwal S. Setlur <ujwal@bytetechnology.co>
+ * Copyright Byte Technology 2020. All rights reserved.
  */
 
 // Moleculer micro-services framework
-import moleculer, { Errors } from 'moleculer';
+import moleculer from 'moleculer';
 import { Action, Event, Service } from 'moleculer-decorators';
-import Validator, { ValidationError } from 'fastest-validator';
+import { MoleculerMikroContext } from 'moleculer-context-db';
 
-const validator = new Validator();
-const eventSchema = { id: 'string' };
-const eventSchemaCheck = validator.compile(eventSchema);
+import { User } from './entities/user.entity';
 
 // Define our sample service
 @Service({
-  // Our service name
   name: 'sample'
 })
 class SampleService extends moleculer.Service {
+  dbUri: string | undefined = undefined;
+
+  dbName: string | undefined = undefined;
+
   // Our actions
   @Action()
   hello(ctx: moleculer.Context) {
@@ -29,7 +29,6 @@ class SampleService extends moleculer.Service {
   }
 
   @Action({
-    cache: false,
     params: {
       name: 'string'
     }
@@ -41,41 +40,40 @@ class SampleService extends moleculer.Service {
     return `Welcome ${ctx.params.name}!`;
   }
 
-  @Event() eventWithoutPayload(
-    payload: never,
-    sender: string,
-    eventName: string
-  ) {
-    if (payload) {
-      this.logger.error(
-        `Validation check failed! event ${eventName} does not take any payload!`
-      );
-      throw new Errors.ValidationError(
-        'Event parameter check failed',
-        'ERR_VALIDATION',
-        payload
-      );
+  @Action({
+    params: {
+      name: 'string',
+      passwordHash: 'string'
     }
+  })
+  async addUser(
+    ctx: MoleculerMikroContext<{ name: string; passwordHash: string }>
+  ) {
+    this.logger.info(
+      `addUser got called from ${ctx.nodeID}, service: ${ctx.caller}`
+    );
+    const em = ctx.entityManager;
+    const user = new User(ctx.params.name, ctx.params.passwordHash);
+    await em.persistAndFlush([user]);
+    return user.id;
+  }
 
+  // Our events
+  @Event()
+  'sample.eventWithoutPayload'(_: any, sender: string, eventName: string) {
     this.logger.info(`Got event ${eventName} from sender ${sender};`);
   }
 
-  @Event() eventWithPayload(
-    payload: typeof eventSchema,
+  @Event({
+    params: {
+      id: 'string'
+    }
+  })
+  'sample.eventWithPayload'(
+    payload: { id: string },
     sender: string,
     eventName: string
   ) {
-    const schemaCheck: boolean | ValidationError[] = eventSchemaCheck(
-      payload
-    );
-    if (schemaCheck !== true) {
-      throw new Errors.ValidationError(
-        'Event parameter check failed',
-        'ERR_VALIDATION',
-        schemaCheck
-      );
-    }
-
     this.logger.info(
       `Got event ${eventName} from sender ${sender}; id: ${payload.id}`
     );

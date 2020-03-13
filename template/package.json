@@ -7,7 +7,7 @@
     "dev": "NODE_ENV=development BLUEBIRD_W_FORGOTTEN_RETURN=0 node -r esm -r ts-node/register src/main.ts",
     "debug": "node --inspect-brk -r esm -r ts-node/register src/main.ts",
     "start": "NODE_ENV=production node -r esm dist/main.js",
-    "test": "NODE_ENV=test jest --coverage --forceExit --detectOpenHandles",
+    "test": "NODE_ENV=test jest --coverage --forceExit --detectOpenHandles --runInBand",
     "lint": "eslint \"{src,{tests,mocks}}/**/*.{js,ts}\"",
     "format": "prettier --write \"{src,{tests,mocks}}/**/*.{js,ts}\""
   },
@@ -17,36 +17,39 @@
   ],
   "author": "Byte Technology",
   "devDependencies": {
-    "@types/bluebird": "3.5.29",
-    "@types/jest": "25.1.2",
-    "@types/node": "13.7.0",
-    "@types/node-fetch": "2.5.4",
-    "@typescript-eslint/eslint-plugin": "2.19.0",
-    "@typescript-eslint/parser": "2.19.0",
+    "@types/bluebird": "3.5.30",
+    "@types/jest": "25.1.4",
+    "@types/node": "13.9.1",
+    "@types/node-fetch": "2.5.5",
+    "@typescript-eslint/eslint-plugin": "2.23.0",
+    "@typescript-eslint/parser": "2.23.0",
     "eslint": "6.8.0",
-    "eslint-config-airbnb-base": "14.0.0",
+    "eslint-config-airbnb-base": "14.1.0",
     "eslint-config-prettier": "6.10.0",
     "eslint-plugin-import": "2.20.1",
     "eslint-plugin-prettier": "3.1.2",
     "jest": "25.1.0",
-    "moleculer-repl": "0.6.2",
+    "moleculer-repl": "0.6.3",
     "prettier": "1.19.1",
-    "ts-jest": "25.2.0",
+    "ts-jest": "25.2.1",
     "ts-node": "8.6.2",
-    "typescript": "3.7.5"
+    "typescript": "3.8.3"
   },
   "dependencies": {
     "amqplib": "0.5.5",
     "esm": "3.2.25",
-    "fastest-validator": "1.0.1",
-    "moleculer": "0.14.0-rc2",
-    "moleculer-decorators": "1.1.1",
-    "moleculer-service-ts": "1.0.3",
+    "mikro-orm": "3.4.1",
+    "moleculer": "0.14.4",
+    "moleculer-context-db": "0.0.6",
+    "moleculer-decorators": "1.2.0",
+    "moleculer-service-ts": "1.0.5",
+    "pg": "7.18.2",
+    "sqlite3": "4.1.1",
     "winston": "3.2.1",
     "winston-gelf-transporter": "1.0.1"
   },
   "engines": {
-    "node": ">= 8.x.x"
+    "node": ">= 10.x.x"
   },
   "jest": {
     "testEnvironment": "node",
