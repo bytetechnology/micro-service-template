@@ -38,13 +38,14 @@ describe('micro-sample', () => {
   beforeAll(async () => {
     // Set the database connector for the context manager
     const connector = new MikroConnector();
-    await connector.init(
-      'sqlite' as 'mongo' | 'postgresql' | 'sqlite' | 'mysql',
-      ':memory:',
-      '',
-      './',
-      entities
-    );
+    await connector.init({
+      type: 'sqlite',
+      dbName: ':memory:',
+      entities,
+      cache: {
+        enabled: false
+      }
+    });
     const generator = connector.getORM().getSchemaGenerator();
     await generator.dropSchema();
     await generator.createSchema();
@@ -104,7 +105,7 @@ describe('micro-sample', () => {
     );
   });
 
-  test('Create user', async () => {
+  test('Test DB connection with MikroORM', async () => {
     // create a sample user
     const userId = await typedBroker.call('sample.addUser', {
       name: 'Byte User',

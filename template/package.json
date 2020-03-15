@@ -40,13 +40,13 @@
     "esm": "3.2.25",
     "mikro-orm": "3.4.1",
     "moleculer": "0.14.4",
-    "moleculer-context-db": "0.0.6",
+    "moleculer-context-db": "0.0.8",
     "moleculer-decorators": "1.2.0",
     "moleculer-service-ts": "1.0.5",
     "pg": "7.18.2",
     "sqlite3": "4.1.1",
     "winston": "3.2.1",
-    "winston-gelf-transporter": "1.0.1"
+    "winston-gelf-transporter": "1.0.2"
   },
   "engines": {
     "node": ">= 10.x.x"

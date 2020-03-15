@@ -28,17 +28,14 @@ const moleculerBroker: TypedServiceBroker<
 async function main() {
   // Set the connector for the context manager
   const connector = new MikroConnector();
-  await connector.init(
-    (process.env.DATABASE_TYPE || 'sqlite') as
-      | 'mongo'
-      | 'postgresql'
-      | 'sqlite'
-      | 'mysql',
-    process.env.DATABASE_NAME || ':memory:',
-    process.env.DATABASE_URL || '',
-    './',
-    entities
-  );
+  await connector.init({
+    type: 'sqlite',
+    dbName: ':memory:',
+    entities,
+    cache: {
+      enabled: false
+    }
+  });
 
   DatabaseContextManager.setDatabaseConnector(connector);
 
