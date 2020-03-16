@@ -8,7 +8,7 @@ import {
   ServiceAction as SampleAction,
   ServiceEvent as SampleEvent,
   ServiceName as SampleName
-} from './sample.service.types';
+} from './{{serviceName}}.service.types';
 
 // Build our union of all service names
 export type ServiceName = SampleName;

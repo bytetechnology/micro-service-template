@@ -1,7 +1,7 @@
 {
   "name": "{{projectName}}",
   "version": "0.0.1",
-  "description": "sample microservice",
+  "description": "{{serviceName}} microservice",
   "scripts": {
     "build": "tsc",
     "dev": "NODE_ENV=development BLUEBIRD_W_FORGOTTEN_RETURN=0 node -r esm -r ts-node/register src/main.ts",
@@ -21,8 +21,8 @@
     "@types/jest": "25.1.4",
     "@types/node": "13.9.1",
     "@types/node-fetch": "2.5.5",
-    "@typescript-eslint/eslint-plugin": "2.23.0",
-    "@typescript-eslint/parser": "2.23.0",
+    "@typescript-eslint/eslint-plugin": "2.24.0",
+    "@typescript-eslint/parser": "2.24.0",
     "eslint": "6.8.0",
     "eslint-config-airbnb-base": "14.1.0",
     "eslint-config-prettier": "6.10.0",
@@ -40,7 +40,7 @@
     "esm": "3.2.25",
     "mikro-orm": "3.4.1",
     "moleculer": "0.14.4",
-    "moleculer-context-db": "0.0.8",
+    "moleculer-context-db": "0.0.10",
     "moleculer-decorators": "1.2.0",
     "moleculer-service-ts": "1.0.5",
     "pg": "7.18.2",

@@ -7,24 +7,24 @@
 
 // Moleculer micro-services framework
 import moleculer from 'moleculer';
-import { Action, Event, Service } from 'moleculer-decorators';
+import { Action, Event, Service, Method } from 'moleculer-decorators';
 import { MoleculerMikroContext } from 'moleculer-context-db';
 
 import { User } from './entities/user.entity';
 
 // Define our sample service
 @Service({
-  name: 'sample'
+  name: '{{serviceName}}'
 })
-class SampleService extends moleculer.Service {
+class {{capitalizedServiceName}}Service extends moleculer.Service {
   dbUri: string | undefined = undefined;
 
   dbName: string | undefined = undefined;
 
   // Our actions
   @Action()
-  hello(ctx: moleculer.Context) {
-    this.logger.info(`hello got called from ${ctx.nodeID}`);
+  ping(ctx: moleculer.Context) {
+    this.logger.info(`ping got called from ${ctx.nodeID}`);
     return `Hello Byte!`;
   }
 
@@ -60,8 +60,15 @@ class SampleService extends moleculer.Service {
 
   // Our events
   @Event()
-  'sample.eventWithoutPayload'(_: any, sender: string, eventName: string) {
+  'eventWithoutPayload'(
+    _: any,
+    sender: string,
+    eventName: string
+  ) {
     this.logger.info(`Got event ${eventName} from sender ${sender};`);
+
+    // call our event tester method so that we can write unite tests for this event
+    this.eventTester();
   }
 
   @Event({
@@ -69,7 +76,7 @@ class SampleService extends moleculer.Service {
       id: 'string'
     }
   })
-  'sample.eventWithPayload'(
+  'eventWithPayload'(
     payload: { id: string },
     sender: string,
     eventName: string
@@ -77,7 +84,13 @@ class SampleService extends moleculer.Service {
     this.logger.info(
       `Got event ${eventName} from sender ${sender}; id: ${payload.id}`
     );
+
+    // call our event tester method so that we can write unite tests for this event
+    this.eventTester();
   }
+
+  @Method
+  eventTester(): void {} // eslint-disable-line class-methods-use-this
 }
 
-export default SampleService;
+export default {{capitalizedServiceName}}Service;

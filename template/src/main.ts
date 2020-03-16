@@ -10,7 +10,7 @@ import { MikroConnector, DatabaseContextManager } from 'moleculer-context-db';
 
 // Our stuff
 import moleculerBrokerConfig from './moleculer.broker.config';
-import SampleService from './sample.service';
+import {{capitalizedServiceName}}Service from './{{serviceName}}.service';
 import entities from './entities/index';
 
 // Import our service names, actions, and events
@@ -37,13 +37,15 @@ async function main() {
     }
   });
 
-  DatabaseContextManager.setDatabaseConnector(connector);
+  const dbContextManager: DatabaseContextManager = new DatabaseContextManager(
+    connector
+  );
 
   // Add the database context manager to the middleware for the broker.
-  moleculerBroker.middlewares.add(DatabaseContextManager.middleware());
+  moleculerBroker.middlewares.add(dbContextManager.middleware());
 
   // Create our service
-  moleculerBroker.createService(SampleService);
+  moleculerBroker.createService({{capitalizedServiceName}}Service);
 
   // Start the broker and go into in REPL mode for non-production environments
   moleculerBroker.start().then(() => {

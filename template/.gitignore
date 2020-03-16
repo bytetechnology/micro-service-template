@@ -1,0 +1,5 @@
+*.code-workspace
+.history
+.DS_Store
+dist
+node_modules
