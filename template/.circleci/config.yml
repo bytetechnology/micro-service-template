@@ -4,7 +4,7 @@ jobs:
     docker:
       - image: circleci/node:lts
     environment:
-      - PROJECT_NAME: "test-project"
+      - PROJECT_NAME: "{{projectName}}"
       - DOCKER_REPO: "bytetechnology"
 
     working_directory: ~/repo
@@ -43,7 +43,7 @@ jobs:
     docker:
       - image: circleci/node:lts
     environment:
-      - PROJECT_NAME: "test-project"
+      - PROJECT_NAME: "{{projectName}}"
       - DOCKER_REPO: "bytetechnology"
     working_directory: ~/repo
     steps:
@@ -74,7 +74,7 @@ jobs:
             export DOCKER_USER=$DOCKER_LOGIN
             export DOCKER_PASSWORD=$DOCKER_PWD
             source docker_registry_api_bash_functions
-            export CURRENT_SNAPSHOT_VERSION=$(get_docker_repo_tags -r bytetechnology/test-project | jq -c '.tags[] | select(. |contains("SNAPSHOT"))' | jq --slurp '. |max_by(sub("SNAPSHOT-";"") | tonumber)' | tr -d '"' | cut -d "-" -f 2)
+            export CURRENT_SNAPSHOT_VERSION=$(get_docker_repo_tags -r bytetechnology/{{projectName}} | jq -c '.tags[] | select(. |contains("SNAPSHOT"))' | jq --slurp '. |max_by(sub("SNAPSHOT-";"") | tonumber)' | tr -d '"' | cut -d "-" -f 2)
             export NEXT_VERSION=$((CURRENT_SNAPSHOT_VERSION+1)) >> $BASH_ENV
             echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
             docker build \
@@ -110,7 +110,7 @@ jobs:
             export DOCKER_USER=$DOCKER_LOGIN
             export DOCKER_PASSWORD=$DOCKER_PWD
             source docker_registry_api_bash_functions
-            export CURRENT_SNAPSHOT_VERSION=$(get_docker_repo_tags -r bytetechnology/test-project | jq -c '.tags[] | select(. |contains("SNAPSHOT"))' | jq --slurp '. |max_by(sub("SNAPSHOT-";"") | tonumber)')
+            export CURRENT_SNAPSHOT_VERSION=$(get_docker_repo_tags -r bytetechnology/{{projectName}} | jq -c '.tags[] | select(. |contains("SNAPSHOT"))' | jq --slurp '. |max_by(sub("SNAPSHOT-";"") | tonumber)')
             gcloud --quiet compute ssh ${SWARM_MANAGER_NAME}\
               --  "sudo -H -u docker-user bash -c 'sudo docker service update --image " \
               "$DOCKER_REPO/$PROJECT_NAME:$CURRENT_SNAPSHOT_VERSION ${DOCKER_SERVICE_NAME}'"
@@ -143,7 +143,7 @@ jobs:
             export DOCKER_USER=$DOCKER_LOGIN
             export DOCKER_PASSWORD=$DOCKER_PWD
             source docker_registry_api_bash_functions
-            export CURRENT_SNAPSHOT_VERSION=$(get_docker_repo_tags -r bytetechnology/test-project | jq -c '.tags[] | select(. |contains("SNAPSHOT"))' | jq --slurp '. |max_by(sub("SNAPSHOT-";"") | tonumber)')
+            export CURRENT_SNAPSHOT_VERSION=$(get_docker_repo_tags -r bytetechnology/{{projectName}} | jq -c '.tags[] | select(. |contains("SNAPSHOT"))' | jq --slurp '. |max_by(sub("SNAPSHOT-";"") | tonumber)')
             gcloud --quiet compute ssh ${SWARM_MANAGER_NAME}\
               --  "sudo -H -u docker-user bash -c 'sudo docker service update --image " \
               "$DOCKER_REPO/$PROJECT_NAME:$CURRENT_SNAPSHOT_VERSION ${DOCKER_SERVICE_NAME}'"
