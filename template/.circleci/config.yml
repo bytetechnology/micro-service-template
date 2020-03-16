@@ -1,0 +1,214 @@
+version: 2
+jobs:
+  build_and_test_features:
+    docker:
+      - image: circleci/node:lts
+    environment:
+      - PROJECT_NAME: "test-project"
+      - DOCKER_REPO: "bytetechnology"
+
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependencies-\{{ checksum "package.json" }}
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-\{{ checksum "package.json" }}
+      - run:
+          name: Run Tests
+          command: npm test
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
+      - store_artifacts:
+          path: tests/coverage/lcov-report/
+      - store_test_results:
+          path: reports/junit/js-test-results.xml
+      - setup_remote_docker:
+      - run:
+          name: Docker build and push
+          command: |
+            echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
+            docker build \
+              --build-arg CICD=false --build-arg CIRCLE_SHA1=${CIRCLE_SHA1} --build-arg BRANCH=${CIRCLE_BRANCH}\
+              -t ${PROJECT_NAME} .
+            docker tag ${PROJECT_NAME} ${DOCKER_REPO}/${PROJECT_NAME}:FEATURE-latest
+            docker push ${DOCKER_REPO}/${PROJECT_NAME}:FEATURE-latest
+  build_pre_production_and_upload_dockerhub:
+    docker:
+      - image: circleci/node:lts
+    environment:
+      - PROJECT_NAME: "test-project"
+      - DOCKER_REPO: "bytetechnology"
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependencies-\{{ checksum "package.json" }}
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-\{{ checksum "package.json" }}
+      - run:
+          name: Run Tests
+          command: npm test
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: "reports/junit/js-test-results.xml"
+      - store_artifacts:
+          path: tests/coverage/lcov-report/
+      - store_test_results:
+          path: reports/junit/js-test-results.xml
+      - setup_remote_docker:
+      - run:
+          name: Docker build and push
+          command: |
+            export DOCKER_USER=$DOCKER_LOGIN
+            export DOCKER_PASSWORD=$DOCKER_PWD
+            source docker_registry_api_bash_functions
+            export CURRENT_SNAPSHOT_VERSION=$(get_docker_repo_tags -r bytetechnology/test-project | jq -c '.tags[] | select(. |contains("SNAPSHOT"))' | jq --slurp '. |max_by(sub("SNAPSHOT-";"") | tonumber)' | tr -d '"' | cut -d "-" -f 2)
+            export NEXT_VERSION=$((CURRENT_SNAPSHOT_VERSION+1)) >> $BASH_ENV
+            echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
+            docker build \
+              --build-arg CICD=false --build-arg CIRCLE_SHA1=${CIRCLE_SHA1} --build-arg BRANCH=${CIRCLE_BRANCH}\
+              -t ${PROJECT_NAME} .
+            docker tag ${PROJECT_NAME} ${DOCKER_REPO}/${PROJECT_NAME}:SNAPSHOT-$NEXT_VERSION
+            docker push ${DOCKER_REPO}/${PROJECT_NAME}:SNAPSHOT-$NEXT_VERSION
+  deploy_to_pre_production_swarm:
+    docker:
+      - image: google/cloud-sdk
+    environment:
+      - PROJECT_NAME: "{{projectName}}"
+      - GOOGLE_PROJECT_ID: "pre-production-tng"
+      - GOOGLE_COMPUTE_ZONE: "us-west1-c"
+      - SWARM_MANAGER_NAME: "swarm-manager-pre-prod"
+      - DOCKER_REPO: "bytetechnology"
+      - DOCKER_SERVICE_NAME: "{{projectName}}-service"
+    steps:
+      - checkout
+      - run:
+          name: Setup Google Cloud SDK
+          command: |
+            apt-get install -qq -y gettext
+            apt-get install -qq -y jq
+            echo $GCLOUD_SERVICE_KEY_PRE_PRODUCTION_TNG > ${HOME}/gcloud-service-key.json
+            gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+      - setup_remote_docker
+      - run:
+          name: Deploy to Docker Swarm
+          command: |
+            export DOCKER_USER=$DOCKER_LOGIN
+            export DOCKER_PASSWORD=$DOCKER_PWD
+            source docker_registry_api_bash_functions
+            export CURRENT_SNAPSHOT_VERSION=$(get_docker_repo_tags -r bytetechnology/test-project | jq -c '.tags[] | select(. |contains("SNAPSHOT"))' | jq --slurp '. |max_by(sub("SNAPSHOT-";"") | tonumber)')
+            gcloud --quiet compute ssh ${SWARM_MANAGER_NAME}\
+              --  "sudo -H -u docker-user bash -c 'sudo docker service update --image " \
+              "$DOCKER_REPO/$PROJECT_NAME:$CURRENT_SNAPSHOT_VERSION ${DOCKER_SERVICE_NAME}'"
+  deploy_to_production_swarm:
+    docker:
+      - image: google/cloud-sdk
+    environment:
+      - PROJECT_NAME: "{{projectName}}"
+      - GOOGLE_PROJECT_ID: "production-tng"
+      - GOOGLE_COMPUTE_ZONE: "us-west1-c"
+      - SWARM_MANAGER_NAME: "swarm-manager-1-prod"
+      - DOCKER_REPO: "bytetechnology"
+      - DOCKER_SERVICE_NAME: "{{projectName}}-service"
+      - STACK_NAME: "byte"
+    steps:
+      - checkout
+      - run:
+          name: Setup Google Cloud SDK
+          command: |
+            apt-get install -qq -y gettext
+            apt-get install -qq -y jq
+            echo $GCLOUD_SERVICE_KEY_PRODUCTION_TNG > ${HOME}/gcloud-service-key.json
+            gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+      - setup_remote_docker
+      - run:
+          name: Deploy to Production Docker Swarm
+          command: |
+            export DOCKER_USER=$DOCKER_LOGIN
+            export DOCKER_PASSWORD=$DOCKER_PWD
+            source docker_registry_api_bash_functions
+            export CURRENT_SNAPSHOT_VERSION=$(get_docker_repo_tags -r bytetechnology/test-project | jq -c '.tags[] | select(. |contains("SNAPSHOT"))' | jq --slurp '. |max_by(sub("SNAPSHOT-";"") | tonumber)')
+            gcloud --quiet compute ssh ${SWARM_MANAGER_NAME}\
+              --  "sudo -H -u docker-user bash -c 'sudo docker service update --image " \
+              "$DOCKER_REPO/$PROJECT_NAME:$CURRENT_SNAPSHOT_VERSION ${DOCKER_SERVICE_NAME}'"
+  deploy_to_build_test_swarm:
+    docker:
+      - image: google/cloud-sdk
+    environment:
+      - PROJECT_NAME: "{{projectName}}"
+      - GOOGLE_PROJECT_ID: "buildtest-269319"
+      - GOOGLE_COMPUTE_ZONE: "us-west1-c"
+      - SWARM_MANAGER_NAME: "swarm-manager"
+      - DOCKER_REPO: "bytetechnology"
+      - DOCKER_SERVICE_NAME: "{{projectName}}-service"
+      - STACK_NAME: "byte"
+    steps:
+      - checkout
+      - run:
+          name: Setup Google Cloud SDK
+          command: |+
+            apt-get install -qq -y gettext
+            apt-get install -qq -y jq
+            echo $GCLOUD_SERVICE_KEY_BUILDTEST_TNG > ${HOME}/gcloud-service-key.json
+            gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+      - setup_remote_docker
+      - run:
+          name: Deploy to Build Test Docker Swarm
+          command: |
+            export DOCKER_USER=$DOCKER_LOGIN
+            export DOCKER_PASSWORD=$DOCKER_PWD
+            source docker_registry_api_bash_functions
+             gcloud --quiet compute ssh ${SWARM_MANAGER_NAME}\
+              --  "sudo -H -u docker-user bash -c 'sudo docker service update --image " \
+              "${DOCKER_REPO}/${PROJECT_NAME}:SNAPSHOT-LATEST ${DOCKER_SERVICE_NAME}'"
+workflows:
+  version: 2
+  build_test_deploy:
+    jobs:
+      - build_and_test_features:
+          filters:
+            branches:
+              only:
+                - /^feature\/\w*/
+      - deploy_to_build_test_swarm:
+          requires:
+            - build_and_test_features
+          filters:
+            branches:
+              only:
+                - /^feature\/\w*/
+      - build_pre_production_and_upload_dockerhub:
+          filters:
+            branches:
+              only:
+                - staging
+      - deploy_to_pre_production_swarm:
+          requires:
+            - build_pre_production_and_upload_dockerhub
+          filters:
+            branches:
+              only:
+                - staging
+      - deploy_to_production_swarm:
+          filters:
+            branches:
+              only:
+                - master
