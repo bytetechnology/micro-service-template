@@ -24,10 +24,11 @@ describe('{{serviceName}} unit tests', () => {
   });
 
   let typedService: MoleculerService;
+  let connector: MikroConnector;
 
-  beforeAll(async () => {
+  beforeAll(async done => {
     // Set the database connector for the context manager
-    const connector = new MikroConnector();
+    connector = new MikroConnector();
     await connector.init({
       type: 'sqlite',
       dbName: ':memory:',
@@ -50,20 +51,24 @@ describe('{{serviceName}} unit tests', () => {
     typedService = typedBroker.createService({{capitalizedServiceName}}Service);
 
     await typedBroker.start();
+    done();
   });
 
-  afterAll(async () => {
+  afterAll(async done => {
     typedBroker.destroyService(typedService);
     await typedBroker.stop();
+    connector.getORM().close();
+    done();
   });
 
-  test('Ping test', async () => {
+  test('Ping test', async done => {
     // call an action without a parameter object
     const response: string = await typedBroker.call('{{serviceName}}.ping');
     expect(response).toBe('Hello Byte!');
+    done();
   });
 
-  test('Action with required parameter', async () => {
+  test('Action with required parameter', async done => {
     // call an action with a parameter object
     const response: string = await typedBroker.call(
       '{{serviceName}}.welcome',
@@ -73,9 +78,10 @@ describe('{{serviceName}} unit tests', () => {
       { caller: 'jest' }
     );
     expect(response).toBe('Welcome John Doe!');
+    done();
   });
 
-  test('Event without parameter', async () => {
+  test('Event without parameter', async done => {
     // create a spy to look at events
     const spy = jest.spyOn(typedService, 'eventTester');
 
@@ -83,9 +89,10 @@ describe('{{serviceName}} unit tests', () => {
     typedBroker.emit('eventWithoutPayload');
 
     expect(spy).toBeCalledTimes(1);
+    done();
   });
 
-  test('Event with required parameter', async () => {
+  test('Event with required parameter', async done => {
     // create a spy to look at events
     const spy = jest.spyOn(typedService, 'eventTester');
 
@@ -93,9 +100,10 @@ describe('{{serviceName}} unit tests', () => {
     typedBroker.emit('eventWithPayload', { id: '1234' });
 
     expect(spy).toBeCalledTimes(2);
+    done();
   });
 
-  test('Test database entity creation', async () => {
+  test('Test database entity creation', async done => {
     // create a sample user
     const userId = await typedBroker.call('{{serviceName}}.addUser', {
       name: 'Byte User',
@@ -103,5 +111,6 @@ describe('{{serviceName}} unit tests', () => {
     });
 
     expect(userId).toBe(1);
+    done();
   });
 });

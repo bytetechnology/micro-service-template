@@ -2,7 +2,6 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "noImplicitAny": true,
-    "module": "es2015",
     "moduleResolution": "node",
     "allowJs": true,
     "strict": true,
@@ -11,11 +10,8 @@
     "sourceMap": true,
     "target": "es2018",
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "rootDir": "./"
   },
-  "exclude": [
-    "dist",
-    "node_modules",
-
-  ]
+  "exclude": ["dist", "node_modules"]
 }
