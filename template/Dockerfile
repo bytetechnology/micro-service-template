@@ -12,6 +12,8 @@ WORKDIR /opt/byte/{{projectName}}
 COPY . .
 # Install npm modules
 RUN npm install
+# Run formatter
+RUN npm run format
 # Run linter
 RUN npm run lint
 # Run tests
