@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "{{serviceName}} microservice",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p src/tsconfig.json",
     "dev": "NODE_ENV=development BLUEBIRD_W_FORGOTTEN_RETURN=0 node -r esm -r ts-node/register src/main.ts",
     "debug": "node --inspect-brk -r esm -r ts-node/register src/main.ts",
     "start": "NODE_ENV=production node -r esm dist/main.js",
@@ -40,7 +40,7 @@
     "esm": "3.2.25",
     "mikro-orm": "3.4.1",
     "moleculer": "0.14.4",
-    "moleculer-context-db": "0.0.10",
+    "moleculer-context-db": "0.0.11",
     "moleculer-decorators": "1.2.0",
     "moleculer-service-ts": "1.0.5",
     "pg": "7.18.2",
