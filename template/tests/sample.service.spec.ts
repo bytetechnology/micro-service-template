@@ -9,7 +9,7 @@ import { Service as MoleculerService } from 'moleculer';
 import { TypedServiceBroker } from 'moleculer-service-ts';
 import { MikroConnector, DatabaseContextManager } from 'moleculer-context-db';
 
-import { ServiceAction, ServiceEvent, ServiceName } from '../src/types/index';
+import { ServiceAction, ServiceEvent, ServiceName } from '../src/service.types/index';
 import {{capitalizedServiceName}}Service from '../src/{{serviceName}}.service';
 import entities from '../src/entities/index';
 
@@ -104,13 +104,13 @@ describe('{{serviceName}} unit tests', () => {
   });
 
   test('Test database entity creation', async done => {
-    // create a sample user
-    const userId = await typedBroker.call('{{serviceName}}.addUser', {
-      name: 'Byte User',
-      passwordHash: 'passwordHash'
+    // create a sample entity
+    const entityId = await typedBroker.call('{{serviceName}}.addTestEntity', {
+      aKey: 'A Key',
+      aValue: 'A Value'
     });
 
-    expect(userId).toBe(1);
+    expect(entityId).toBe(1);
     done();
   });
 });

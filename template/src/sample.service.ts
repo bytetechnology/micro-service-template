@@ -10,7 +10,7 @@ import moleculer from 'moleculer';
 import { Action, Event, Service, Method } from 'moleculer-decorators';
 import { MoleculerMikroContext } from 'moleculer-context-db';
 
-import { User } from './entities/user.entity';
+import { TestEntity } from './entities/test.entity';
 
 // Define our sample service
 @Service({
@@ -42,20 +42,20 @@ class {{capitalizedServiceName}}Service extends moleculer.Service {
 
   @Action({
     params: {
-      name: 'string',
-      passwordHash: 'string'
+      aKey: 'string',
+      aValue: 'string'
     }
   })
-  async addUser(
-    ctx: MoleculerMikroContext<{ name: string; passwordHash: string }>
+  async addTestEntity(
+    ctx: MoleculerMikroContext<{ aKey: string; aValue: string }>
   ) {
     this.logger.info(
-      `addUser got called from ${ctx.nodeID}, service: ${ctx.caller}`
+      `addTestEntity got called from ${ctx.nodeID}, service: ${ctx.caller}`
     );
     const em = ctx.entityManager;
-    const user = new User(ctx.params.name, ctx.params.passwordHash);
-    await em.persistAndFlush([user]);
-    return user.id;
+    const testEntity = new TestEntity(ctx.params.aKey, ctx.params.aValue);
+    await em.persistAndFlush([testEntity]);
+    return testEntity.id;
   }
 
   // Our events

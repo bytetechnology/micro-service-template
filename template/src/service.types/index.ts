@@ -1,5 +1,5 @@
 /**
- * All our know service action and event types.
+ * All our known service action and event types.
  *
  * Copyright Byte Technology 2019. All rights reserved.
  */
@@ -8,7 +8,7 @@ import {
   ServiceAction as SampleAction,
   ServiceEvent as SampleEvent,
   ServiceName as SampleName
-} from './sample.service.types'; // eslint-disable-line import/extensions
+} from './{{serviceName}}.service.types'; // eslint-disable-line import/extensions
 
 // Build our union of all service names
 export type ServiceName = SampleName;

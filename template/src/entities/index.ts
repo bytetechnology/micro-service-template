@@ -4,7 +4,7 @@
  * Copyright Byte Technology 2020. All rights reserved.
  */
 
-import { User } from './user.entity';
+import { TestEntity } from './test.entity';
 
-const entities = [User];
+const entities = [TestEntity];
 export default entities;

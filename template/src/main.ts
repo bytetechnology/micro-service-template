@@ -14,7 +14,7 @@ import {{capitalizedServiceName}}Service from './{{serviceName}}.service';
 import entities from './entities/index';
 
 // Import our service names, actions, and events
-import { ServiceAction, ServiceEvent, ServiceName } from './types/index';
+import { ServiceAction, ServiceEvent, ServiceName } from './service.types/index';
 
 // Create our moleculer service broker
 const moleculerBroker: TypedServiceBroker<

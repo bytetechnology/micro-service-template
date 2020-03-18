@@ -3,7 +3,7 @@
 var fs = require("fs");
 var path = require("path");
 
-module.exports = function(values) {
+module.exports = function (values) {
   return {
     metalsmith: {
       before(metalsmith) {
@@ -31,12 +31,11 @@ module.exports = function(values) {
         let newFileName = `${projectPath}${path.sep}src${path.sep}${serviceName}.service.ts`;
         fs.renameSync(oldFileName, newFileName);
 
-        oldFileName = `${projectPath}${path.sep}src${path.sep}types${path.sep}sample.service.types.ts`;
-        newFileName = `${projectPath}${path.sep}src${path.sep}types${path.sep}${serviceName}.service.types.ts`;
+        oldFileName = `${projectPath}${path.sep}src${path.sep}service.types${path.sep}sample.service.types.ts`;
+        newFileName = `${projectPath}${path.sep}src${path.sep}service.types${path.sep}${serviceName}.service.types.ts`;
         fs.renameSync(oldFileName, newFileName);
 
         oldFileName = `${projectPath}${path.sep}tests${path.sep}sample.service.spec.ts`;
-        metalsmith._metadata.projectPath + "/tests/sample.service.spec.ts";
         newFileName = `${projectPath}${path.sep}tests${path.sep}${serviceName}.service.spec.ts`;
         fs.renameSync(oldFileName, newFileName);
       }

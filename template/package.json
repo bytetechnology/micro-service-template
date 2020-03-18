@@ -19,7 +19,7 @@
   "devDependencies": {
     "@types/bluebird": "3.5.30",
     "@types/jest": "25.1.4",
-    "@types/node": "13.9.1",
+    "@types/node": "13.9.2",
     "@types/node-fetch": "2.5.5",
     "@typescript-eslint/eslint-plugin": "2.24.0",
     "@typescript-eslint/parser": "2.24.0",
@@ -32,7 +32,7 @@
     "moleculer-repl": "0.6.3",
     "prettier": "1.19.1",
     "ts-jest": "25.2.1",
-    "ts-node": "8.6.2",
+    "ts-node": "8.7.0",
     "typescript": "3.8.3"
   },
   "dependencies": {
@@ -40,7 +40,7 @@
     "esm": "3.2.25",
     "mikro-orm": "3.4.1",
     "moleculer": "0.14.4",
-    "moleculer-context-db": "0.0.11",
+    "moleculer-context-db": "0.0.12",
     "moleculer-decorators": "1.2.0",
     "moleculer-service-ts": "1.0.5",
     "pg": "7.18.2",

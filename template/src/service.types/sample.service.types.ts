@@ -1,20 +1,30 @@
 /**
- * Typescript definitions of actions supported by the sample service
+ * Typescript definitions of actions supported by the {{serviceName}} service
  *
  * Copyright Byte Technology 2019. All rights reserved.
  */
+
 import {
   GenericActionWithParameters,
   GenericActionWithoutParameters,
   GenericEventWithoutPayload,
   GenericEventWithPayload
-} from 'moleculer-service-ts'; // eslint-disable-line import/extensions
+} from 'moleculer-service-ts';
 
-export type ServiceName = 'sample';
+export type ServiceName = '{{serviceName}}';
 
 export type ServiceAction =
-  | GenericActionWithoutParameters<'sample.hello', string>
-  | GenericActionWithParameters<'sample.welcome', { name: string }, string>;
+  | GenericActionWithoutParameters<'{{serviceName}}.ping', string>
+  | GenericActionWithParameters<
+      '{{serviceName}}.welcome',
+      { name: string },
+      string
+    >
+  | GenericActionWithParameters<
+      '{{serviceName}}.addTestEntity',
+      { aKey: string; aValue: string },
+      number
+    >;
 
 // These are the events we emit
 export type ServiceEvent =
