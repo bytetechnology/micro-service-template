@@ -64,7 +64,7 @@
     "testRegex": ".*\\.(test|spec).(ts|js)$",
     "globals": {
       "ts-jest": {
-        "tsConfig": "./tsconfig.json"
+        "tsConfig": "tests/tsconfig.json"
       }
     },
     "setupFiles": [],
