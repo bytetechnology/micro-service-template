@@ -1,5 +1,6 @@
 *.code-workspace
 .history
 .DS_Store
+coverage
 dist
 node_modules

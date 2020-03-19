@@ -55,9 +55,9 @@ describe('{{serviceName}} unit tests', () => {
   });
 
   afterAll(async done => {
-    typedBroker.destroyService(typedService);
+    await typedBroker.destroyService(typedService);
     await typedBroker.stop();
-    connector.getORM().close();
+    await connector.getORM().close();
     done();
   });
 
