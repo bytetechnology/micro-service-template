@@ -12,7 +12,8 @@
     "target": "es2018",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "rootDir": "./"
+    "rootDir": "./",
+    "outDir": "./dist"
   },
   "exclude": ["dist", "node_modules"]
 }
