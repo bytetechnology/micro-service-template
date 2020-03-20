@@ -2,6 +2,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "noImplicitAny": true,
+    "module": "CommonJS",
     "moduleResolution": "node",
     "allowJs": true,
     "strict": true,

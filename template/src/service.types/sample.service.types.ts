@@ -15,11 +15,7 @@ export type ServiceName = '{{serviceName}}';
 
 export type ServiceAction =
   | GenericActionWithoutParameters<'{{serviceName}}.ping', string>
-  | GenericActionWithParameters<
-      '{{serviceName}}.welcome',
-      { name: string },
-      string
-    >
+  | GenericActionWithParameters<'{{serviceName}}.welcome', { name: string }, string>
   | GenericActionWithParameters<
       '{{serviceName}}.addTestEntity',
       { aKey: string; aValue: string },
