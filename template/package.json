@@ -3,11 +3,11 @@
   "version": "0.0.1",
   "description": "{{serviceName}} microservice",
   "scripts": {
-    "build": "tsc -p src/tsconfig.json",
-    "dev": "NODE_ENV=development BLUEBIRD_W_FORGOTTEN_RETURN=0 node -r esm -r ts-node/register src/main.ts",
+    "build": "tsc",
+    "dev": "cross-env NODE_ENV=development BLUEBIRD_W_FORGOTTEN_RETURN=0 node -r esm -r ts-node/register src/main.ts",
     "debug": "node --inspect-brk -r esm -r ts-node/register src/main.ts",
     "start": "NODE_ENV=production node -r esm dist/main.js",
-    "test": "NODE_ENV=test jest --coverage",
+    "test": "cross-env NODE_ENV=test jest --coverage",
     "lint": "eslint \"{src,{tests,mocks}}/**/*.{js,ts}\"",
     "format": "prettier --write \"{src,{tests,mocks}}/**/*.{js,ts}\""
   },
@@ -23,6 +23,7 @@
     "@types/node-fetch": "2.5.5",
     "@typescript-eslint/eslint-plugin": "2.24.0",
     "@typescript-eslint/parser": "2.24.0",
+    "cross-env": "7.0.2",
     "eslint": "6.8.0",
     "eslint-config-airbnb-base": "14.1.0",
     "eslint-config-prettier": "6.10.0",
@@ -37,6 +38,7 @@
   },
   "dependencies": {
     "amqplib": "0.5.5",
+    "dotenv": "8.2.0",
     "esm": "3.2.25",
     "mikro-orm": "3.4.1",
     "moleculer": "0.14.4",
@@ -44,6 +46,7 @@
     "moleculer-decorators": "1.2.0",
     "moleculer-service-ts": "1.0.5",
     "pg": "7.18.2",
+    "pkg-dir": "4.2.0",
     "sqlite3": "4.1.1",
     "winston": "3.2.1",
     "winston-gelf-transporter": "1.0.2"
@@ -64,7 +67,7 @@
     "testRegex": ".*\\.(test|spec).(ts|js)$",
     "globals": {
       "ts-jest": {
-        "tsConfig": "tests/tsconfig.json"
+        "tsConfig": "tsconfig.json"
       }
     },
     "setupFiles": [],

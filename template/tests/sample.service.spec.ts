@@ -6,71 +6,40 @@
  */
 
 import { Service as MoleculerService } from 'moleculer';
-import { TypedServiceBroker } from 'moleculer-service-ts';
-import { MikroConnector, DatabaseContextManager } from 'moleculer-context-db';
 
-import { ServiceAction, ServiceEvent, ServiceName } from '../src/service.types/index';
-import {{capitalizedServiceName}}Service from '../src/{{serviceName}}.service';
-import entities from '../src/entities/index';
+import { startService, stopService } from '../src/lib/service.broker';
+import { broker } from '../src/lib/service.broker';
+import { resetServiceDB } from './utils';
 
-describe('{{serviceName}} unit tests', () => {
-  // create a typed service broker
-  const typedBroker: TypedServiceBroker<
-    ServiceAction,
-    ServiceEvent,
-    ServiceName
-  > = new TypedServiceBroker<ServiceAction, ServiceEvent, ServiceName>({
-    logLevel: 'info'
-  });
+describe('{{capitalizedServiceName}} unit tests', () => {
 
-  let typedService: MoleculerService;
-  let connector: MikroConnector;
+  let service: MoleculerService;
 
   beforeAll(async done => {
-    // Set the database connector for the context manager
-    connector = new MikroConnector();
-    await connector.init({
-      type: 'sqlite',
-      dbName: ':memory:',
-      entities,
-      cache: {
-        enabled: false
-      }
-    });
-    const generator = connector.getORM().getSchemaGenerator();
-    await generator.dropSchema();
-    await generator.createSchema();
-
-    // add database middleware to broker
-    const dbContextManager: DatabaseContextManager = new DatabaseContextManager(
-      connector
-    );
-    typedBroker.middlewares.add(dbContextManager.middleware());
-
-    // create our service
-    typedService = typedBroker.createService({{capitalizedServiceName}}Service);
-
-    await typedBroker.start();
+    service = await startService();
     done();
   });
 
   afterAll(async done => {
-    await typedBroker.destroyService(typedService);
-    await typedBroker.stop();
-    await connector.getORM().close();
+    await stopService();
     done();
   });
 
+  beforeEach(async done => {
+    await resetServiceDB();
+    done();
+  })
+
   test('Ping test', async done => {
     // call an action without a parameter object
-    const response: string = await typedBroker.call('{{serviceName}}.ping');
+    const response: string = await broker.call('{{serviceName}}.ping');
     expect(response).toBe('Hello Byte!');
     done();
   });
 
   test('Action with required parameter', async done => {
     // call an action with a parameter object
-    const response: string = await typedBroker.call(
+    const response: string = await broker.call(
       '{{serviceName}}.welcome',
       {
         name: 'John Doe'
@@ -83,10 +52,10 @@ describe('{{serviceName}} unit tests', () => {
 
   test('Event without parameter', async done => {
     // create a spy to look at events
-    const spy = jest.spyOn(typedService, 'eventTester');
+    const spy = jest.spyOn(service, 'eventTester');
 
     // emit an event as well so that that can get tested. no return on event
-    typedBroker.emit('eventWithoutPayload');
+    broker.emit('eventWithoutPayload');
 
     expect(spy).toBeCalledTimes(1);
     done();
@@ -94,10 +63,10 @@ describe('{{serviceName}} unit tests', () => {
 
   test('Event with required parameter', async done => {
     // create a spy to look at events
-    const spy = jest.spyOn(typedService, 'eventTester');
+    const spy = jest.spyOn(service, 'eventTester');
 
     // emit an event as well so that that can get tested. no return on event
-    typedBroker.emit('eventWithPayload', { id: '1234' });
+    broker.emit('eventWithPayload', { id: '1234' });
 
     expect(spy).toBeCalledTimes(2);
     done();
@@ -105,7 +74,7 @@ describe('{{serviceName}} unit tests', () => {
 
   test('Test database entity creation', async done => {
     // create a sample entity
-    const entityId = await typedBroker.call('{{serviceName}}.addTestEntity', {
+    const entityId = await broker.call('{{serviceName}}.addTestEntity', {
       aKey: 'A Key',
       aValue: 'A Value'
     });
