@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "{{serviceName}} microservice",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p src/tsconfig.json",
     "dev": "cross-env NODE_ENV=development BLUEBIRD_W_FORGOTTEN_RETURN=0 node -r esm -r ts-node/register src/main.ts",
     "debug": "node --inspect-brk -r esm -r ts-node/register src/main.ts",
     "start": "NODE_ENV=production node -r esm dist/main.js",
