@@ -58,7 +58,7 @@ class {{capitalizedServiceName}}Service extends moleculer.Service {
     return testEntity.id;
   }
 
-  // Our events
+  // Events that we listen to
   @Event()
   'eventWithoutPayload'(
     _: any,

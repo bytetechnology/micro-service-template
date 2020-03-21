@@ -1,5 +1,5 @@
 /**
- * Typescript definitions of actions supported by the {{serviceName}} service
+ * Typescript definitions of actions and events supported by the {{serviceName}} service
  *
  * Copyright Byte Technology 2019. All rights reserved.
  */
