@@ -7,10 +7,9 @@
 import {
   ServiceAction as {{capitalizedServiceName}}Action,
   ServiceEvent as {{capitalizedServiceName}}Event,
-  ServiceName as {{capitalizedServiceName}}ame
+  ServiceName as {{capitalizedServiceName}}Name
 } from './{{serviceName}}.service.types'; // eslint-disable-line import/extensions
 
-// Build our union of all service names
 export type ServiceName = {{capitalizedServiceName}}Name;
 // Build our union of all action types
 export type ServiceAction = {{capitalizedServiceName}}Action;

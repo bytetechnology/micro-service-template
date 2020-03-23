@@ -60,11 +60,7 @@ class {{capitalizedServiceName}}Service extends moleculer.Service {
 
   // Our events
   @Event()
-  'eventWithoutPayload'(
-    _: any,
-    sender: string,
-    eventName: string
-  ) {
+  eventWithoutPayload(_: any, sender: string, eventName: string) {
     this.logger.info(`Got event ${eventName} from sender ${sender};`);
 
     // call our event tester method so that we can write unite tests for this event
@@ -76,11 +72,7 @@ class {{capitalizedServiceName}}Service extends moleculer.Service {
       id: 'string'
     }
   })
-  'eventWithPayload'(
-    payload: { id: string },
-    sender: string,
-    eventName: string
-  ) {
+  eventWithPayload(payload: { id: string }, sender: string, eventName: string) {
     this.logger.info(
       `Got event ${eventName} from sender ${sender}; id: ${payload.id}`
     );
