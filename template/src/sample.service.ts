@@ -1,5 +1,5 @@
 /**
- * Sample service for the Byte Technology cloud backend.
+ * {{capitalizedServiceName}} service for the Byte Technology cloud backend.
  * Uses the moleculer microservices framework.
  *
  * Copyright Byte Technology 2020. All rights reserved.
@@ -12,7 +12,7 @@ import { MoleculerMikroContext } from 'moleculer-context-db';
 
 import { TestEntity } from './entities/test.entity';
 
-// Define our sample service
+// Define our {{serviceName}} service
 @Service({
   name: '{{serviceName}}'
 })

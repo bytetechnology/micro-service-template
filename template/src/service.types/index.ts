@@ -5,14 +5,14 @@
  */
 
 import {
-  ServiceAction as SampleAction,
-  ServiceEvent as SampleEvent,
-  ServiceName as SampleName
+  ServiceAction as {{capitalizedServiceName}}Action,
+  ServiceEvent as {{capitalizedServiceName}}Event,
+  ServiceName as {{capitalizedServiceName}}ame
 } from './{{serviceName}}.service.types'; // eslint-disable-line import/extensions
 
 // Build our union of all service names
-export type ServiceName = SampleName;
+export type ServiceName = {{capitalizedServiceName}}Name;
 // Build our union of all action types
-export type ServiceAction = SampleAction;
+export type ServiceAction = {{capitalizedServiceName}}Action;
 // Build our union of all event types
-export type ServiceEvent = SampleEvent;
+export type ServiceEvent = {{capitalizedServiceName}}Event;
