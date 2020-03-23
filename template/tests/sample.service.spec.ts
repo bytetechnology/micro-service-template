@@ -7,12 +7,10 @@
 
 import { Service as MoleculerService } from 'moleculer';
 
-import { startService, stopService } from '../src/lib/service.broker';
-import { broker } from '../src/lib/service.broker';
+import { startService, stopService, broker } from '../src/lib/service.broker';
 import { resetServiceDB } from './utils';
 
 describe('{{capitalizedServiceName}} unit tests', () => {
-
   let service: MoleculerService;
 
     await typedBroker.start();
@@ -28,7 +26,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
   beforeEach(async done => {
     await resetServiceDB();
     done();
-  })
+  });
 
   test('Ping test', async done => {
     // call an action without a parameter object

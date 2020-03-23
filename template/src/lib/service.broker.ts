@@ -1,16 +1,21 @@
-import { TypedServiceBroker } from "moleculer-service-ts";
-import { Service } from "moleculer";
+import { TypedServiceBroker } from 'moleculer-service-ts';
+import { Service } from 'moleculer';
 import { MikroConnector, DatabaseContextManager } from 'moleculer-context-db';
 import { ServiceAction, ServiceEvent, ServiceName } from '../service.types';
 import entities from '../entities';
 
-import { brokerConfig } from "./internal/broker.confing";
-import {{capitalizedServiceName}}Service from "../{{serviceName}}.service";
+import { brokerConfig } from './internal/broker.confing';
+import {{capitalizedServiceName}}Service from '../{{serviceName}}.service';
 
 let service: Service;
 let started = false;
 
-export const broker: TypedServiceBroker<ServiceAction, ServiceEvent, ServiceName> = new TypedServiceBroker(brokerConfig);
+export const broker: TypedServiceBroker<
+  ServiceAction,
+  ServiceEvent,
+  ServiceName
+> = new TypedServiceBroker(brokerConfig);
+
 export const dbConnector: MikroConnector = new MikroConnector();
 
 export async function startService(): Promise<Service> {

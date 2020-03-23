@@ -4,26 +4,7 @@
  *
  * Copyright Byte Technology 2020. All rights reserved.
  */
-
-import { TypedServiceBroker } from 'moleculer-service-ts';
-import { MikroConnector, DatabaseContextManager } from 'moleculer-context-db';
-
-// Our stuff
-import moleculerBrokerConfig from './moleculer.broker.config';
-import {{capitalizedServiceName}}Service from './{{serviceName}}.service';
-import entities from './entities/index';
-
-// Import our service names, actions, and events
-import { ServiceAction, ServiceEvent, ServiceName } from './service.types/index';
-
-// Create our moleculer service broker
-const moleculerBroker: TypedServiceBroker<
-  ServiceAction,
-  ServiceEvent,
-  ServiceName
-> = new TypedServiceBroker<ServiceAction, ServiceEvent, ServiceName>(
-  moleculerBrokerConfig
-);
+import { startService, broker } from './lib/service.broker';
 
 async function main() {
   // Set the connector for the context manager
@@ -50,12 +31,9 @@ async function main() {
   // Create our service
   moleculerBroker.createService({{capitalizedServiceName}}Service);
 
-  // Start the broker and go into in REPL mode for non-production environments
-  moleculerBroker.start().then(() => {
-    if (process.env.NODE_ENV === 'development') {
-      moleculerBroker.repl();
-    }
-  });
+  if (process.env.NODE_ENV === 'development') {
+    broker.repl();
+  }
 }
 
 main();
