@@ -12,7 +12,7 @@ import { MoleculerMikroContext } from 'moleculer-context-db';
 
 import { TestEntity } from './entities/test.entity';
 
-// Define our sample service
+// Define our {{serviceName}} service
 @Service({
   name: '{{serviceName}}'
 })

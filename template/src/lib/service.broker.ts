@@ -5,7 +5,7 @@ import { ServiceAction, ServiceEvent, ServiceName } from '../service.types';
 import entities from '../entities';
 
 import { brokerConfig } from "./internal/broker.confing";
-import SampleService from "../sample.service";
+import {{capitalizedServiceName}}Service from "../{{serviceName}}.service";
 
 let service: Service;
 let started = false;
@@ -22,7 +22,7 @@ export async function startService(): Promise<Service> {
   await dbConnector.init({
     type: 'sqlite', // TODO use env
     dbName: ':memory:', // TODO use env
-    name: 'micro-sample-db',
+    name: 'micro-{{serviceName}}-db',
     entities,
     cache: {
       enabled: false
@@ -36,7 +36,7 @@ export async function startService(): Promise<Service> {
   broker.middlewares.add(dbContextManager.middleware());
 
   // create our service
-  service = broker.createService(SampleService);
+  service = broker.createService({{capitalizedServiceName}}Service);
 
   await broker.start();
   return service;

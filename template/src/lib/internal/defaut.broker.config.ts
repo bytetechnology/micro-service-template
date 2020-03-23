@@ -21,7 +21,7 @@ export const defaultBrokerConfig: BrokerOptions = {
   // Namespace of nodes to segment your nodes on the same network.
   namespace: '',
   // Unique node identifier. Must be unique in a namespace.
-  nodeID: `sample-${process.env.HOSTNAME}`,
+  nodeID: `{{serviceName}}-${process.env.HOSTNAME}`,
 
   // Log formatter for built-in console logger. Available values: default, simple, short. It can be also a `Function`.
   logFormatter: 'default',
