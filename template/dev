@@ -1,2 +1,2 @@
 #!/bin/sh
-docker exec -it -u root micro-iot bash
+docker exec -it -u root micro-{{serviceName}} bash
