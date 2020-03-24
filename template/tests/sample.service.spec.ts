@@ -28,6 +28,10 @@ describe('{{capitalizedServiceName}} unit tests', () => {
     done();
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('Ping test', async done => {
     // call an action without a parameter object
     const response: string = await broker.call('{{serviceName}}.ping');
@@ -48,12 +52,30 @@ describe('{{capitalizedServiceName}} unit tests', () => {
     done();
   });
 
+  test('Action with invalid parameter should throw', async done => {
+    // call an action with a parameter object
+    try {
+      await broker.call(
+        '{{serviceName}}.welcome',
+        {
+          mistake: 'invalid property name'
+        } as any,
+        { caller: 'jest' }
+      );
+      // eslint-disable-next-line no-undef
+      fail(`Expected ValidationError.`);
+    } catch (err) {
+      expect(err.code).toBe(400);
+    }
+    done();
+  });
+
   test('Event without parameter', async done => {
     // create a spy to look at events
     const spy = jest.spyOn(service, 'eventTester');
 
     // emit an event as well so that that can get tested. no return on event
-    broker.emit('eventWithoutPayload');
+    await broker.emit('eventWithoutPayload');
 
     expect(spy).toBeCalledTimes(1);
     done();
@@ -64,18 +86,22 @@ describe('{{capitalizedServiceName}} unit tests', () => {
     const spy = jest.spyOn(service, 'eventTester');
 
     // emit an event as well so that that can get tested. no return on event
-    broker.emit('eventWithPayload', { id: '1234' });
+    await broker.emit('eventWithPayload', { id: '1234' });
 
-    expect(spy).toBeCalledTimes(2);
+    expect(spy).toBeCalledTimes(1);
     done();
   });
 
   test('Test database entity creation', async done => {
     // create a sample entity
-    const entityId = await broker.call('{{serviceName}}.addTestEntity', {
-      aKey: 'A Key',
-      aValue: 'A Value'
-    });
+    const entityId = await broker.call(
+      '{{serviceName}}.addTestEntity',
+      {
+        aKey: 'A Key',
+        aValue: 'A Value'
+      },
+      { caller: 'jest' }
+    );
 
     expect(entityId).toBe(1);
     done();

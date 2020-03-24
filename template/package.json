@@ -2,12 +2,13 @@
   "name": "{{projectName}}",
   "version": "0.0.1",
   "description": "{{serviceName}} microservice",
+  "main": "src/api",
   "scripts": {
     "build": "tsc -p src/tsconfig.json",
-    "dev": "cross-env NODE_ENV=development BLUEBIRD_W_FORGOTTEN_RETURN=0 node -r esm -r ts-node/register src/main.ts",
-    "debug": "node --inspect-brk -r esm -r ts-node/register src/main.ts",
-    "start": "NODE_ENV=production node -r esm dist/main.js",
-    "test": "cross-env NODE_ENV=test jest --coverage",
+    "dev": "cross-env  ENV_FILE=envs/dev.env  BLUEBIRD_W_FORGOTTEN_RETURN=0  ts-node src/main.ts",
+    "debug": "node  --inspect-brk  -r ts-node/register  src/main.ts",
+    "start": "cross-env  NODE_ENV=production  node dist/main.js",
+    "test": "cross-env  ENV_FILE=envs/test.env  jest --coverage",
     "lint": "eslint \"{src,{tests,mocks}}/**/*.{js,ts}\"",
     "format": "prettier --write \"{src,{tests,mocks}}/**/*.{js,ts}\""
   },
@@ -40,6 +41,7 @@
     "amqplib": "0.5.5",
     "dotenv": "8.2.0",
     "esm": "3.2.25",
+    "joiful": "2.0.0",
     "mikro-orm": "3.4.1",
     "moleculer": "0.14.4",
     "moleculer-context-db": "0.0.12",
@@ -70,7 +72,8 @@
         "tsConfig": "tsconfig.json"
       }
     },
-    "setupFiles": [],
+    "testTimeout": 20000,
+    "setupFilesAfterEnv": ["./tests/setup.ts"],
     "moduleFileExtensions": [
       "ts",
       "tsx",
