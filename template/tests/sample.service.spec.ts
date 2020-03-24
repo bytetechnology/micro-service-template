@@ -51,8 +51,9 @@ describe('{{serviceName}} unit tests', () => {
     typedService = typedBroker.createService({{capitalizedServiceName}}Service);
 
     await typedBroker.start();
+    await typedBroker.waitForServices('{{serviceName}}', 10000);
     done();
-  });
+  }, 10000);
 
   afterAll(async done => {
     await typedBroker.destroyService(typedService);
