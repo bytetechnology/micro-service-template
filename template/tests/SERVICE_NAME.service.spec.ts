@@ -13,10 +13,10 @@ import { resetServiceDB } from './utils';
 describe('{{capitalizedServiceName}} unit tests', () => {
   let service: MoleculerService;
 
-    await typedBroker.start();
-    await typedBroker.waitForServices('{{serviceName}}', 10000);
+  beforeAll(async done => {
+    service = await startService();
     done();
-  }, 10000);
+  });
 
   afterAll(async done => {
     await stopService();

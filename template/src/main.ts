@@ -7,29 +7,7 @@
 import { startService, broker } from './lib/service.broker';
 
 async function main() {
-  // Set the connector for the context manager
-  const connector = new MikroConnector();
-  await connector.init({
-    type: 'sqlite',
-    dbName: ':memory:',
-    entities,
-    cache: {
-      enabled: false
-    }
-  });
-
-  const generator = connector.getORM().getSchemaGenerator();
-  await generator.updateSchema();
-
-  const dbContextManager: DatabaseContextManager = new DatabaseContextManager(
-    connector
-  );
-
-  // Add the database context manager to the middleware for the broker.
-  moleculerBroker.middlewares.add(dbContextManager.middleware());
-
-  // Create our service
-  moleculerBroker.createService({{capitalizedServiceName}}Service);
+  await startService();
 
   if (process.env.NODE_ENV === 'development') {
     broker.repl();

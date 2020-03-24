@@ -46,7 +46,7 @@ export class {{capitalizedServiceName}}Service extends moleculer.Service {
     return addTestEntity(ctx);
   }
 
-  // Events that we listen to
+  // Incoming events
   @Event()
   eventWithoutPayload(/* _: any, sender: string, eventName: string */) {
     // call our event tester method so that we can write unite tests for this event
