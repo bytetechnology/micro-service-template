@@ -12,7 +12,8 @@ if (ENV_FILE && !path.isAbsolute(ENV_FILE)) {
   const ROOT_DIR = pkgDir.sync(__dirname);
   if (!ROOT_DIR) {
     throw new Error(
-      `Unable to determine project root directory. It is required to load config properly. Hint: if you are not able to fix this problem then provide ENV_FILE=<absolute-path>`
+      `Unable to determine project root directory. It is required to load config properly. ` +
+        `Hint: if you are not able to fix this problem then provide ENV_FILE=<absolute-path>`
     );
   }
   ENV_FILE = path.join(ROOT_DIR, ENV_FILE);
