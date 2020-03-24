@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 /**
  * {{capitalizedServiceName}} service for the Byte Technology cloud backend.
  * Uses the moleculer microservices framework.
@@ -8,74 +9,58 @@
 // Moleculer micro-services framework
 import moleculer from 'moleculer';
 import { Action, Event, Service, Method } from 'moleculer-decorators';
-import { MoleculerMikroContext } from 'moleculer-context-db';
+import { MoleculerMikroContext as CTX } from 'moleculer-context-db';
 
-import { TestEntity } from './entities/test.entity';
+import { WelcomeParams } from './api/params/welcome.params';
+import { AddTestEntityParams } from './api/params/add.test.entity.params';
+import { ExampleEvent } from './api/events/example.event';
+import { validateParams, validatePayload } from './lib/validate.data';
+import { welcome } from './action.handlers/welcome';
+import { addTestEntity } from './action.handlers/add.test.entity';
+import { eventWithPayload } from './event.handlers/event.with.payload';
 
 // Define our {{serviceName}} service
 @Service({
   name: '{{serviceName}}'
 })
-class {{capitalizedServiceName}}Service extends moleculer.Service {
+export class {{capitalizedServiceName}}Service extends moleculer.Service {
   dbUri: string | undefined = undefined;
 
   dbName: string | undefined = undefined;
 
   // Our actions
   @Action()
-  ping(ctx: moleculer.Context) {
-    this.logger.info(`ping got called from ${ctx.nodeID}`);
+  ping(/* ctx: CTX */) {
     return `Hello Byte!`;
   }
 
-  @Action({
-    params: {
-      name: 'string'
-    }
-  })
-  welcome(ctx: moleculer.Context<{ name: string }>) {
-    this.logger.info(
-      `welcome got called from ${ctx.nodeID}, service: ${ctx.caller}`
-    );
-    return `Welcome ${ctx.params.name}!`;
+  @Action()
+  welcome(ctx: CTX<WelcomeParams>) {
+    validateParams(ctx, WelcomeParams);
+    return welcome(ctx);
   }
 
-  @Action({
-    params: {
-      aKey: 'string',
-      aValue: 'string'
-    }
-  })
-  async addTestEntity(
-    ctx: MoleculerMikroContext<{ aKey: string; aValue: string }>
-  ) {
-    this.logger.info(
-      `addTestEntity got called from ${ctx.nodeID}, service: ${ctx.caller}`
-    );
-    const em = ctx.entityManager;
-    const testEntity = new TestEntity(ctx.params.aKey, ctx.params.aValue);
-    await em.persistAndFlush([testEntity]);
-    return testEntity.id;
+  @Action()
+  async addTestEntity(ctx: CTX<AddTestEntityParams>) {
+    validateParams(ctx, AddTestEntityParams);
+    return addTestEntity(ctx);
   }
 
-  // Our events
+  // Incoming events
   @Event()
-  eventWithoutPayload(_: any, sender: string, eventName: string) {
-    this.logger.info(`Got event ${eventName} from sender ${sender};`);
-
+  eventWithoutPayload(/* _: any, sender: string, eventName: string */) {
     // call our event tester method so that we can write unite tests for this event
     this.eventTester();
   }
 
-  @Event({
-    params: {
-      id: 'string'
-    }
-  })
-  eventWithPayload(payload: { id: string }, sender: string, eventName: string) {
-    this.logger.info(
-      `Got event ${eventName} from sender ${sender}; id: ${payload.id}`
-    );
+  @Event()
+  async eventWithPayload(
+    payload: ExampleEvent,
+    sender: string,
+    eventName: string
+  ) {
+    const validPayload = validatePayload(payload, ExampleEvent);
+    await eventWithPayload.call(this, validPayload, sender, eventName);
 
     // call our event tester method so that we can write unite tests for this event
     this.eventTester();
@@ -84,5 +69,3 @@ class {{capitalizedServiceName}}Service extends moleculer.Service {
   @Method
   eventTester(): void {} // eslint-disable-line class-methods-use-this
 }
-
-export default {{capitalizedServiceName}}Service;

@@ -1,11 +1,16 @@
 import { TypedServiceBroker } from 'moleculer-service-ts';
-import { Service } from 'moleculer';
-import { MikroConnector, DatabaseContextManager } from 'moleculer-context-db';
+import { Service, Middleware, ServiceBroker, EventSchema } from 'moleculer';
+import {
+  MikroConnector,
+  DatabaseContextManager,
+  MoleculerMikroContext
+} from 'moleculer-context-db';
 import { ServiceAction, ServiceEvent, ServiceName } from '../service.types';
-import entities from '../entities';
+import { entities } from '../entities';
+import { config } from './env';
 
-import { brokerConfig } from './internal/broker.confing';
-import {{capitalizedServiceName}}Service from '../{{serviceName}}.service';
+import { brokerConfig } from './moleculer/broker.config';
+import { {{capitalizedServiceName}}Service } from '../{{serviceName}}.service';
 
 let service: Service;
 let started = false;
@@ -18,16 +23,40 @@ export const broker: TypedServiceBroker<
 
 export const dbConnector: MikroConnector = new MikroConnector();
 
+const LogMiddleware: Middleware = {
+  localAction(next: any) {
+    return function logAction(this: ServiceBroker, ctx: MoleculerMikroContext) {
+      broker.logger.info(
+        `Action '${ctx.action?.name}'.  '${ctx.caller}'. CallerNode '${ctx.nodeID}'.`
+      );
+      return next(ctx);
+    };
+  },
+  localEvent(next: any, event: EventSchema) {
+    return function logEvent(payload: any, sender: string, eventName: string) {
+      broker.logger.info(`Event ${event.name}. From service '${sender}'`);
+      return next(payload, sender, eventName);
+    };
+  }
+};
+
 export async function startService(): Promise<Service> {
   if (started) {
-    throw new Error(`startService() already called. Now you can only call stopService().`);
+    throw new Error(
+      `startService() already called. Now you can only call stopService().`
+    );
   }
   started = true;
 
+  broker.middlewares.add(LogMiddleware);
+
   await dbConnector.init({
-    type: 'sqlite', // TODO use env
-    dbName: ':memory:', // TODO use env
-    name: 'micro-{{serviceName}}-db',
+    type: config.DB_CORE__TYPE,
+    dbName: config.DB_CORE__DB_NAME,
+    name: config.DB_CORE__NAME,
+    clientUrl: config.DB_CORE__CLIENT_URL,
+    user: config.DB_CORE__USER,
+    password: config.DB_CORE__PASSWORD,
     entities,
     cache: {
       enabled: false
@@ -44,6 +73,8 @@ export async function startService(): Promise<Service> {
   service = broker.createService({{capitalizedServiceName}}Service);
 
   await broker.start();
+  await broker.waitForServices('{{serviceName}}');
+
   return service;
 }
 

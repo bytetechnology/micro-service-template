@@ -1,5 +1,6 @@
 import { BrokerOptions } from 'moleculer';
 import WinstonGelfTransporter from 'winston-gelf-transporter';
+import { config } from '../env';
 
 /**
  * Moleculer ServiceBroker configuration file
@@ -17,16 +18,15 @@ import WinstonGelfTransporter from 'winston-gelf-transporter';
  * 	For example, to set the cacher prefix to `MYCACHE`,
  *  you should declare an env var as `MOL_CACHER__OPTIONS__PREFIX=MYCACHE`.
  */
-const brokerConfig: BrokerOptions = {
+export const byteBrokerConfig: BrokerOptions = {
   // Namespace of nodes to segment your nodes on the same network.
   namespace: '',
   // Unique node identifier. Must be unique in a namespace.
   nodeID: `{{serviceName}}-${process.env.HOSTNAME}`,
-
   // Log formatter for built-in console logger. Available values: default, simple, short. It can be also a `Function`.
-  logFormatter: 'default',
+  logFormatter: config.LOG_FORMATTER,
   // Log level for built-in console logger. Available values: trace, debug, info, warn, error, fatal
-  logLevel: 'info',
+  logLevel: config.LOG_LEVEL,
   // Custom object & array printer for built-in console logger.
   logObjectPrinter: undefined,
   // Enable/disable logging or use custom logger. More info: https://moleculer.services/docs/0.14/logging.html
@@ -34,7 +34,7 @@ const brokerConfig: BrokerOptions = {
     {
       type: 'Console',
       options: {
-        level: process.env.LOG_LEVEL,
+        level: config.LOG_LEVEL,
         colors: true,
         moduleColors: false,
         formatter: 'full',
@@ -45,7 +45,7 @@ const brokerConfig: BrokerOptions = {
     {
       type: 'Winston',
       options: {
-        level: process.env.LOG_LEVEL,
+        level: config.LOG_LEVEL,
         winston: {
           transports: [
             new WinstonGelfTransporter({
@@ -170,5 +170,3 @@ const brokerConfig: BrokerOptions = {
   // Register custom REPL commands.
   replCommands: undefined
 };
-
-export default brokerConfig;
