@@ -1,3 +1,8 @@
+/**
+ * Typed config loader.
+ *
+ * Copyright Byte Technology 2020. All rights reserved.
+ */
 import dotenv from 'dotenv';
 import path from 'path';
 import pkgDir from 'pkg-dir';

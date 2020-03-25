@@ -1,3 +1,9 @@
+/**
+ * Validation schema for env vars.
+ * EnvBase is base class for config.
+ *
+ * Copyright Byte Technology 2020. All rights reserved.
+ */
 import * as jf from 'joiful';
 import { MikroORMOptions } from 'mikro-orm';
 
@@ -19,6 +25,21 @@ export class EnvBase {
     .default('default')
     .valid('default', 'simple', 'short'))
   LOG_FORMATTER!: 'default' | 'simple' | 'short';
+
+  @optional()
+  HOSTNAME?: string;
+
+  @optional()
+  LOG_HOST?: string;
+
+  @(optional().pattern(/\d+/))
+  LOG_PORT?: string;
+
+  @optional()
+  MESSAGE_BROKER_HOST?: string;
+
+  @(optional().pattern(/\d+/))
+  MESSAGE_BROKER_PORT?: string;
 
   // ---------------------------------------------------------------
   //  Mikro-orm db connector

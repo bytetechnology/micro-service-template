@@ -4,12 +4,13 @@
  *
  * Copyright Byte Technology 2020. All rights reserved.
  */
+import { config } from './lib';
 import { startService, broker } from './lib/service.broker';
 
 async function main() {
   await startService();
 
-  if (process.env.NODE_ENV === 'development') {
+  if (config.NODE_ENV === 'development') {
     broker.repl();
   }
 }

@@ -1,3 +1,6 @@
+/**
+ * Copyright Byte Technology 2020. All rights reserved.
+ */
 import { BrokerOptions } from 'moleculer';
 import { byteBrokerConfig } from './byte.broker.config';
 import { config } from '../env';

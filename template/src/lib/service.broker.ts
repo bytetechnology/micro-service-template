@@ -1,3 +1,10 @@
+/**
+ * Service broker and start/init function.
+ * Use it everywhere (production, dev, tests).
+ * Adapt using proper config (env vars).
+ *
+ * Copyright Byte Technology 2020. All rights reserved.
+ */
 import { TypedServiceBroker } from 'moleculer-service-ts';
 import { Service, Middleware, ServiceBroker, EventSchema } from 'moleculer';
 import {

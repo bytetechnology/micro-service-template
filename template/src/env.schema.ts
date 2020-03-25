@@ -4,8 +4,9 @@
  *
  * Environment variables will be validated basing on this file.
  * Example in EnvBase class.
- *
  * Env is type for { config } from ./lib
+ *
+ * Copyright Byte Technology 2020. All rights reserved.
  */
 
 // ! Important - do not impoprt from './lib' - EnvBase will be undefined in tests

@@ -1,9 +1,10 @@
 /**
- * Typescript definitions of actions supported by the {{serviceName}} service
+ * Definition for ./lib/service.broker.ts
+ * Should contain api of current service.
+ * Can contain any number of external services api.
  *
  * Copyright Byte Technology 2019. All rights reserved.
  */
-
 import {
   GenericEventWithoutPayload as EventNoData,
   GenericEventWithPayload as Event
@@ -14,7 +15,7 @@ import { ExampleEvent } from './api/events/example.event';
 export type ServiceName = '{{serviceName}}';
 
 // Add other services types here, eg;
-// export type ServiceAction = DiscoutActions & UserActions & IotActions;
+// export type ServiceAction = DiscoutActions | UserActions | IotActions;
 export type ServiceAction = {{capitalizedServiceName}}Actions;
 
 // These are the events we emit

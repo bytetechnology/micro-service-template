@@ -1,4 +1,11 @@
 // eslint-disable-next-line max-classes-per-file
+/**
+ * Validators for context params and event payloads.
+ * Custom validation of moleculer@0.0.14 is not working.
+ *
+ * Copyright Byte Technology 2020. All rights reserved.
+ */
+
 import * as jf from 'joiful';
 import { Errors } from 'moleculer';
 import { MoleculerMikroContext } from 'moleculer-context-db';

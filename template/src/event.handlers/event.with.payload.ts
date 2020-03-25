@@ -1,3 +1,6 @@
+/**
+ * Copyright Byte Technology 2020. All rights reserved.
+ */
 import { Service } from 'moleculer';
 import { ExampleEvent } from '../api/events/example.event';
 

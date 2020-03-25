@@ -1,3 +1,8 @@
+/**
+ * {{Some description}}
+ *
+ * Copyright Byte Technology 2020. All rights reserved.
+ */
 import { MoleculerMikroContext as CTX } from 'moleculer-context-db';
 import { AddTestEntityParams } from '../api/params/add.test.entity.params';
 import { TestEntity } from '../entities/test.entity';

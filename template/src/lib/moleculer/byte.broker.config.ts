@@ -1,3 +1,8 @@
+/**
+ * Bytetech-default configuration for moleculer message broker.
+ *
+ * Copyright Byte Technology 2020. All rights reserved.
+ */
 import { BrokerOptions } from 'moleculer';
 import WinstonGelfTransporter from 'winston-gelf-transporter';
 import { config } from '../env';
@@ -22,7 +27,7 @@ export const byteBrokerConfig: BrokerOptions = {
   // Namespace of nodes to segment your nodes on the same network.
   namespace: '',
   // Unique node identifier. Must be unique in a namespace.
-  nodeID: `{{serviceName}}-${process.env.HOSTNAME}`,
+  nodeID: `{{serviceName}}-${config.HOSTNAME}`,
   // Log formatter for built-in console logger. Available values: default, simple, short. It can be also a `Function`.
   logFormatter: config.LOG_FORMATTER,
   // Log level for built-in console logger. Available values: trace, debug, info, warn, error, fatal
@@ -49,8 +54,8 @@ export const byteBrokerConfig: BrokerOptions = {
         winston: {
           transports: [
             new WinstonGelfTransporter({
-              host: process.env.LOG_HOST || 'graylog',
-              port: parseInt(process.env.LOG_PORT || '12201', 10),
+              host: config.LOG_HOST || 'graylog',
+              port: parseInt(config.LOG_PORT || '12201', 10),
               protocol: 'tcp'
             })
           ]
@@ -63,8 +68,8 @@ export const byteBrokerConfig: BrokerOptions = {
   // More info: https://moleculer.services/docs/0.14/networking.html
   transporter: {
     options: {
-      url: `amqp://${process.env.RABBITMQ_HOST || 'rabbitmq'}:${process.env
-        .RABBITMQ_PORT || 5672}`
+      url: `amqp://${config.MESSAGE_BROKER_HOST || 'rabbitmq'}:${+(config
+        .MESSAGE_BROKER_PORT || 5672)}`
     },
     type: 'AMQP'
   },

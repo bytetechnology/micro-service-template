@@ -42,7 +42,7 @@
     "dotenv": "8.2.0",
     "esm": "3.2.25",
     "joiful": "2.0.0",
-    "mikro-orm": "3.4.1",
+    "mikro-orm": "3.5.2",
     "moleculer": "0.14.4",
     "moleculer-context-db": "0.0.12",
     "moleculer-decorators": "1.2.0",
