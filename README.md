@@ -46,7 +46,7 @@ You have 2 options for development:
   Prerequisites:
 
   Windows:
-    - `npm i -w windows-build-tools` via admin powershell
+    - `npm i -g windows-build-tools` via admin powershell
 
   Linux:
     - `apk add --no-cache make gcc g++ python git`
@@ -58,8 +58,9 @@ You have 2 options for development:
 
   Prerequisites:
 
-    After you've created new `.yml` file via `sh add-new-service.sh <SERIVCE_NAME>` you should have running container for your new service. From BYTE_SW_MICRO_REPO_PATH/micro-dev-environment call:
-    - `sh up.sh`
+  - After you've created new `.yml` file via `sh add-new-service.sh <SERIVCE_NAME>` you should have running container for your new service. From BYTE_SW_MICRO_REPO_PATH/micro-dev-environment call `sh up.sh`
+
+  Steps:
 
   - go into container. From  `micro-<SERVICE_NAME>` dir call:
   - `sh enter-conatiner`
