@@ -14,7 +14,7 @@ import { config } from './lib';
 
 export const dbConnector: MikroConnector = new MikroConnector();
 
-export async function initAndGetDbConnector() {
+export async function initDbConnector(): Promise<MikroConnector> {
   await dbConnector.init({
     type: config.DB_CORE__TYPE,
     dbName: config.DB_CORE__DB_NAME,
@@ -27,4 +27,6 @@ export async function initAndGetDbConnector() {
       enabled: false
     }
   });
+
+  return dbConnector;
 }

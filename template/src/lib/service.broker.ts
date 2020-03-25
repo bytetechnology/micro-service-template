@@ -13,12 +13,10 @@ import {
   MoleculerMikroContext
 } from 'moleculer-context-db';
 import { ServiceAction, ServiceEvent, ServiceName } from '../service.types';
-import { entities } from '../entities';
-import { config } from './env';
 
 import { brokerConfig } from './moleculer/broker.config';
 import { {{capitalizedServiceName}}Service } from '../{{serviceName}}.service';
-import { initAndGetDbConnector } from '../db.connector';
+import { dbConnector, initDbConnector } from '../db.connector';
 
 let service: Service;
 let started = false;
@@ -58,7 +56,7 @@ export async function startService(): Promise<Service> {
 
   broker.middlewares.add(LogMiddleware);
 
-  const dbConnector: MikroConnector = await initAndGetDbConnector();
+  await initDbConnector();
 
   // add database middleware to broker
   const dbContextManager: DatabaseContextManager = new DatabaseContextManager(
