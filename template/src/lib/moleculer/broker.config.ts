@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 /**
  * Copyright Byte Technology 2020. All rights reserved.
  */

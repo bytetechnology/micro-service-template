@@ -38,20 +38,23 @@ You have 2 options for development:
 1. Run service on host OS - can be faster but you will be only able to run tests (no dev mode runtime)
 2. Run service in container.
 
-1. Run service on host OS:
+! Imporant:
+- If you made `npm install` from host OS and you want to work inside container then remove node_modules direcory and install it again from inside container. The same for opposite scenario.
+
+### 1. Run service on host OS:
 
   Prerequisites:
 
-    Windows:
+  Windows:
     - `npm i -w windows-build-tools` via admin powershell
 
-    Linux:
+  Linux:
     - `apk add --no-cache make gcc g++ python git`
 
   - `npm install` from `micro-<SERVICE_NAME>` dir. If failed try multiple times.
   - `npm test` to run tests
 
-2. Run inside container:
+### 2. Run inside container:
 
   Prerequisites:
 
@@ -64,8 +67,6 @@ You have 2 options for development:
   - `npm test` to run tests
   - `npm run dev` to run service in development environment with interactive [moleculer-cli](https://moleculer.services/docs/0.14/moleculer-cli.html).
 
-! Imporant:
-- If you made `npm install` from host OS and you want to work inside container then remove node_modules direcory and install it again from inside container. The same for opposite scenario.
 
 ## Rules
 

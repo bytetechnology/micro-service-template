@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 // eslint-disable-next-line max-classes-per-file
 /**
  * Validators for context params and event payloads.

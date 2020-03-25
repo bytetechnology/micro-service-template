@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 /**
  * Typed config loader.
  *

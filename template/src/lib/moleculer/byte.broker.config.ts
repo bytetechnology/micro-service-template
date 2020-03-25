@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 /**
  * Bytetech-default configuration for moleculer message broker.
  *

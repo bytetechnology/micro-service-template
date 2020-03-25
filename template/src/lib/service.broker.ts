@@ -34,7 +34,9 @@ const LogMiddleware: Middleware = {
   localAction(next: any) {
     return function logAction(this: ServiceBroker, ctx: MoleculerMikroContext) {
       broker.logger.info(
-        `Action '${ctx.action?.name}'.  '${ctx.caller}'. CallerNode '${ctx.nodeID}'.`
+        `Action '${(ctx.action as any).name}'.  '${ctx.caller}'. CallerNode '${
+          ctx.nodeID
+        }'.`
       );
       return next(ctx);
     };
