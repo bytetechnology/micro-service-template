@@ -1,6 +1,4 @@
 /**
- * {{Some description}}
- *
  * Copyright Byte Technology 2020. All rights reserved.
  */
 import { MoleculerMikroContext as CTX } from 'moleculer-context-db';
