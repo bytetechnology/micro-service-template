@@ -1,4 +1,4 @@
-import { dbConnector } from '../src/lib/service.broker';
+import { dbConnector } from '../src/db.connector';
 
 export async function resetServiceDB(): Promise<void> {
   await dbConnector

@@ -18,6 +18,7 @@ import { config } from './env';
 
 import { brokerConfig } from './moleculer/broker.config';
 import { {{capitalizedServiceName}}Service } from '../{{serviceName}}.service';
+import { initAndGetDbConnector } from '../db.connector';
 
 let service: Service;
 let started = false;
@@ -27,8 +28,6 @@ export const broker: TypedServiceBroker<
   ServiceEvent,
   ServiceName
 > = new TypedServiceBroker(brokerConfig);
-
-export const dbConnector: MikroConnector = new MikroConnector();
 
 const LogMiddleware: Middleware = {
   localAction(next: any) {
@@ -59,18 +58,7 @@ export async function startService(): Promise<Service> {
 
   broker.middlewares.add(LogMiddleware);
 
-  await dbConnector.init({
-    type: config.DB_CORE__TYPE,
-    dbName: config.DB_CORE__DB_NAME,
-    name: config.DB_CORE__NAME,
-    clientUrl: config.DB_CORE__CLIENT_URL,
-    user: config.DB_CORE__USER,
-    password: config.DB_CORE__PASSWORD,
-    entities,
-    cache: {
-      enabled: false
-    }
-  });
+  const dbConnector: MikroConnector = await initAndGetDbConnector();
 
   // add database middleware to broker
   const dbContextManager: DatabaseContextManager = new DatabaseContextManager(
