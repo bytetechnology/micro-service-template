@@ -5,7 +5,6 @@
  * Copyright Byte Technology 2020. All rights reserved.
  */
 import * as jf from 'joiful';
-import { MikroORMOptions } from 'mikro-orm';
 
 const optional = () => jf.string().optional();
 const required = () => jf.string().required();
@@ -40,28 +39,6 @@ export class EnvBase {
 
   @(optional().pattern(/\d+/))
   MESSAGE_BROKER_PORT?: string;
-
-  // ---------------------------------------------------------------
-  //  Mikro-orm db connector
-  @(optional()
-    .default('sqlite')
-    .valid('mongo', 'mysql', 'mariadb', 'postgresql', 'sqlite'))
-  DB_CORE__TYPE!: MikroORMOptions['type'];
-
-  @(optional().default(':memory:'))
-  DB_CORE__DB_NAME!: string;
-
-  @optional()
-  DB_CORE__NAME?: string;
-
-  @optional()
-  DB_CORE__CLIENT_URL?: string;
-
-  @optional()
-  DB_CORE__USER?: string;
-
-  @optional()
-  DB_CORE__PASSWORD?: string;
 
   // ---------------------------------------------------------------
   //  Tests

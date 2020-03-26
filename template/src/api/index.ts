@@ -11,9 +11,9 @@ import { WelcomeParams } from './params/welcome.params';
 import { AddTestEntityParams } from './params/add.test.entity.params';
 
 export type Actions =
-  | ActionNoParams<'{{serviceName}}.ping', string>
-  | Action<'{{serviceName}}.welcome', WelcomeParams, string>
-  | Action<'{{serviceName}}.addTestEntity', AddTestEntityParams, number>;
+  | ActionNoParams<'xxx.ping', string>
+  | Action<'xxx.welcome', WelcomeParams, string>
+  | Action<'xxx.addTestEntity', AddTestEntityParams, number>;
 
 export * from './params/add.test.entity.params';
 export * from './params/welcome.params';

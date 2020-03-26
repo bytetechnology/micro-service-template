@@ -1,7 +1,7 @@
 {
-  "name": "{{projectName}}",
+  "name": "micro-xxx",
   "version": "0.0.1",
-  "description": "{{serviceName}} microservice",
+  "description": "xxx microservice",
   "main": "src/api",
   "scripts": {
     "build": "tsc -p src/tsconfig.json",
@@ -73,7 +73,9 @@
       }
     },
     "testTimeout": 20000,
-    "setupFilesAfterEnv": ["./tests/setup.ts"],
+    "setupFilesAfterEnv": [
+      "./tests/setup.ts"
+    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",

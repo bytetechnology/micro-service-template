@@ -1,14 +1,9 @@
-/**
- * Entry point for the {{serviceName}} service of the Byte Technology cloud backend.
- * Uses the moleculer microservices framework.
- *
- * Copyright Byte Technology 2020. All rights reserved.
- */
-import { config } from './lib';
-import { startService, broker } from './lib/service.broker';
+import { broker } from './lib/moleculer/broker';
+import { startAll } from './start.stop.all';
+import { config } from './lib/env';
 
 async function main() {
-  await startService();
+  await startAll();
 
   if (config.NODE_ENV === 'development') {
     broker.repl();

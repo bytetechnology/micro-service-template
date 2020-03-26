@@ -29,7 +29,7 @@ export const byteBrokerConfig: BrokerOptions = {
   // Namespace of nodes to segment your nodes on the same network.
   namespace: '',
   // Unique node identifier. Must be unique in a namespace.
-  nodeID: `{{serviceName}}-${config.HOSTNAME}`,
+  nodeID: `xxx-${config.HOSTNAME}`,
   // Log formatter for built-in console logger. Available values: default, simple, short. It can be also a `Function`.
   logFormatter: config.LOG_FORMATTER,
   // Log level for built-in console logger. Available values: trace, debug, info, warn, error, fatal
