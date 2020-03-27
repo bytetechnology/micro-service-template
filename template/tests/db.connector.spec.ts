@@ -8,6 +8,9 @@ describe('getDbConnector()', () => {
     const { getDbConnector } = await import('../src/db.connector');
     const dbc = await getDbConnector();
     expect(dbc).toBeInstanceOf(MikroConnector);
+
+    // Cleanup
+    await dbc.getORM().close();
   });
 
   test('Multiple calls at once => ok', async () => {
@@ -20,6 +23,9 @@ describe('getDbConnector()', () => {
 
     expect(dbc1).toBeInstanceOf(MikroConnector);
     expect(dbc1).toEqual(dbc2);
+
+    // Cleanup
+    await dbc1.getORM().close();
   });
 
   test('Single call => error', async () => {

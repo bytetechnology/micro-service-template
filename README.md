@@ -25,12 +25,12 @@ This is a moleculer template for Byte Technology micro-services. This will provi
 
 2. Add your new service to git repo `https://github.com/bytetechnology/micro-<SERVICE_NAME>`
 
-3. From add new service from BYTE_SW_MICRO_REPO_PATH/micro-dev-environment
+3. Add new service from BYTE_SW_MICRO_REPO_PATH/micro-dev-environment
   ```sh
   sh add-new-service.sh <SERVICE_NAME>
   ```
 
-At point 3. you created new file `micro-dev-environment/docker-compose.<SERVICE_NAME>.yml` - it is definition of container that serves you to run service in dev env.
+At point 3. you created new file `micro-dev-environment/docker-compose.<SERVICE_NAME>.yml` - it is definition of container that serves you to run service in dev env. To use it just call from micro-dev-environment `sh up.sh -d`.
 
 ## Development of new service
 

@@ -8,7 +8,7 @@
 import Moleculer from 'moleculer';
 
 import { EventEmitter } from 'events';
-import { {{capitalizedServiceName}}Service } from '../SERVICE_NAME.service';
+import { {{capitalizedServiceName}}Service } from '../{{serviceName}}.service';
 import { broker } from './moleculer/broker';
 
 let service: Moleculer.Service | null = null;
