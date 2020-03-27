@@ -25,7 +25,7 @@ export class EnvBase {
     .valid('default', 'simple', 'short'))
   LOG_FORMATTER!: 'default' | 'simple' | 'short';
 
-  @optional()
+  @(optional().default('unknown'))
   HOSTNAME?: string;
 
   @optional()

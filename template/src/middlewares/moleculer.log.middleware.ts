@@ -8,9 +8,7 @@ export function getLogMiddleware(logFunction: (...args: any[]) => any) {
         ctx: Moleculer.Context
       ) {
         logFunction(
-          `Action '${(ctx.action as any).name}'.  '${
-            ctx.caller
-          }'. CallerNode '${ctx.nodeID}'.`
+          `Action '${(ctx.action as any).name}'. Caller '${ctx.caller}'`
         );
         return next(ctx);
       };
