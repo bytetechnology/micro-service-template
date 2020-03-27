@@ -7,7 +7,7 @@ FROM node:lts-alpine as builder
 # Add maintainer info
 LABEL maintainer="Byte Technology"
 # Set the working directory
-WORKDIR /opt/byte/micro-xxx
+WORKDIR /opt/byte/micro-{{serviceName}}
 # Copy our stuff over
 COPY . .
 # Install npm modules
@@ -26,13 +26,13 @@ FROM node:lts-alpine
 # Add maintainer info
 LABEL maintainer="Byte Technology"
 # Set the working directory
-WORKDIR /opt/byte/micro-xxx
+WORKDIR /opt/byte/micro-{{serviceName}}
 # Copy package.json
-COPY --from=builder /opt/byte/micro-xxx/package.json .
+COPY --from=builder /opt/byte/micro-{{serviceName}}/package.json .
 # Copy package-lock.json
-COPY --from=builder /opt/byte/micro-xxx/package-lock.json .
+COPY --from=builder /opt/byte/micro-{{serviceName}}/package-lock.json .
 # Copy the dist directory
-COPY --from=builder /opt/byte/micro-xxx/dist dist/.
+COPY --from=builder /opt/byte/micro-{{serviceName}}/dist dist/.
 # Install only packages needed by production
 RUN npm ci --only=production
 # Our run command

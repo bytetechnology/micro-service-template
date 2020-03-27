@@ -1,7 +1,7 @@
 {
-  "name": "micro-xxx",
+  "name": "micro-{{serviceName}}",
   "version": "0.0.1",
-  "description": "xxx microservice",
+  "description": "{{serviceName}} microservice",
   "main": "src/api",
   "scripts": {
     "build": "tsc -p src/tsconfig.json",

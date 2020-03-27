@@ -1,11 +1,11 @@
 {
-  "name": "xxx",
+  "name": "{{serviceName}}",
   "dockerComposeFile": [
     "../micro-dev-environment/docker-compose.yml",
-    "../micro-dev-environment/docker-compose.xxx.yml"
+    "../micro-dev-environment/docker-compose.{{serviceName}}.yml"
   ],
-  "service": "xxx",
-  "workspaceFolder": "/home/bytedev/micro-xxx",
+  "service": "{{serviceName}}",
+  "workspaceFolder": "/home/bytedev/micro-{{serviceName}}",
   "extensions": [
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",

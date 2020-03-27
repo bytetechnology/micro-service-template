@@ -81,3 +81,17 @@ You have 2 options for development:
 There is a Dockerfile that will generate a production ready docker image:
 
 `docker build -t "bytetechnology/<service>:latest" .`
+
+## For developer of micro-{{serviceName}}
+
+- Do not modify `src/lib` - it is readonly
+- Do not modify filenames or export names of (files used by `src/lib`):
+  - `api/index.ts`
+  - `env.schema.ts`
+  - `service.types.ts`
+- Server framework - [moleculer](https://moleculer.services/) + TypeScript overlay libs
+- DB framework - [mikro-orm](https://mikro-orm.io/)
+- Data Validation (config and payloads) - [joiful](https://github.com/joiful-ts/joiful).
+- Don't try to put `index.ts` inside `src/lib` (briefly - you may end up with undefined dependencies at runtime).
+
+Feel free to update above list.

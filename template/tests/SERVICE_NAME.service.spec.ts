@@ -7,19 +7,22 @@
 
 import { Service as MoleculerService } from 'moleculer';
 
-import { startService, stopService, broker } from '../src/lib/service.broker';
 import { resetServiceDB } from './utils';
+import { startAll, stopAll } from '../src/start.stop.all';
+import { getService } from '../src/lib/start.service.and.broker';
+import { broker } from '../src/lib/moleculer/broker';
 
 describe('{{capitalizedServiceName}} unit tests', () => {
   let service: MoleculerService;
 
   beforeAll(async done => {
-    service = await startService();
+    await startAll();
+    service = await getService();
     done();
   });
 
   afterAll(async done => {
-    await stopService();
+    await stopAll();
     done();
   });
 
