@@ -1,3 +1,6 @@
+/**
+ * Copyright Byte Technology 2020. All rights reserved.
+ */
 import { MikroConnector } from 'moleculer-context-db';
 import { EventEmitter } from 'events';
 import { config } from './lib/env';

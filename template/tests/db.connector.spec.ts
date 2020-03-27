@@ -1,3 +1,6 @@
+/**
+ * Copyright Byte Technology 2020. All rights reserved.
+ */
 describe('getDbConnector()', () => {
   beforeEach(() => {
     jest.resetModules();

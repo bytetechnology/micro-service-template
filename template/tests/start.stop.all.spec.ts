@@ -1,3 +1,6 @@
+/**
+ * Copyright Byte Technology 2020. All rights reserved.
+ */
 import { startAll, stopAll } from '../src/start.stop.all';
 
 test('stopAll() befre startAll()', async () => {

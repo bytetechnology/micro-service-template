@@ -1,3 +1,6 @@
+/**
+ * Copyright Byte Technology 2020. All rights reserved.
+ */
 import Moleculer from 'moleculer';
 
 export function getLogMiddleware(logFunction: (...args: any[]) => any) {

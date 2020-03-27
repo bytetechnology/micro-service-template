@@ -6,7 +6,7 @@
  *
  * Should contain api of current service and others.
  *
- * Copyright Byte Technology 2019. All rights reserved.
+ * Copyright Byte Technology 2020. All rights reserved.
  */
 import {
   GenericEventWithoutPayload as EventNoData,

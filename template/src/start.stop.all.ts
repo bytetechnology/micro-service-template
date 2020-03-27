@@ -1,3 +1,6 @@
+/**
+ * Copyright Byte Technology 2020. All rights reserved.
+ */
 import { getLogMiddleware } from './middlewares/moleculer.log.middleware';
 import { getDbMiddleware } from './middlewares/moleculer.db.middleware';
 import { getDbConnector } from './db.connector';

@@ -1,5 +1,5 @@
 /**
- * Extarnal api for other services
+ * External api for other services
  *
  * Copyright Byte Technology 2020. All rights reserved.
  */
