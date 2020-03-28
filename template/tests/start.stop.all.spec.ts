@@ -3,7 +3,7 @@
  */
 import { startAll, stopAll } from '../src/start.stop.all';
 
-test('stopAll() befre startAll()', async () => {
+test('stopAll() before startAll()', async () => {
   await expect(stopAll()).rejects.toThrow();
   await startAll();
   await expect(startAll()).rejects.toThrow();
