@@ -27,15 +27,11 @@ module.exports = function (values) {
         const projectPath = metalsmith._metadata.projectPath;
         const serviceName = metalsmith._metadata.serviceName;
 
-        let oldFileName = `${projectPath}${path.sep}src${path.sep}sample.service.ts`;
+        let oldFileName = `${projectPath}${path.sep}src${path.sep}SERVICE_NAME.service.ts`;
         let newFileName = `${projectPath}${path.sep}src${path.sep}${serviceName}.service.ts`;
         fs.renameSync(oldFileName, newFileName);
 
-        oldFileName = `${projectPath}${path.sep}src${path.sep}service.types${path.sep}sample.service.types.ts`;
-        newFileName = `${projectPath}${path.sep}src${path.sep}service.types${path.sep}${serviceName}.service.types.ts`;
-        fs.renameSync(oldFileName, newFileName);
-
-        oldFileName = `${projectPath}${path.sep}tests${path.sep}sample.service.spec.ts`;
+        oldFileName = `${projectPath}${path.sep}tests${path.sep}SERVICE_NAME.service.spec.ts`;
         newFileName = `${projectPath}${path.sep}tests${path.sep}${serviceName}.service.spec.ts`;
         fs.renameSync(oldFileName, newFileName);
       }

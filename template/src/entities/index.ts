@@ -6,5 +6,4 @@
 
 import { TestEntity } from './test.entity';
 
-const entities = [TestEntity];
-export default entities;
+export const entities = [TestEntity];

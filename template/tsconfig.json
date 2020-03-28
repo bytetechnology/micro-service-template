@@ -2,6 +2,7 @@
   "compilerOptions": {
     "esModuleInterop": true,
     "noImplicitAny": true,
+    "module": "CommonJS",
     "moduleResolution": "node",
     "allowJs": true,
     "strict": true,
@@ -11,7 +12,8 @@
     "target": "es2018",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "rootDir": "./"
+    "rootDir": "./",
+    "outDir": "./dist"
   },
   "exclude": ["dist", "node_modules"]
 }

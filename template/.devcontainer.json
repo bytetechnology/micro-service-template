@@ -5,7 +5,7 @@
     "../micro-dev-environment/docker-compose.{{serviceName}}.yml"
   ],
   "service": "{{serviceName}}",
-  "workspaceFolder": "/home/bytedev/{{projectName}}",
+  "workspaceFolder": "/home/bytedev/micro-{{serviceName}}",
   "extensions": [
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",

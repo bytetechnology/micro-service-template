@@ -6,63 +6,68 @@ moleculer template for byte microservices
 
 This is a moleculer template for Byte Technology micro-services. This will provide a functional service along with required packages and tooling to build a micro-service for the Byte Technology cloud backend.
 
-## Usage
+## Prerequisites
 
-`moleculer init "bytetechnology/micro-service-template" micro-sample`
+- Install Node.js (preferred version 12 or higher) and npm.
+- Setup [micro-dev-environment](https://github.com/bytetechnology/micro-dev-environment) (BYTE_SW_MICRO_REPO_PATH should be set)
+- Install moleculer comman line interface `npm install -g moleculer-cli`
 
-## Requirements
+## Create new service:
 
-- Moleculer CLI is installed `npm install -g moleculer-cli`
-- `BYTE_SW_MICRO_REPO_PATH` environment variable defined and pointing to where your repositories are located. Please see [micro-dev-environment](https://github.com/bytetechnology/micro-dev-environment) for more details.
-- Core services as defined in the [micro-dev-environment](https://github.com/bytetechnology/micro-dev-environment) should be up and running.
-  - `docker-compose up -d -p byte-dev`
-- GELF TCP input configured on the Graylog log server
-  - Log into the [Graylog](http://localhost:9000) server; user name: `admin`; password: `somepasswordpepper`
-  - Create a GELF TCP input to run on the default port 12201.
-- Create a `docker-compose.<service>.yml` file for your service under `micro-dev-environment` directory.
-  Example:
+1. Create new service code via moleculer-cli. Below command will create service basing on `master` branch of [micro-service-template](https://github.com/bytetechnology/micro-service-template) repo in BYTE_SW_MICRO_REPO_PATH:
+  ```sh
+  moleculer init --no-install "bytetechnology/micro-service-template" micro-<SERVICE_NAME>
+  ```
+  You can specify branch using `#`:
+  ```sh
+  moleculer init --no-install "bytetechnology/micro-service-template#my/branch" micro-<SERVICE_NAME>
+  ```
 
-```yml
-version: "3"
+2. Add your new service to git repo `https://github.com/bytetechnology/micro-<SERVICE_NAME>`
 
-services:
-  api: # api service
-    image: "bytetechnology/alpine-node-12:dev"
-    ports:
-      - "3000" # if the service needs to expose ports, list them here
-    networks:
-      - transaction # connect to byte network
-      - log # connect to the logging network
-    volumes: # map git repo from host
-      - ${BYTE_SW_MICRO_REPO_PATH:?Missing value for BYTE_SW_MICRO_REPO_PATH env variable}/micro-api:/home/bytedev/micro-api:cached
-    command: tail -f /dev/null # make sure container does not quit on startup since initial command is just bash
-    depends_on: # start after message-broker and logging services
-      - message-broker
-      - logger
-```
+3. Add new service from BYTE_SW_MICRO_REPO_PATH/micro-dev-environment
+  ```sh
+  sh add-new-service.sh <SERVICE_NAME>
+  ```
 
-- Launch a container with the `docker-compose.<service>.yml` file and attach it to the rest of the docker dev environment running the core services
-  - `./byte-service up -d <service>`
+At point 3. you created new file `micro-dev-environment/docker-compose.<SERVICE_NAME>.yml` - it is definition of container that serves you to run service in dev env. To use it just call from micro-dev-environment `sh up.sh -d`.
 
-## Create your service
+## Development of new service
 
-- Enter the container that you created above:
-  - `docker exec -it <container_name> bash`
-- Create the service using this template:
+You have 2 options for development:
+1. Run service on host OS - can be faster but you will be only able to run tests (no dev mode runtime)
+2. Run service in container.
 
-```bash
-moleculer init "bytetechnology/micro-service-template" micro-<service>
-cd micro-<service>
-```
+! Imporant:
+- If you made `npm install` from host OS and you want to work inside container then remove node_modules direcory and install it again from inside container. The same for opposite scenario.
 
-## Running the service
+### 1. Run service on host OS:
 
-```bash
-npm run format
-npm run lint
-npm run test
-npm run dev
-```
+  Prerequisites:
+
+  Windows:
+    - `npm i -g windows-build-tools` via admin powershell
+
+  Linux:
+    - `apk add --no-cache make gcc g++ python git`
+
+  - `npm install` from `micro-<SERVICE_NAME>` dir. If failed try multiple times.
+  - `npm test` to run tests
+
+### 2. Run inside container:
+
+  Prerequisites:
+
+  - After you've created new `.yml` file via `sh add-new-service.sh <SERIVCE_NAME>` you should have running container for your new service. From BYTE_SW_MICRO_REPO_PATH/micro-dev-environment call `sh up.sh`
+
+  Steps:
+
+  - go into container. From  `micro-<SERVICE_NAME>` dir call:
+  - `sh enter-conatiner`
+  - `npm install`
+  - `npm test` to run tests
+  - `npm run dev` to run service in development environment with interactive [moleculer-cli](https://moleculer.services/docs/0.14/moleculer-cli.html).
+
 
 ## Rules
 
@@ -76,3 +81,17 @@ npm run dev
 There is a Dockerfile that will generate a production ready docker image:
 
 `docker build -t "bytetechnology/<service>:latest" .`
+
+## For developer of micro-{{serviceName}}
+
+- Do not modify `src/lib` - it is readonly
+- Do not modify filenames or export names of (files used by `src/lib`):
+  - `api/index.ts`
+  - `env.schema.ts`
+  - `service.types.ts`
+- Server framework - [moleculer](https://moleculer.services/) + TypeScript overlay libs
+- DB framework - [mikro-orm](https://mikro-orm.io/)
+- Data Validation (config and payloads) - [joiful](https://github.com/joiful-ts/joiful).
+- Don't try to put `index.ts` inside `src/lib` (briefly - you may end up with undefined dependencies at runtime).
+
+Feel free to update above list.

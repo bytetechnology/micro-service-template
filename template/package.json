@@ -1,14 +1,15 @@
 {
-  "name": "{{projectName}}",
+  "name": "micro-{{serviceName}}",
   "version": "0.0.1",
   "description": "{{serviceName}} microservice",
+  "main": "src/api",
   "scripts": {
     "build": "tsc -p src/tsconfig.json",
-    "dev": "NODE_ENV=development BLUEBIRD_W_FORGOTTEN_RETURN=0 node -r esm -r ts-node/register src/main.ts",
-    "debug": "node --inspect-brk -r esm -r ts-node/register src/main.ts",
-    "start": "NODE_ENV=production node -r esm dist/main.js",
-    "test": "NODE_ENV=test jest --coverage",
-    "lint": "eslint \"{src,{tests,mocks}}/**/*.{js,ts}\"",
+    "dev": "cross-env  ENV_FILE=envs/dev.env  BLUEBIRD_W_FORGOTTEN_RETURN=0  ts-node src/main.ts",
+    "debug": "node  --inspect-brk  -r ts-node/register  src/main.ts",
+    "start": "cross-env  NODE_ENV=production  node dist/main.js",
+    "test": "cross-env  ENV_FILE=envs/test.env  jest --coverage",
+    "lint": "eslint --fix \"{src,{tests,mocks}}/**/*.{js,ts}\"",
     "format": "prettier --write \"{src,{tests,mocks}}/**/*.{js,ts}\""
   },
   "keywords": [
@@ -19,31 +20,35 @@
   "devDependencies": {
     "@types/bluebird": "3.5.30",
     "@types/jest": "25.1.4",
-    "@types/node": "13.9.2",
+    "@types/node": "13.9.5",
     "@types/node-fetch": "2.5.5",
-    "@typescript-eslint/eslint-plugin": "2.24.0",
-    "@typescript-eslint/parser": "2.24.0",
+    "@typescript-eslint/eslint-plugin": "2.25.0",
+    "@typescript-eslint/parser": "2.25.0",
+    "cross-env": "7.0.2",
     "eslint": "6.8.0",
     "eslint-config-airbnb-base": "14.1.0",
-    "eslint-config-prettier": "6.10.0",
+    "eslint-config-prettier": "6.10.1",
     "eslint-plugin-import": "2.20.1",
     "eslint-plugin-prettier": "3.1.2",
-    "jest": "25.1.0",
+    "jest": "25.2.3",
     "moleculer-repl": "0.6.3",
-    "prettier": "1.19.1",
+    "prettier": "2.0.2",
     "ts-jest": "25.2.1",
-    "ts-node": "8.7.0",
+    "ts-node": "8.8.1",
     "typescript": "3.8.3"
   },
   "dependencies": {
     "amqplib": "0.5.5",
+    "dotenv": "8.2.0",
     "esm": "3.2.25",
-    "mikro-orm": "3.4.1",
-    "moleculer": "0.14.4",
-    "moleculer-context-db": "0.0.12",
+    "joiful": "2.0.0",
+    "mikro-orm": "3.5.2",
+    "moleculer": "0.14.5",
+    "moleculer-context-db": "0.0.13",
     "moleculer-decorators": "1.2.0",
     "moleculer-service-ts": "1.0.5",
     "pg": "7.18.2",
+    "pkg-dir": "4.2.0",
     "sqlite3": "4.1.1",
     "winston": "3.2.1",
     "winston-gelf-transporter": "1.0.2"
@@ -64,10 +69,13 @@
     "testRegex": ".*\\.(test|spec).(ts|js)$",
     "globals": {
       "ts-jest": {
-        "tsConfig": "tests/tsconfig.json"
+        "tsConfig": "tsconfig.json"
       }
     },
-    "setupFiles": [],
+    "testTimeout": 20000,
+    "setupFilesAfterEnv": [
+      "./tests/setup.ts"
+    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",
