@@ -16,4 +16,21 @@ if (config.NODE_ENV === 'test') {
   };
 }
 
+// if we run directly on host instead of container ecosystem, don't require rabbitmq and graylog. Easier to develop
+if (process.env.DEV_HOST === 'host') {
+  byteBrokerConfig.transporter = 'TCP'; // uses gossip protocol based transporter instead of rabbitmq
+  brokerConfig.logger = {
+    // use only console logger
+    type: 'Console',
+    options: {
+      level: config.LOG_LEVEL,
+      colors: true,
+      moduleColors: false,
+      formatter: 'full',
+      objectPrinter: null,
+      autoPadding: false
+    }
+  };
+}
+
 export { brokerConfig };
