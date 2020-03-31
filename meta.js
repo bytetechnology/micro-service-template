@@ -3,9 +3,10 @@
 var fs = require("fs");
 var path = require("path");
 
-module.exports = function (values) {
+module.exports = function(values) {
   return {
-    questions: [{
+    questions: [
+      {
         type: "confirm",
         name: "needDb",
         message: "Does your service need to access a database",
@@ -15,7 +16,8 @@ module.exports = function (values) {
         type: "list",
         name: "db",
         message: "Select a db",
-        choices: [{
+        choices: [
+          {
             name: "mongo",
             value: "mongo"
           },
@@ -45,6 +47,11 @@ module.exports = function (values) {
           serviceName.charAt(0).toUpperCase() + serviceName.slice(1);
         metalsmith._metadata.serviceName = serviceName;
         metalsmith._metadata.capitalizedServiceName = capitalizedServiceName;
+        // if we are using a database, set the appropriate database flag to true since handlebars can't compare values without helpers
+        if (metalsmith._metadata.needDb) {
+          const dbType = metalsmith._metadata.db;
+          metalsmith._metadata[dbType] = true;
+        }
       },
 
       complete(metalsmith) {
@@ -76,12 +83,11 @@ module.exports = function (values) {
           fs.unlinkSync(dbConnectorSpecFile);
           const utilsFile = `${projectPath}${path.sep}tests${path.sep}utils.ts`;
           fs.unlinkSync(utilsFile);
-          const middleWareDbFile = `${projectPath}${path.sep}src${path.sep}middlewares${path.sep}moleculer.db.middleware.ts`
+          const middleWareDbFile = `${projectPath}${path.sep}src${path.sep}middlewares${path.sep}moleculer.db.middleware.ts`;
           fs.unlinkSync(middleWareDbFile);
 
           return;
         }
-
       }
     },
 

@@ -6,6 +6,9 @@
  */
 
 import { Service as MoleculerService } from 'moleculer';
+{{#if mongo}}
+import { MongoMemoryServer } from 'mongodb-memory-server';
+{{/if}}
 
 {{#if needDb}}
 import { resetServiceDB } from './utils';
@@ -13,11 +16,28 @@ import { resetServiceDB } from './utils';
 import { startAll, stopAll } from '../src/start.stop.all';
 import { getService } from '../src/lib/start.service.and.broker';
 import { broker } from '../src/lib/moleculer/broker';
+{{#if mongo}}
+import { config } from '../src/lib/env';
+{{/if}}
 
 describe('{{capitalizedServiceName}} unit tests', () => {
   let service: MoleculerService;
+{{#if mongo}}
+  let mongod: MongoMemoryServer;
+{{/if}}
 
   beforeAll(async done => {
+{{#if mongo}}
+    // create an in-memory mongodb instance
+    mongod = new MongoMemoryServer();
+    const uri = await mongod.getUri();
+    const dbName = await mongod.getDbName();
+
+    config.DB_CORE__TYPE = 'mongo';
+    config.DB_CORE__CLIENT_URL = uri;
+    config.DB_CORE__DB_NAME = dbName;
+{{/if}}
+    
     await startAll();
     service = await getService();
     done();
@@ -25,6 +45,9 @@ describe('{{capitalizedServiceName}} unit tests', () => {
 
   afterAll(async done => {
     await stopAll();
+{{#if mongo}}
+    await mongod.stop();
+{{/if}}
     done();
   });
 
@@ -111,7 +134,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
       { caller: 'jest' }
     );
 
-    expect(entityId).toBe(1);
+    expect(entityId).toBeTruthy();
     done();
   });
   {{/if}}

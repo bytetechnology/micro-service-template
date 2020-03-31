@@ -16,7 +16,7 @@ export type Actions =
   | ActionNoParams<'{{serviceName}}.ping', string>
   | Action<'{{serviceName}}.welcome', WelcomeParams, string>
 {{#if needDb}}
-  | Action<'{{serviceName}}.addTestEntity', AddTestEntityParams, number>;
+  | Action<'{{serviceName}}.addTestEntity', AddTestEntityParams, string>;
 {{/if}}
 
 {{#if needDb}}

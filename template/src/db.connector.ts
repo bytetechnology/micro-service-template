@@ -2,16 +2,19 @@
  * Copyright Byte Technology 2020. All rights reserved.
  */
 import { MikroConnector } from 'moleculer-context-db';
+{{#if mongo}}
+import { MongoDriver } from 'mikro-orm/dist/drivers/MongoDriver';
+{{/if}}
 import { EventEmitter } from 'events';
 import { config } from './lib/env';
 import { entities } from './entities';
 
-let dbConnector: MikroConnector;
+let dbConnector: MikroConnector{{#if mongo}}<MongoDriver>{{/if}};
 let initError: Error | null;
 
 let pending: null | EventEmitter = null;
 
-export async function getDbConnector(): Promise<MikroConnector> {
+export async function getDbConnector(): Promise<MikroConnector{{#if mongo}}<MongoDriver>{{/if}}> {
   if (dbConnector) {
     return dbConnector;
   }
@@ -35,7 +38,7 @@ export async function getDbConnector(): Promise<MikroConnector> {
 
     // try/catch because promise executor is async
     try {
-      const tmpConnector = new MikroConnector();
+      const tmpConnector = new MikroConnector{{#if mongo}}<MongoDriver>{{/if}}();
 
       await tmpConnector.init({
         type: config.DB_CORE__TYPE,
