@@ -19,6 +19,8 @@ export type Actions =
   | Action<'{{serviceName}}.addTestEntity', AddTestEntityParams, string>;
 {{/if}}
 
+export type Name = '{{serviceName}}';
+
 {{#if needDb}}
 export * from './params/add.test.entity.params';
 {{/if}}
