@@ -2,8 +2,10 @@
  * Copyright Byte Technology 2020. All rights reserved.
  */
 import { getLogMiddleware } from './middlewares/moleculer.log.middleware';
+{{#if needDb}}
 import { getDbMiddleware } from './middlewares/moleculer.db.middleware';
 import { getDbConnector } from './db.connector';
+{{/if}}
 import {
   startServiceAndBroker,
   getService
@@ -18,9 +20,12 @@ export async function startAll() {
   const logInfo = broker.logger.info.bind(broker.logger);
   const logMiddleware = getLogMiddleware(logInfo);
 
-  const dbMiddleware = await getDbMiddleware();
+  const middlewares = [logMiddleware];
 
-  const middlewares = [logMiddleware, dbMiddleware];
+  {{#if needDb}}
+  const dbMiddleware = await getDbMiddleware();
+  middlewares.push(dbMiddleware);
+  {{/if}}
 
   await startServiceAndBroker(middlewares);
 }
@@ -30,12 +35,15 @@ export async function stopAll(): Promise<void> {
     throw new Error(`stopAll() should not be called before startAll().`);
   }
 
-  const service = await getService();
+  {{#if needDb}}
   const dbConnector = await getDbConnector();
+  await dbConnector.getORM().close();
+  {{/if}}
 
+  const service = await getService();
   await broker.destroyService(service);
   await broker.stop();
-  await dbConnector.getORM().close();
+  
 
   started = false;
 }

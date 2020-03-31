@@ -6,16 +6,47 @@
  */
 
 import { Service as MoleculerService } from 'moleculer';
+{{#if mongo}}
+import { {{#if mongoTransactions}}MongoMemoryReplSet{{/if}}{{#unless mongoTransactions}}MongoMemoryServer{{/unless}} } from 'mongodb-memory-server';
+{{/if}}
 
+{{#if needDb}}
 import { resetServiceDB } from './utils';
+{{/if}}
 import { startAll, stopAll } from '../src/start.stop.all';
 import { getService } from '../src/lib/start.service.and.broker';
 import { broker } from '../src/lib/moleculer/broker';
+{{#if mongo}}
+import { config } from '../src/lib/env';
+{{/if}}
 
 describe('{{capitalizedServiceName}} unit tests', () => {
   let service: MoleculerService;
+{{#if mongo}}
+  let mongod: {{#if mongoTransactions}}MongoMemoryReplSet{{/if}}{{#unless mongoTransactions}}MongoMemoryServer{{/unless}};
+{{/if}}
 
   beforeAll(async done => {
+{{#if mongo}}
+    // create an in-memory mongodb instance
+    {{#if mongoTransactions}}
+    mongod = new MongoMemoryReplSet({
+      replSet: { storageEngine: 'wiredTiger' }
+    });
+    await mongod.waitUntilRunning();
+    {{/if}}
+    {{#unless mongoTransactions}}
+    mongod = new MongoMemoryServer();
+    {{/unless}}
+
+    const uri = await mongod.getUri();
+    const dbName = await mongod.getDbName();
+
+    config.DB_CORE__TYPE = 'mongo';
+    config.DB_CORE__CLIENT_URL = uri;
+    config.DB_CORE__DB_NAME = dbName;
+{{/if}}
+    
     await startAll();
     service = await getService();
     done();
@@ -23,11 +54,16 @@ describe('{{capitalizedServiceName}} unit tests', () => {
 
   afterAll(async done => {
     await stopAll();
+{{#if mongo}}
+    await mongod.stop();
+{{/if}}
     done();
   });
 
   beforeEach(async done => {
+    {{#if needDb}}
     await resetServiceDB();
+    {{/if}}
     done();
   });
 
@@ -95,6 +131,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
     done();
   });
 
+  {{#if needDb}}
   test('Test database entity creation', async done => {
     // create a sample entity
     const entityId = await broker.call(
@@ -106,7 +143,8 @@ describe('{{capitalizedServiceName}} unit tests', () => {
       { caller: 'jest' }
     );
 
-    expect(entityId).toBe(1);
+    expect(entityId).toBeTruthy();
     done();
   });
+  {{/if}}
 });
