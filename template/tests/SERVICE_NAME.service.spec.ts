@@ -7,7 +7,9 @@
 
 import { Service as MoleculerService } from 'moleculer';
 
+{{#if needDb}}
 import { resetServiceDB } from './utils';
+{{/if}}
 import { startAll, stopAll } from '../src/start.stop.all';
 import { getService } from '../src/lib/start.service.and.broker';
 import { broker } from '../src/lib/moleculer/broker';
@@ -27,7 +29,9 @@ describe('{{capitalizedServiceName}} unit tests', () => {
   });
 
   beforeEach(async done => {
+    {{#if needDb}}
     await resetServiceDB();
+    {{/if}}
     done();
   });
 
@@ -95,6 +99,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
     done();
   });
 
+  {{#if needDb}}
   test('Test database entity creation', async done => {
     // create a sample entity
     const entityId = await broker.call(
@@ -109,4 +114,5 @@ describe('{{capitalizedServiceName}} unit tests', () => {
     expect(entityId).toBe(1);
     done();
   });
+  {{/if}}
 });

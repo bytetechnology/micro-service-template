@@ -10,7 +10,12 @@
 
 import * as jf from 'joiful';
 import { Errors } from 'moleculer';
-import { MoleculerMikroContext } from 'moleculer-context-db';
+{{#if needDb}}
+import { MoleculerMikroContext as CTX} from 'moleculer-context-db';
+{{/if}}
+{{#unless needDb}}
+import { Context as CTX } from 'moleculer';
+{{/unless}}
 import { config } from './env';
 
 const { MoleculerError } = Errors;
@@ -21,7 +26,7 @@ if (config.NODE_ENV === 'production') {
 }
 
 export function validateParams<TParams>(
-  ctx: MoleculerMikroContext<TParams | TParams[]>,
+  ctx: CTX<TParams | TParams[]>,
   Class: new () => TParams
 ): void {
   const { params } = ctx;
