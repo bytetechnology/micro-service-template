@@ -7,7 +7,7 @@
 
 import { Service as MoleculerService } from 'moleculer';
 {{#if mongo}}
-import { MongoMemoryServer } from 'mongodb-memory-server';
+import { {{#if mongoTransactions}}MongoMemoryReplSet{{/if}}{{#unless mongoTransactions}}MongoMemoryServer{{/unless}} } from 'mongodb-memory-server';
 {{/if}}
 
 {{#if needDb}}
@@ -23,13 +23,22 @@ import { config } from '../src/lib/env';
 describe('{{capitalizedServiceName}} unit tests', () => {
   let service: MoleculerService;
 {{#if mongo}}
-  let mongod: MongoMemoryServer;
+  let mongod: {{#if mongoTransactions}}MongoMemoryReplSet{{/if}}{{#unless mongoTransactions}}MongoMemoryServer{{/unless}};
 {{/if}}
 
   beforeAll(async done => {
 {{#if mongo}}
     // create an in-memory mongodb instance
+    {{#if mongoTransactions}}
+    mongod = new MongoMemoryReplSet({
+      replSet: { storageEngine: 'wiredTiger' }
+    });
+    await mongod.waitUntilRunning();
+    {{/if}}
+    {{#unless mongoTransactions}}
     mongod = new MongoMemoryServer();
+    {{/unless}}
+
     const uri = await mongod.getUri();
     const dbName = await mongod.getDbName();
 

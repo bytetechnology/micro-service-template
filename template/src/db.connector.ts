@@ -50,7 +50,9 @@ export async function getDbConnector(): Promise<MikroConnector{{#if mongo}}<Mong
         entities,
         cache: {
           enabled: false
-        }
+        }{{#if mongoTransactions}},
+        implicitTransactions: true
+        {{/if}}
       });
 
       dbConnector = tmpConnector;

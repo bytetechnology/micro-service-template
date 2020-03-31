@@ -30,6 +30,15 @@ module.exports = function(values) {
           return answers.needDb;
         },
         default: "mongo"
+      },
+      {
+        type: "confirm",
+        name: "mongoTransactions",
+        message: "Does your mongo instance support transactions?",
+        default: false,
+        when(answers) {
+          return answers.db === "mongo";
+        }
       }
     ],
     metalsmith: {
