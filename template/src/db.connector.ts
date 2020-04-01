@@ -55,6 +55,19 @@ export async function getDbConnector(): Promise<MikroConnector{{#if mongo}}<Mong
         {{/if}}
       });
 
+{{#if sql}}
+      await connector
+        .getORM()
+        .getSchemaGenerator()
+        .updateSchema(false);
+{{/if}}
+{{#if mongo}}
+      await connector
+        .getORM()
+        .em.getDriver()
+        .createCollections();
+{{/if}}
+
       dbConnector = tmpConnector;
     } catch (err) {
       initError = err;
