@@ -12,14 +12,14 @@ import { WelcomeParams } from './params/welcome.params';
 import { AddTestEntityParams } from './params/add.test.entity.params';
 {{/if}}
 
-export type Actions =
+export type {{capitalizedServiceName}}Action =
   | ActionNoParams<'{{serviceName}}.ping', string>
   | Action<'{{serviceName}}.welcome', WelcomeParams, string>
 {{#if needDb}}
   | Action<'{{serviceName}}.addTestEntity', AddTestEntityParams, string>;
 {{/if}}
 
-export type Name = '{{serviceName}}';
+export type {{capitalizedServiceName}}Name = '{{serviceName}}';
 
 {{#if needDb}}
 export * from './params/add.test.entity.params';

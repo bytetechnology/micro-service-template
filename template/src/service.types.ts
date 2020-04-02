@@ -12,14 +12,14 @@ import {
   GenericEventWithoutPayload as EventNoData,
   GenericEventWithPayload as Event
 } from 'moleculer-service-ts';
-import { Actions as {{capitalizedServiceName}}Actions, Name } from './api';
+import { {{capitalizedServiceName}}Action, {{capitalizedServiceName}}Name } from './api';
 import { ExampleEvent } from './api/events/example.event';
 
-export type ServiceName = Name;
+export type ServiceName = {{capitalizedServiceName}}Name;
 
 // Add other services types here, eg;
-// export type ServiceAction = DiscoutActions | UserActions | IotActions;
-export type ServiceAction = {{capitalizedServiceName}}Actions;
+// export type ServiceAction = DiscountActions | UserActions | IotActions;
+export type ServiceAction = {{capitalizedServiceName}}Action;
 
 // These are the events we emit
 export type ServiceEvent =

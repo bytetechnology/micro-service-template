@@ -2,7 +2,7 @@
   "name": "micro-{{serviceName}}",
   "version": "0.0.1",
   "description": "{{serviceName}} microservice",
-  "main": "src/api",
+  "main": "dist/api",
   "scripts": {
     "build": "tsc -p src/tsconfig.json",
     "dev": "cross-env  ENV_FILE=envs/dev.env  BLUEBIRD_W_FORGOTTEN_RETURN=0  ts-node src/main.ts",
@@ -45,19 +45,24 @@
     "joiful": "2.0.0",
     "mikro-orm": "3.6.0",
     "moleculer": "0.14.5",
-    "moleculer-context-db": "1.0.0",
+    "moleculer-context-db": "1.0.1",
     "moleculer-decorators": "1.2.0",
     "moleculer-service-ts": "1.0.6",
     "mongodb": "^3.5.5",
     "pg": "8.0.0",
     "pkg-dir": "4.2.0",
     "sqlite3": "4.1.1",
-    "uuid": "7.0.2",
+    "uuid": "7.0.3",
     "winston": "3.2.1",
     "winston-gelf-transporter": "1.0.2"
   },
   "engines": {
     "node": ">= 10.x.x"
+  },
+  "config": {
+    "mongodbMemoryServer": {
+      "version": "4.2.5"
+    }
   },
   "jest": {
     "testEnvironment": "node",
