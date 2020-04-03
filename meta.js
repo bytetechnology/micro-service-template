@@ -3,10 +3,9 @@
 var fs = require("fs");
 var path = require("path");
 
-module.exports = function(values) {
+module.exports = function (values) {
   return {
-    questions: [
-      {
+    questions: [{
         type: "confirm",
         name: "needDb",
         message: "Does your service need to access a database",
@@ -16,20 +15,19 @@ module.exports = function(values) {
         type: "list",
         name: "db",
         message: "Select a db",
-        choices: [
+        choices: [{
+            name: "sql",
+            value: "sql"
+          },
           {
             name: "mongo",
             value: "mongo"
           },
-          {
-            name: "sql",
-            value: "sql"
-          }
         ],
         when(answers) {
           return answers.needDb;
         },
-        default: "mongo"
+        default: "sql"
       },
       {
         type: "confirm",

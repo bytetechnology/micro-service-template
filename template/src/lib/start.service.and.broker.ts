@@ -20,27 +20,26 @@ export async function getService(): Promise<Moleculer.Service> {
     return service;
   }
 
-  if (!pending) {
-    throw new Error(
-      `await getService() should be called after startServiceAndBroker().`
-    );
-  }
   return new Promise((resolve, reject) => {
-    // `pending` is defined here. `?` is used only because of tsc compiler
-
-    /* istanbul ignore next */
-    // eslint-disable-next-line no-unused-expressions
-    pending?.once('resolve', () => {
+    if (!pending) {
+      reject(
+        new Error(
+          `await getService() should be called after startServiceAndBroker().`
+        )
+      );
+    } else {
       /* istanbul ignore next */
-      if (!service) {
-        throw new Error(`Internal error - expected that service is set.`);
-      }
-      resolve(service);
-    });
+      pending.once('resolve', () => {
+        /* istanbul ignore next */
+        if (!service) {
+          throw new Error(`Internal error - expected that service is set.`);
+        }
+        resolve(service);
+      });
 
-    /* istanbul ignore next */
-    // eslint-disable-next-line no-unused-expressions
-    pending?.once('error', reject);
+      /* istanbul ignore next */
+      pending.once('error', reject);
+    }
   });
 }
 
