@@ -102,6 +102,7 @@ module.exports = function (values) {
 To get started:
 
   cd {{projectName}}
+  npm install
   npm run format
   npm run lint
   npm run test
