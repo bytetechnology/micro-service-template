@@ -5,12 +5,15 @@
   "main": "dist/api",
   "scripts": {
     "build": "tsc -p src/tsconfig.json",
-    "dev": "cross-env  ENV_FILE=envs/dev.env  BLUEBIRD_W_FORGOTTEN_RETURN=0  ts-node src/main.ts",
+    "check": "npm run lint && npm run format && npm run build && npm run test && npm run docs && npm run cli-test",
+    "cli-test": "cross-env DEV_HOST=host ENV_FILE=envs/test.env BLUEBIRD_W_FORGOTTEN_RETURN=0  ts-node --files src/main.ts",
+    "dev": "cross-env ENV_FILE=envs/dev.env  BLUEBIRD_W_FORGOTTEN_RETURN=0  ts-node --files src/main.ts",
     "debug": "node  --inspect-brk  -r ts-node/register  src/main.ts",
-    "start": "cross-env  NODE_ENV=production  node dist/main.js",
-    "test": "cross-env  ENV_FILE=envs/test.env  jest --coverage",
+    "docs": "typedoc --theme markdown --out apidocs src",
+    "format": "prettier --write \"{src,{tests,mocks}}/**/*.{js,ts}\"",
     "lint": "eslint --fix \"{src,{tests,mocks}}/**/*.{js,ts}\"",
-    "format": "prettier --write \"{src,{tests,mocks}}/**/*.{js,ts}\""
+    "start": "cross-env  NODE_ENV=production  node dist/main.js",
+    "test": "cross-env  ENV_FILE=envs/test.env  jest --coverage"
   },
   "keywords": [
     "microservices",
@@ -18,9 +21,9 @@
   ],
   "author": "Byte Technology",
   "devDependencies": {
-    "@types/jest": "25.1.4",
+    "@types/jest": "25.2.1",
     "@types/mongodb": "^3.5.4",
-    "@types/node": "13.9.8",
+    "@types/node": "13.11.0",
     "@types/uuid": "7.0.2",
     "@typescript-eslint/eslint-plugin": "2.26.0",
     "@typescript-eslint/parser": "2.26.0",
@@ -30,11 +33,13 @@
     "eslint-config-prettier": "6.10.1",
     "eslint-plugin-import": "2.20.2",
     "eslint-plugin-prettier": "3.1.2",
-    "jest": "25.2.4",
+    "jest": "25.2.7",
     "moleculer-repl": "0.6.3",
     "prettier": "2.0.2",
-    "ts-jest": "25.3.0",
+    "ts-jest": "25.3.1",
     "ts-node": "8.8.1",
+    "typedoc": "0.17.3",
+    "typedoc-plugin-markdown": "2.2.17",
     "typescript": "3.8.3"
   },
   "dependencies": {
@@ -42,15 +47,25 @@
     "dotenv": "8.2.0",
     "esm": "3.2.25",
     "joiful": "2.0.0",
-    "mikro-orm": "3.6.0",
+{{#if needDb}}
+    "mikro-orm": "3.6.1",
+{{/if}}
     "moleculer": "0.14.5",
     "moleculer-context-db": "1.0.1",
     "moleculer-decorators": "1.2.0",
     "moleculer-service-ts": "1.0.6",
-    "mongodb": "^3.5.5",
+{{#if needDb}}
+    "mongodb": "3.5.5",
+{{/if}}
+{{#if mongo}}
+    "mongodb-memory-server": "6.5.0",
+{{/if}}
     "pg": "8.0.0",
     "pkg-dir": "4.2.0",
+{{#if sql}}
     "sqlite3": "4.1.1",
+{{/if}}
+    "thunky": "1.1.0",
     "uuid": "7.0.3",
     "winston": "3.2.1",
     "winston-gelf-transporter": "1.0.2"
@@ -58,11 +73,13 @@
   "engines": {
     "node": ">= 10.x.x"
   },
+{{#if mongo}}
   "config": {
     "mongodbMemoryServer": {
       "version": "4.2.5"
     }
   },
+{{/if}}
   "jest": {
     "testEnvironment": "node",
     "rootDir": ".",

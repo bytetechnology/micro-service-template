@@ -9,25 +9,24 @@
  */
 
 import { DatabaseContextManager } from 'moleculer-context-db';
-import Moleculer from 'moleculer';
-import { getDbConnector } from '../db.connector';
+import thunkyp from 'thunky/promise';
+import * as dbConnectorModule from '../db.connector';
 
-let dbMiddleware: Moleculer.Middleware;
-
-// TODO async singletone
-
-export async function getDbMiddleware(): Promise<Moleculer.Middleware> {
-  if (dbMiddleware) {
-    return dbMiddleware;
-  }
-
-  const dbConnector = await getDbConnector();
+export const getDbMiddleware = thunkyp(async function getDbMiddleware() {
+  const dbConnector = await dbConnectorModule.getDbConnector();
+  {{#if sql}}
+  const generator = dbConnector.getORM().getSchemaGenerator();
+  await generator.updateSchema();
+  {{/if}}
+  {{#if mongo}}
+  await dbConnector.getORM().em.getDriver().createCollections();
+  {{/if}}
 
   const dbContextManager: DatabaseContextManager = new DatabaseContextManager(
     dbConnector
   );
 
-  dbMiddleware = dbContextManager.middleware();
+  const dbMiddleware = dbContextManager.middleware();
 
   return dbMiddleware;
-}
+});

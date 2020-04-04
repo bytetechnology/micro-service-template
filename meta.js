@@ -3,9 +3,10 @@
 var fs = require("fs");
 var path = require("path");
 
-module.exports = function (values) {
+module.exports = function(values) {
   return {
-    questions: [{
+    questions: [
+      {
         type: "confirm",
         name: "needDb",
         message: "Does your service need to access a database",
@@ -15,14 +16,15 @@ module.exports = function (values) {
         type: "list",
         name: "db",
         message: "Select a db",
-        choices: [{
+        choices: [
+          {
             name: "sql",
             value: "sql"
           },
           {
             name: "mongo",
             value: "mongo"
-          },
+          }
         ],
         when(answers) {
           return answers.needDb;
@@ -102,10 +104,7 @@ module.exports = function (values) {
 To get started:
 
   cd {{projectName}}
-  npm run format
-  npm run lint
-  npm run test
-  npm run dev
+  npm run check
 
 		`
   };
