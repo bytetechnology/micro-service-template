@@ -8,17 +8,24 @@ describe('getDbConnector()', () => {
 
   test('Single call => ok', async () => {
     const { MikroConnector } = await import('moleculer-context-db');
+    const { globalSetup, globalTearDown } = await import('./setup');
     const { getDbConnector } = await import('../src/db.connector');
+
+    await globalSetup();
     const dbc = await getDbConnector();
     expect(dbc).toBeInstanceOf(MikroConnector);
 
     // Cleanup
     await dbc.getORM().close();
+    await globalTearDown();
   });
 
   test('Multiple calls at once => ok', async () => {
     const { MikroConnector } = await import('moleculer-context-db');
+    const { globalSetup, globalTearDown } = await import('./setup');
     const { getDbConnector } = await import('../src/db.connector');
+
+    await globalSetup();
     const [dbc1, dbc2] = await Promise.all([
       getDbConnector(),
       getDbConnector()
@@ -29,6 +36,7 @@ describe('getDbConnector()', () => {
 
     // Cleanup
     await dbc1.getORM().close();
+    await globalTearDown();
   });
 
   test('Single call => error', async () => {
