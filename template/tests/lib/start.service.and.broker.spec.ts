@@ -47,4 +47,22 @@ test('Call getService() before startServiceAndBroker() completed.', async () => 
   await broker.stop();
 });
 
+test('Call startServiceAndBroker() when already started => FAIL', async () => {
+  const { startServiceAndBroker, getService } = await import(
+    '../../src/lib/start.service.and.broker'
+  );
+  const { broker } = await import('../../src/lib/moleculer/broker');
+
+  const [, service] = await Promise.all([
+    startServiceAndBroker([]),
+    getService()
+  ]);
+
+  await expect(startServiceAndBroker([])).rejects.toThrow();
+
+  // Clean up
+  await broker.destroyService(service);
+  await broker.stop();
+});
+
 export {};
