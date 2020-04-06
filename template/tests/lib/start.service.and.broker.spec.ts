@@ -58,7 +58,7 @@ test('Call startServiceAndBroker() when already started => FAIL', async () => {
     getService()
   ]);
 
-  expect(startServiceAndBroker([])).rejects.toThrow();
+  await expect(startServiceAndBroker([])).rejects.toThrow();
 
   // Clean up
   await broker.destroyService(service);
