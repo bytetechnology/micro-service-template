@@ -2,4 +2,5 @@
 .history
 .DS_Store
 coverage
+envs/local.*.env
 node_modules
