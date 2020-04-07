@@ -5,7 +5,7 @@ beforeEach(() => {
   jest.resetModules();
 });
 
-test('getService() befor startServcieAndBroker() => FAIL', async () => {
+test('getService() before startServcieAndBroker() => FAIL', async () => {
   const { getService } = await import('../../src/lib/start.service.and.broker');
   await expect(getService()).rejects.toThrow();
 });
@@ -42,6 +42,26 @@ test('Call getService() before startServiceAndBroker() completed.', async () => 
     startServiceAndBroker([]),
     getService()
   ]);
+
+  await broker.destroyService(service);
+  await broker.stop();
+});
+
+test('Call getService() twice.', async () => {
+  const { getService, startServiceAndBroker } = await import(
+    '../../src/lib/start.service.and.broker'
+  );
+  const { broker } = await import('../../src/lib/moleculer/broker');
+
+  const [, service] = await Promise.all([
+    startServiceAndBroker([]),
+    getService()
+  ]);
+
+  // call getService() again, it should have a service already to return
+  const serviceAgain = await getService();
+  // we expect the service to be the same service
+  expect(serviceAgain).toBe(service);
 
   await broker.destroyService(service);
   await broker.stop();
