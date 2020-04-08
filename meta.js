@@ -3,10 +3,9 @@
 var fs = require("fs");
 var path = require("path");
 
-module.exports = function(values) {
+module.exports = function (values) {
   return {
-    questions: [
-      {
+    questions: [{
         type: "confirm",
         name: "needDb",
         message: "Does your service need to access a database",
@@ -16,8 +15,7 @@ module.exports = function(values) {
         type: "list",
         name: "db",
         message: "Select a db",
-        choices: [
-          {
+        choices: [{
             name: "sql",
             value: "sql"
           },
@@ -74,6 +72,14 @@ module.exports = function(values) {
 
         oldFileName = `${projectPath}${path.sep}tests${path.sep}SERVICE_NAME.service.spec.ts`;
         newFileName = `${projectPath}${path.sep}tests${path.sep}${serviceName}.service.spec.ts`;
+        fs.renameSync(oldFileName, newFileName);
+
+        oldFileName = `${projectPath}${path.sep}envs${path.sep}example.dev.env`;
+        newFileName = `${projectPath}${path.sep}envs${path.sep}local.dev.env`;
+        fs.renameSync(oldFileName, newFileName);
+
+        oldFileName = `${projectPath}${path.sep}envs${path.sep}example.test.env`;
+        newFileName = `${projectPath}${path.sep}envs${path.sep}local.test.env`;
         fs.renameSync(oldFileName, newFileName);
 
         // if we don't need any database, delete any database specific stuff

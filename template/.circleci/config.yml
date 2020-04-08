@@ -1,0 +1,121 @@
+version: 2
+jobs:
+  build_and_test:
+    docker:
+      - image: circleci/node:lts
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependencies-\{{ checksum "package.json" }}
+            - dependencies-
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-\{{ checksum "package.json" }}
+      - run:
+          name: Create environment file
+          command: cp envs/circleci.test.env envs/local.test.env
+      - run:
+          environment:
+            JEST_JUNIT_OUTPUT_DIR: "junit/"
+          name: Run tests
+          command: npm test
+      - store_test_results:
+          path: ./junit
+  deploy_to_staging:
+    docker:
+      - image: google/cloud-sdk
+    environment:
+      - PROJECT_NAME: "{{projectName}}"
+      - GOOGLE_PROJECT_ID: "byte-micro-stg"
+      - GOOGLE_COMPUTE_ZONE: "us-west1-c"
+      - SWARM_MANAGER_NAME: "micro-manager"
+      - DOCKER_REPO: "bytetechnology"
+      - STACK_NAME: "byte"
+    steps:
+      - checkout
+      - run:
+          name: Setup Google Cloud SDK
+          command: |
+            apt-get install -qq -y gettext
+            echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+            gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+      - setup_remote_docker
+      - run:
+          name: Docker build and push
+          command: |
+            echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
+            docker build \
+              --build-arg COMMIT_REF=${CIRCLE_SHA1} \
+              --build-arg BUILD_DATE=`date -u +”%Y-%m-%dT%H:%M:%SZ”` \
+              -t ${PROJECT_NAME} .
+            docker tag ${PROJECT_NAME} ${DOCKER_REPO}/${PROJECT_NAME}:${CIRCLE_SHA1}
+            docker push ${DOCKER_REPO}/${PROJECT_NAME}:${CIRCLE_SHA1}
+            docker tag ${PROJECT_NAME} ${DOCKER_REPO}/${PROJECT_NAME}:staging
+            docker push ${DOCKER_REPO}/${PROJECT_NAME}:staging
+      - run:
+          name: Deploy to Docker Swarm
+          command: |
+            gcloud --quiet compute ssh ${SWARM_MANAGER_NAME}\
+              --  "sudo -H -u docker-user bash -c 'sudo docker service update --image " \
+              "$DOCKER_REPO/$PROJECT_NAME:$CIRCLE_SHA1 ${STACK_NAME}_$PROJECT_NAME'"
+  deploy_to_production:
+    docker:
+      - image: google/cloud-sdk
+    environment:
+      - PROJECT_NAME: "{{projectName}}"
+      - GOOGLE_PROJECT_ID: "byte-micro-prd"
+      - GOOGLE_COMPUTE_ZONE: "us-west1-c"
+      - SWARM_MANAGER_NAME: "micro-manager"
+      - DOCKER_REPO: "bytetechnology"
+    steps:
+      - run:
+          name: Setup Google Cloud SDK
+          command: |
+            apt-get install -qq -y gettext
+            echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
+            gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+            gcloud --quiet container clusters get-credentials ${GOOGLE_CLUSTER_NAME}
+      - setup_remote_docker
+      - run:
+          name: Docker build and push
+          command: |
+            echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
+            docker build \
+              --build-arg COMMIT_REF=${CIRCLE_SHA1} \
+              --build-arg BUILD_DATE=`date -u +”%Y-%m-%dT%H:%M:%SZ”` \
+              -t ${PROJECT_NAME} .
+            docker tag ${PROJECT_NAME} ${DOCKER_REPO}/${PROJECT_NAME}:${CIRCLE_SHA1}
+            docker push ${DOCKER_REPO}/${PROJECT_NAME}:${CIRCLE_SHA1}
+            docker tag ${PROJECT_NAME} ${DOCKER_REPO}/${PROJECT_NAME}:production
+            docker push ${DOCKER_REPO}/${PROJECT_NAME}:production
+      - run:
+          name: Deploy to Docker Swarm
+          command: |
+            gcloud compute ssh ${SWARM_MANAGER_NAME}\
+              --  "sudo docker service update " \
+              "--image $REGISTRY_NAME/$PROJECT_NAME:$CIRCLE_SHA1 $PROJECT_NAME"
+workflows:
+  version: 2
+  build_test_deploy:
+    jobs:
+      - build_and_test
+      - deploy_to_staging:
+          requires:
+            - build_and_test
+          filters:
+            branches:
+              only: develop
+      - deploy_to_production:
+          filters:
+            branches:
+              only: master
