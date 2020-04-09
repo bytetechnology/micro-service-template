@@ -55,34 +55,3 @@ export function validateParams<TParams>(
   // Need to reassign to params because defaults set by joiful
   ctx.params = value;
 }
-
-export function validatePayload<T>(payload: T[], Class: new () => T): T[];
-export function validatePayload<T>(payload: T, Class: new () => T): T;
-export function validatePayload<T>(
-  payload: T | T[],
-  Class: new () => T
-): T | T[] {
-  let error;
-  let value;
-
-  if (Array.isArray(payload)) {
-    ({ error, value } = jf.validateArrayAsClass(payload, Class, {
-      abortEarly
-    }));
-  } else {
-    ({ error, value } = jf.validateAsClass(payload, Class, {
-      abortEarly
-    }));
-  }
-
-  if (error) {
-    throw new MoleculerError(
-      `Invalid event payload received. ${error.message}`,
-      500,
-      'INTERNAL_SERVER_ERROR',
-      payload
-    );
-  }
-
-  return value;
-}

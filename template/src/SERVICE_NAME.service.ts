@@ -18,7 +18,7 @@ import { WelcomeParams } from './api/params/welcome.params';
 import { AddTestEntityParams } from './api/params/add.test.entity.params';
 {{/if}}
 import { ExampleEvent } from './api/events/example.event';
-import { validateParams, validatePayload } from './lib/validate.data';
+import { validateParams } from './lib/validate.data';
 import { welcome } from './action.handlers/welcome';
 {{#if needDb}}
 import { addTestEntity } from './action.handlers/add.test.entity';
@@ -62,14 +62,9 @@ export class {{capitalizedServiceName}}Service extends moleculer.Service {
   }
 
   @Event()
-  async eventWithPayload(
-    payload: ExampleEvent,
-    sender: string,
-    eventName: string
-  ) {
-    const validPayload = validatePayload(payload, ExampleEvent);
-    await eventWithPayload.call(this, validPayload, sender, eventName);
-
+  async eventWithPayload(ctx: CTX<ExampleEvent>) {
+    validateParams(ctx, ExampleEvent);
+    eventWithPayload(ctx);
     // call our event tester method so that we can write unite tests for this event
     this.eventTester();
   }
