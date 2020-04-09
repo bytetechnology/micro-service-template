@@ -19,9 +19,7 @@ export function getLogMiddleware(logFunction: (...args: any[]) => any) {
     localEvent(next: (ctx: Context) => void) {
       return function logEvent(ctx: Context) {
         logFunction(
-          `Event ${ctx.eventName}. From service ${
-            ctx.caller || 'UNKNOWN (moleculer-cli)'
-          }. Data =`,
+          `Event ${ctx.eventName}. From node ID ${ctx.nodeID}. Data =`,
           ctx.params
         );
         return next(ctx);
