@@ -1,11 +1,11 @@
 /**
  * Copyright Byte Technology 2020. All rights reserved.
  */
-import Moleculer from 'moleculer';
+import Moleculer, { Context } from 'moleculer';
 
 export function getLogMiddleware(logFunction: (...args: any[]) => any) {
   const LogMiddleware: Moleculer.Middleware = {
-    localAction(next: any) {
+    localAction(next: (ctx: Context) => void) {
       return function logAction(
         this: Moleculer.ServiceBroker,
         ctx: Moleculer.Context
@@ -16,14 +16,13 @@ export function getLogMiddleware(logFunction: (...args: any[]) => any) {
         return next(ctx);
       };
     },
-    localEvent(next: any, event: Moleculer.EventSchema) {
-      return function logEvent(
-        payload: any,
-        sender: string,
-        eventName: string
-      ) {
-        logFunction(`Event ${event.name}. From service '${sender}'`);
-        return next(payload, sender, eventName);
+    localEvent(next: (ctx: Context) => void) {
+      return function logEvent(ctx: Context) {
+        logFunction(
+          `Event ${ctx.eventName}. From node ID ${ctx.nodeID}. Data =`,
+          ctx.params
+        );
+        return next(ctx);
       };
     }
   };
