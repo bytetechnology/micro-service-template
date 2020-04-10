@@ -8,7 +8,7 @@
     "check": "npm run lint && npm run format && npm run build && npm run test && npm run docs && npm run cli-test",
     "cli-test": "cross-env DEV_HOST=host ENV_FILE=envs/local.test.env BLUEBIRD_W_FORGOTTEN_RETURN=0  ts-node --files src/main.ts",
     "dev": "cross-env ENV_FILE=envs/local.dev.env  BLUEBIRD_W_FORGOTTEN_RETURN=0  ts-node --files src/main.ts",
-    "debug": "node  --inspect-brk  -r ts-node/register  src/main.ts",
+    "debug": "cross-env ENV_FILE=envs/local.dev.env DEV_HOST=host TS_NODE_FILES=true node --inspect-brk -r ts-node/register src/main.ts",
     "docs": "typedoc --theme markdown --out apidocs src",
     "format": "prettier --write \"{src,{tests,mocks}}/**/*.{js,ts}\"",
     "lint": "eslint --fix \"{src,{tests,mocks}}/**/*.{js,ts}\"",

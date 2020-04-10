@@ -47,6 +47,7 @@ export async function getDbConnector(): Promise<MikroConnector{{#if mongo}}<Mong
         clientUrl: config.DB_CORE__CLIENT_URL,
         user: config.DB_CORE__USER,
         password: config.DB_CORE__PASSWORD,
+        debug: config.DB_CORE__DEBUG,
         entities,
         cache: {
           enabled: false

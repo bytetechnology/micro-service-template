@@ -16,6 +16,7 @@ import { EnvBase } from './lib/env.base.schema';
 
 {{#if needDb}}
 const optional = () => jf.string().optional();
+const booleanOptional = () => jf.boolean().optional();
 {{/if}}
 
 // Decorate properties using joiful validator
@@ -42,6 +43,9 @@ export class Env extends EnvBase {
 
   @optional()
   DB_CORE__PASSWORD?: string;
+
+  @(booleanOptional().default(false))
+  DB_CORE__DEBUG?: boolean;
 
   // Any custom extensions of the base environemntal schema here
   {{/if}}
