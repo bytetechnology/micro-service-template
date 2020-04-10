@@ -60,6 +60,7 @@
 {{#if mongo}}
     "mongodb-memory-server": "6.5.0",
 {{/if}}
+    "notepack.io": "2.3.0",
     "pg": "8.0.0",
     "pkg-dir": "4.2.0",
 {{#if sql}}

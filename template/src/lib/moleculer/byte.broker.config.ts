@@ -79,7 +79,7 @@ export const byteBrokerConfig: BrokerOptions = {
   // Define a serializer.
   // Available values: "JSON", "Avro", "ProtoBuf", "MsgPack", "Notepack", "Thrift".
   // More info: https://moleculer.services/docs/0.14/networking.html
-  serializer: 'JSON',
+  serializer: 'Notepack',
 
   // Number of milliseconds to wait before reject a request with a RequestTimeout error. Disabled: 0
   requestTimeout: 10 * 1000,
