@@ -1,9 +1,9 @@
-# Dockerfile for production image for API server of the Byte Technology micro-services backend.
+# Dockerfile for production image for {{projectName}} service of the Byte Technology micro-services backend.
 #
 # Copyright 2019 Byte Technology. All rights reserved.
 
 # Our builder stage
-FROM node:lts-alpine as builder
+FROM node:12.16.2-buster-slim as builder
 # Add maintainer info
 LABEL maintainer="Byte Technology"
 # Set the working directory
@@ -12,17 +12,11 @@ WORKDIR /opt/byte/micro-{{serviceName}}
 COPY . .
 # Install npm modules
 RUN npm install
-# Run formatter
-RUN npm run format
-# Run linter
-RUN npm run lint
-# Run tests
-RUN npm run test
-# Build
-RUN npm run build
+# Run check
+RUN npm run check
 
 # our final image
-FROM node:lts-alpine
+FROM node:12.16.2-buster-slim
 # Add maintainer info
 LABEL maintainer="Byte Technology"
 # Set the working directory
