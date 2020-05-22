@@ -1,5 +1,5 @@
 /**
- * Entry point for unit test.
+ * Entry point for service unit tests.
  * Uses the moleculer microservices framework.
  *
  * Copyright Byte Technology 2020. All rights reserved.
@@ -14,6 +14,13 @@ import { resetServiceDB } from './utils';
 import { startAll, stopAll } from '../src/start.stop.all';
 import { getService } from '../src/lib/start.service.and.broker';
 import { broker } from '../src/lib/moleculer/broker';
+import { createAuthToken } from '../src/app/auth.token';
+
+const authToken = createAuthToken({
+  userId: 'a user',
+  clientId: 'a client',
+  roles: ['admin']
+});
 
 describe('{{capitalizedServiceName}} unit tests', () => {
   let service: MoleculerService;
@@ -58,13 +65,13 @@ describe('{{capitalizedServiceName}} unit tests', () => {
       {
         name: 'John Doe'
       },
-      { caller: 'jest' }
+      { caller: 'jest', meta: { authToken } }
     );
-    expect(response).toBe('Welcome John Doe!');
+    expect(response).toBe('Welcome John Doe; caller: jest!');
     done();
   });
 
-  test('Action with invalid parameter should throw', async done => {
+  test('Action with unauthenticated call should throw', async done => {
     // call an action with a parameter object
     try {
       await broker.call(
@@ -77,7 +84,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
       // eslint-disable-next-line no-undef
       fail(`Expected ValidationError.`);
     } catch (err) {
-      expect(err.code).toBe(400);
+      expect(err.code).toBe(401);
     }
     done();
   });
@@ -113,10 +120,38 @@ describe('{{capitalizedServiceName}} unit tests', () => {
         aKey: 'A Key',
         aValue: 'A Value'
       },
-      { caller: 'jest' }
+      { caller: 'jest', meta: { authToken } }
     );
 
     expect(entityId).toBeTruthy();
+    done();
+  });
+
+  test('Test database entity update', async done => {
+    // create a sample entity
+    const entityId = await broker.call(
+      '{{serviceName}}.addTestEntity',
+      {
+        aKey: 'A Key',
+        aValue: 'A Value'
+      },
+      { caller: 'jest', meta: { authToken } }
+    );
+
+    expect(entityId).toBeTruthy();
+
+    const updatedEntityId = await broker.call(
+      '{{serviceName}}.editTestEntity',
+      {
+        id: entityId,
+        aKey: 'Another Key',
+        aValue: 'Another Value'
+      },
+      { caller: 'jest', meta: { authToken } }
+    );
+
+    expect(updatedEntityId).toBe(entityId);
+
     done();
   });
   {{/if}}

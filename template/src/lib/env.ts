@@ -27,10 +27,8 @@ if (ENV_FILE && !path.isAbsolute(ENV_FILE)) {
 }
 
 // ---------------- Load & parse ----------------------
-let parsedEnv: any = process.env;
-
 if (ENV_FILE) {
-  const { error: parseErr, parsed } = dotenv.config({
+  const { error: parseErr } = dotenv.config({
     path: ENV_FILE
   });
 
@@ -39,13 +37,11 @@ if (ENV_FILE) {
       `Unable to parse .env file pointed by env var ENV_FILE="${ENV_FILE}". ${parseErr}`
     );
   }
-
-  parsedEnv = parsed;
 }
 
 // ---------------- Validation ----------------------
 
-const { error: validationErr, value } = jf.validateAsClass(parsedEnv, Env, {
+const { error: validationErr, value } = jf.validateAsClass(process.env, Env, {
   allowUnknown: true
 });
 

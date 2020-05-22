@@ -70,8 +70,9 @@ export const byteBrokerConfig: BrokerOptions = {
   // More info: https://moleculer.services/docs/0.14/networking.html
   transporter: {
     options: {
-      url: `amqp://${config.MESSAGE_BROKER_HOST || 'rabbitmq'}:${+(config
-        .MESSAGE_BROKER_PORT || 5672)}`
+      url: `amqp://${config.MESSAGE_BROKER_HOST || 'rabbitmq'}:${+(
+        config.MESSAGE_BROKER_PORT || 5672
+      )}`
     },
     type: 'AMQP'
   },
@@ -79,7 +80,7 @@ export const byteBrokerConfig: BrokerOptions = {
   // Define a serializer.
   // Available values: "JSON", "Avro", "ProtoBuf", "MsgPack", "Notepack", "Thrift".
   // More info: https://moleculer.services/docs/0.14/networking.html
-  serializer: 'JSON',
+  serializer: 'Notepack',
 
   // Number of milliseconds to wait before reject a request with a RequestTimeout error. Disabled: 0
   requestTimeout: 10 * 1000,

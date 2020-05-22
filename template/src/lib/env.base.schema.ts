@@ -20,9 +20,7 @@ export class EnvBase {
     .valid('fatal', 'error', 'warn', 'info', 'debug', 'trace'))
   LOG_LEVEL!: 'fatal' | 'error' | 'warn' | 'info' | 'debug' | 'trace';
 
-  @(optional()
-    .default('default')
-    .valid('default', 'simple', 'short'))
+  @(optional().default('default').valid('default', 'simple', 'short'))
   LOG_FORMATTER!: 'default' | 'simple' | 'short';
 
   @(optional().default('unknown'))
@@ -39,6 +37,10 @@ export class EnvBase {
 
   @(optional().pattern(/\d+/))
   MESSAGE_BROKER_PORT?: string;
+
+  // Auth JWT secret
+  @(optional().default('BYTE-JWT-KEY'))
+  AUTH__JWT_KEY!: string;
 
   // ---------------------------------------------------------------
   //  Tests

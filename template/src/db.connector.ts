@@ -6,24 +6,32 @@ import { MikroConnector } from 'moleculer-context-db';
 import { MongoDriver } from 'mikro-orm/dist/drivers/MongoDriver';
 {{/if}}
 import { EventEmitter } from 'events';
+import path from 'path';
+
 import { config } from './lib/env';
+import { TableNamingStrategy } from './mikro.orm.naming.strategy';
 import { entities } from './entities';
 
-let dbConnector: MikroConnector{{#if mongo}}<MongoDriver>{{/if}};
-let initError: Error | null;
+let dbConnector: MikroConnector{{#if mongo}}<MongoDriver>{{/if}} | null = null;
+let initError: Error | null = null;
 
 let pending: null | EventEmitter = null;
+let closing = false;
 
 export async function getDbConnector(): Promise<MikroConnector{{#if mongo}}<MongoDriver>{{/if}}> {
-  if (dbConnector) {
-    return dbConnector;
+  if (closing) {
+    throw new Error(`closeDbConnection() called but not yet completed`);
   }
 
   if (initError) {
     throw initError;
   }
 
-  // eslint-disable-next-line no-async-promise-executor, consistent-return
+  if (dbConnector) {
+    return dbConnector;
+  }
+
+  // eslint-disable-next-line no-async-promise-executor
   return new Promise(async (resolve, reject) => {
     if (pending) {
       pending.once('resolve', resolve);
@@ -47,12 +55,18 @@ export async function getDbConnector(): Promise<MikroConnector{{#if mongo}}<Mong
         clientUrl: config.DB_CORE__CLIENT_URL,
         user: config.DB_CORE__USER,
         password: config.DB_CORE__PASSWORD,
-        entities,
+        debug: config.DB_CORE__DEBUG,
+        entities: entities as any, // "as any" because of enum typings problem
         cache: {
           enabled: false
-        }{{#if mongoTransactions}},
-        implicitTransactions: true
+        },
+        {{#if mongoTransactions}}
+        implicitTransactions: true,
         {{/if}}
+        namingStrategy: TableNamingStrategy,
+        entitiesDirs: ['./dist/entities'],
+        entitiesDirsTs: ['./src/entities'],
+        baseDir: path.join(__dirname, '/..')
       });
 
       dbConnector = tmpConnector;
@@ -68,4 +82,16 @@ export async function getDbConnector(): Promise<MikroConnector{{#if mongo}}<Mong
     pending.removeAllListeners();
     pending = null;
   });
+}
+
+export async function closeDbConnection(): Promise<void> {
+  closing = true;
+
+  if (dbConnector) {
+    await dbConnector.getORM().close();
+  }
+
+  initError = null;
+  dbConnector = null;
+  closing = false;
 }

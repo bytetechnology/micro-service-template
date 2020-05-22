@@ -1,6 +1,7 @@
 /**
  * Copyright Byte Technology 2020. All rights reserved.
  */
+import 'jest-extended';
 {{#if mongo}}
 {{#if mongoTransactions}}
 import { MongoMemoryReplSet } from 'mongodb-memory-server';

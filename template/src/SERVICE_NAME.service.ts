@@ -16,12 +16,14 @@ import { MoleculerMikroContext as CTX } from 'moleculer-context-db';
 import { WelcomeParams } from './api/params/welcome.params';
 {{#if needDb}}
 import { AddTestEntityParams } from './api/params/add.test.entity.params';
+import { EditTestEntityParams } from './api/params/edit.test.entity.params';
 {{/if}}
 import { ExampleEvent } from './api/events/example.event';
 import { validateParams } from './lib/validate.data';
 import { welcome } from './action.handlers/welcome';
 {{#if needDb}}
 import { addTestEntity } from './action.handlers/add.test.entity';
+import { editTestEntity } from './action.handlers/edit.test.entity';
 {{/if}}
 import { eventWithPayload } from './event.handlers/event.with.payload';
 
@@ -40,17 +42,23 @@ export class {{capitalizedServiceName}}Service extends moleculer.Service {
     return `Hello Byte!`;
   }
 
-  @Action()
+  @Action({ restricted: true })
   welcome(ctx: CTX<WelcomeParams>) {
     validateParams(ctx, WelcomeParams);
     return welcome(ctx);
   }
 
   {{#if needDb}}
-  @Action()
+  @Action({ restricted: true })
   async addTestEntity(ctx: CTX<AddTestEntityParams>) {
     validateParams(ctx, AddTestEntityParams);
     return addTestEntity(ctx);
+  }
+
+  @Action({ restricted: true })
+  async editTestEntity(ctx: CTX<EditTestEntityParams>) {
+    validateParams(ctx, EditTestEntityParams);
+    return editTestEntity(ctx);
   }
   {{/if}}
 

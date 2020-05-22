@@ -3,10 +3,16 @@
  */
 import { TypedServiceBroker } from 'moleculer-service-ts';
 import { brokerConfig } from './broker.config';
-import { ServiceAction, ServiceEvent, ServiceName } from '../../service.types';
+import {
+  ContextMeta,
+  ServiceAction,
+  ServiceEvent,
+  ServiceName
+} from '../../service.types';
 
 export const broker: TypedServiceBroker<
   ServiceAction,
   ServiceEvent,
-  ServiceName
+  ServiceName,
+  ContextMeta
 > = new TypedServiceBroker(brokerConfig);
