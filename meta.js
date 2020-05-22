@@ -88,18 +88,29 @@ module.exports = function (values) {
           fs.rmdirSync(entitiesDir, {
             recursive: true
           });
-          const dbConnectorFile = `${projectPath}${path.sep}src${path.sep}db.connector.ts`;
-          fs.unlinkSync(dbConnectorFile);
+
           const addTestEntityParamsFile = `${projectPath}${path.sep}src${path.sep}api${path.sep}params${path.sep}add.test.entity.params.ts`;
           fs.unlinkSync(addTestEntityParamsFile);
+          const editTestEntityParamsFile = `${projectPath}${path.sep}src${path.sep}api${path.sep}params${path.sep}edit.test.entity.params.ts`;
+          fs.unlinkSync(editTestEntityParamsFile);
           const addTestEntityActionFile = `${projectPath}${path.sep}src${path.sep}action.handlers${path.sep}add.test.entity.ts`;
           fs.unlinkSync(addTestEntityActionFile);
+          const editTestEntityActionFile = `${projectPath}${path.sep}src${path.sep}action.handlers${path.sep}edit.test.entity.ts`;
+          fs.unlinkSync(editTestEntityActionFile);
+          const dbConnectorFile = `${projectPath}${path.sep}src${path.sep}db.connector.ts`;
+          fs.unlinkSync(dbConnectorFile);
           const dbConnectorSpecFile = `${projectPath}${path.sep}tests${path.sep}db.connector.spec.ts`;
           fs.unlinkSync(dbConnectorSpecFile);
           const utilsFile = `${projectPath}${path.sep}tests${path.sep}utils.ts`;
           fs.unlinkSync(utilsFile);
           const middleWareDbFile = `${projectPath}${path.sep}src${path.sep}middlewares${path.sep}moleculer.db.middleware.ts`;
           fs.unlinkSync(middleWareDbFile);
+          const middleWareDbSpecFile = `${projectPath}${path.sep}tests${path.sep}middlewares${path.sep}moleculer.db.middleware.spec.ts`;
+          fs.unlinkSync(middleWareDbSpecFile);
+          const namingStrategyFile = `${projectPath}${path.sep}src${path.sep}mikro.orm.naming.strategy.ts`;
+          fs.unlinkSync(namingStrategyFile);
+          const namingStrategySpecFile = `${projectPath}${path.sep}tests${path.sep}mikro.orm.naming.strategy.spec.ts`;
+          fs.unlinkSync(namingStrategySpecFile);
 
           return;
         }

@@ -31,6 +31,8 @@ describe('getDbConnector()', () => {
       getDbConnector()
     ]);
 
+    await getDbConnector();
+
     expect(dbc1).toBeInstanceOf(MikroConnector);
     expect(dbc1).toEqual(dbc2);
 
@@ -64,6 +66,36 @@ describe('getDbConnector()', () => {
     await expect(
       Promise.all([getDbConnector(), getDbConnector()])
     ).rejects.toThrow();
+  });
+
+  test('Cannot get connector while db connection is closing', async () => {
+    const { globalSetup, globalTearDown } = await import('./setup');
+    const { getDbConnector, closeDbConnection } = await import(
+      '../src/db.connector'
+    );
+
+    await globalSetup();
+    const db = await getDbConnector();
+    await expect(
+      Promise.all([closeDbConnection(), getDbConnector()])
+    ).rejects.toThrow();
+
+    // Cleanup
+    db.getORM().close();
+    await globalTearDown();
+  });
+
+  test('get() and double close()', async () => {
+    const { globalSetup, globalTearDown } = await import('./setup');
+    const { getDbConnector, closeDbConnection } = await import(
+      '../src/db.connector'
+    );
+
+    await globalSetup();
+    await getDbConnector();
+    await closeDbConnection();
+    await closeDbConnection();
+    await globalTearDown();
   });
 });
 

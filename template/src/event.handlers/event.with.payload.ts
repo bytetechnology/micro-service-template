@@ -1,12 +1,7 @@
 /**
  * Copyright Byte Technology 2020. All rights reserved.
  */
-{{#if needDb}}
-import { MoleculerMikroContext as CTX } from 'moleculer-context-db';
-{{/if}}
-{{#unless needDb}}
-import { Context as CTX } from 'moleculer';
-{{/unless}}
+import { CTX } from '../service.types';
 import { ExampleEvent } from '../api/events/example.event';
 
 export function eventWithPayload(ctx: CTX<ExampleEvent>) {

@@ -4,6 +4,9 @@
  * Copyright Byte Technology 2020. All rights reserved.
  */
 
+import { BaseEntity } from './base.entity';
 import { TestEntity } from './test.entity';
 
-export const entities = [TestEntity];
+export { TestEntity };
+
+export const entities = [BaseEntity, TestEntity];

@@ -8,7 +8,7 @@
 import Moleculer from 'moleculer';
 
 import { EventEmitter } from 'events';
-import { {{capitalizedServiceName}}Service } from '../{{serviceName}}.service';
+import { {{capitalizedServiceName}}Service as Service } from '../{{serviceName}}.service';
 import { broker } from './moleculer/broker';
 
 let service: Moleculer.Service | null = null;
@@ -28,7 +28,6 @@ export async function getService(): Promise<Moleculer.Service> {
         )
       );
     } else {
-      /* istanbul ignore next */
       pending.once('resolve', () => {
         /* istanbul ignore next */
         if (!service) {
@@ -37,7 +36,6 @@ export async function getService(): Promise<Moleculer.Service> {
         resolve(service);
       });
 
-      /* istanbul ignore next */
       pending.once('error', reject);
     }
   });
@@ -65,7 +63,7 @@ export async function startServiceAndBroker(
 
     try {
       middlewares.forEach(mw => broker.middlewares.add(mw));
-      const tmpService = broker.createService({{capitalizedServiceName}}Service);
+      const tmpService = broker.createService(Service);
       await broker.start();
       await broker.waitForServices('{{serviceName}}');
       service = tmpService;

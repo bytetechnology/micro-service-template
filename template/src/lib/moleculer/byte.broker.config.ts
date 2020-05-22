@@ -70,8 +70,9 @@ export const byteBrokerConfig: BrokerOptions = {
   // More info: https://moleculer.services/docs/0.14/networking.html
   transporter: {
     options: {
-      url: `amqp://${config.MESSAGE_BROKER_HOST || 'rabbitmq'}:${+(config
-        .MESSAGE_BROKER_PORT || 5672)}`
+      url: `amqp://${config.MESSAGE_BROKER_HOST || 'rabbitmq'}:${+(
+        config.MESSAGE_BROKER_PORT || 5672
+      )}`
     },
     type: 'AMQP'
   },

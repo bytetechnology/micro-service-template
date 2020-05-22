@@ -1,13 +1,16 @@
 /**
  * Copyright Byte Technology 2020. All rights reserved.
  */
-import { MoleculerMikroContext as CTX } from 'moleculer-context-db';
+import { CTX } from '../service.types';
 import { AddTestEntityParams } from '../api/params/add.test.entity.params';
-import { TestEntity } from '../entities/test.entity';
+import { TestEntity } from '../entities/index';
 
 export async function addTestEntity(ctx: CTX<AddTestEntityParams>) {
   const em = ctx.entityManager;
-  const testEntity = new TestEntity(ctx.params.aKey, ctx.params.aValue);
+  const testEntity = new TestEntity({
+    aKey: ctx.params.aKey,
+    aValue: ctx.params.aValue
+  });
   await em.persistAndFlush([testEntity]);
   return testEntity.id;
 }
