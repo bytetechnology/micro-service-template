@@ -1,0 +1,27 @@
+version: '3.8'
+
+# All our services will be running on this network
+networks:
+  message: # used for messaging traffic
+  log: # used for logging traffic
+
+services:
+  {{serviceName}}:
+    image: ${CONTAINER_REGISTRY}/${CONTAINER_REGISTRY_PROJECT}/micro-{{serviceName}}
+    networks:
+      - message # connect to messaging network
+      - log # connect to the logging network
+    environment:
+      - NODE_ENV
+      - AUTH__JWT_KEY
+      - MESSAGE_BROKER_HOST
+      - LOG_HOST
+      - DB_CORE__TYPE
+      - DB_CORE__CLIENT_URL
+      - DB_CORE__DB_NAME
+      - DB_CORE__USER
+      - DB_CORE__PASSWORD
+    deploy:
+      placement:
+        constraints:
+          - node.labels.service == true

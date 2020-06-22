@@ -54,6 +54,7 @@ module.exports = function (values) {
           serviceName.charAt(0).toUpperCase() + serviceName.slice(1);
         metalsmith._metadata.serviceName = serviceName;
         metalsmith._metadata.capitalizedServiceName = capitalizedServiceName;
+        metalsmith._metadata.serviceNameUppercase = serviceName.toUpperCase();
         // if we are using a database, set the appropriate database flag to true since handlebars can't compare values without helpers
         if (metalsmith._metadata.needDb) {
           const dbType = metalsmith._metadata.db;

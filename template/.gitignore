@@ -1,6 +1,9 @@
 *.code-workspace
 .history
 .DS_Store
+apidocs
 coverage
+dist
 envs/local.*.env
 node_modules
+temp

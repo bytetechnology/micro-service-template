@@ -13,7 +13,8 @@
     "format": "prettier --write \"{src,{tests,mocks}}/**/*.{js,ts}\"",
     "lint": "eslint --fix \"{src,{tests,mocks}}/**/*.{js,ts}\"",
     "start": "cross-env  NODE_ENV=production  node dist/main.js",
-    "test": "cross-env  ENV_FILE=envs/local.test.env  jest --coverage --runInBand"
+    "test": "cross-env  ENV_FILE=envs/local.test.env  jest --coverage --runInBand",
+    "setup:local": "ts-node dev/setup.local.ts"
   },
   "keywords": [
     "microservices",
