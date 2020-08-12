@@ -1,6 +1,9 @@
 /**
  * Copyright Byte Technology 2020. All rights reserved.
  */
+{{#if needDb}}
+import 'reflect-metadata';
+{{/if}}
 import 'jest-extended';
 {{#if mongo}}
 {{#if mongoTransactions}}
