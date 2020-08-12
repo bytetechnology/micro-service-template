@@ -2,11 +2,11 @@
  * Copyright Byte Technology 2020. All rights reserved.
  */
 import { MikroConnector } from 'moleculer-context-db';
+import { ReflectMetadataProvider } from 'mikro-orm';
 {{#if mongo}}
 import { MongoDriver } from 'mikro-orm/dist/drivers/MongoDriver';
 {{/if}}
 import { EventEmitter } from 'events';
-import path from 'path';
 
 import { config } from './lib/env';
 import { TableNamingStrategy } from './mikro.orm.naming.strategy';
@@ -56,17 +56,15 @@ export async function getDbConnector(): Promise<MikroConnector{{#if mongo}}<Mong
         user: config.DB_CORE__USER,
         password: config.DB_CORE__PASSWORD,
         debug: config.DB_CORE__DEBUG,
-        entities: entities as any, // "as any" because of enum typings problem
+        entities: entities,
+        metadataProvider: ReflectMetadataProvider,
         cache: {
           enabled: false
         },
         {{#if mongoTransactions}}
         implicitTransactions: true,
         {{/if}}
-        namingStrategy: TableNamingStrategy,
-        entitiesDirs: ['./dist/entities'],
-        entitiesDirsTs: ['./src/entities'],
-        baseDir: path.join(__dirname, '/..')
+        namingStrategy: TableNamingStrategy
       });
 
       dbConnector = tmpConnector;

@@ -23,6 +23,10 @@ export type {{capitalizedServiceName}}Action =
 
 export type {{capitalizedServiceName}}Name = '{{serviceName}}';
 
+// CASL permissions
+export type AppActions = 'manage';
+export type AppSubjects = 'all' | '{{serviceName}}';
+
 {{#if needDb}}
 export * from './params/add.test.entity.params';
 export * from './params/edit.test.entity.params';

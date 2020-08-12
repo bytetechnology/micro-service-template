@@ -18,11 +18,11 @@ import { MoleculerMikroContext as MCTX } from 'moleculer-context-db';
 {{#unless needDb}}
 import { Context as MCTX } from 'moleculer';
 {{/unless}}
-import * as jf from 'joiful';
 
 import { {{capitalizedServiceName}}Action, {{capitalizedServiceName}}Name } from './api';
 import { broker } from './lib/moleculer/broker';
 import { ExampleEvent } from './api/events/example.event';
+import { AuthTokenPayload } from './lib/auth.token';
 
 export type ServiceName = {{capitalizedServiceName}}Name;
 
@@ -35,29 +35,14 @@ export type ServiceEvent =
   | EventNoData<'eventWithoutPayload'>
   | Event<'eventWithPayload', ExampleEvent>;
 
-export class AuthTokenPayload {
-  @(jf.string().required())
-  userId: string = '';
-
-  @(jf.string().required())
-  clientId: string = '';
-
-  @(jf
-    .array()
-    .optional()
-    .items(joi => joi.string())
-    .min(1)
-    .unique())
-  roles: string[] = [''];
-}
 export type ContextMeta = {
   authToken?: string;
   auth?: AuthTokenPayload;
 };
-
-export type CTX<
-  P = unknown,
-  M extends ContextMeta = ContextMeta
-> = MCTX<P, M> & {
+  
+export type CTX<P = unknown, M extends ContextMeta = ContextMeta> = MCTX<
+  P,
+  M
+> & {
   broker: typeof broker;
 };

@@ -5,7 +5,7 @@
 import Moleculer from 'moleculer';
 
 import { CTX } from '../service.types';
-import { verifyAuthToken } from '../app/auth.token';
+import { verifyAuthToken } from '../lib/auth.token';
 
 export const authenticateMoleculerContext = (ctx: CTX): void => {
   if (!(ctx.meta && ctx.meta.authToken)) {
