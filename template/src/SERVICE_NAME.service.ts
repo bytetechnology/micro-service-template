@@ -29,7 +29,9 @@ import { eventWithPayload } from './event.handlers/event.with.payload';
 
 // Define our {{serviceName}} service
 @Service({
-  name: '{{serviceName}}'
+  name: '{{serviceName}}',
+  version: process.env.npm_package_version,
+  settings: { $noVersionPrefix: true }
 })
 export class {{capitalizedServiceName}}Service extends moleculer.Service {
   dbUri: string | undefined = undefined;
