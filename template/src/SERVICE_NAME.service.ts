@@ -34,10 +34,6 @@ import { eventWithPayload } from './event.handlers/event.with.payload';
   settings: { $noVersionPrefix: true }
 })
 export class {{capitalizedServiceName}}Service extends moleculer.Service {
-  dbUri: string | undefined = undefined;
-
-  dbName: string | undefined = undefined;
-
   // Our actions
   @Action()
   ping(/* ctx: CTX */) {
