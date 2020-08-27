@@ -10,7 +10,7 @@
 import * as jf from 'joiful';
 import { Errors } from 'moleculer';
 
-import { CTX } from '../service.types';
+import { CTX } from './moleculer/broker';
 import { config } from './env';
 
 const { MoleculerError } = Errors;

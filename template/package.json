@@ -21,31 +21,31 @@
   ],
   "author": "Byte Technology",
   "devDependencies": {
-    "@types/jest": "26.0.9",
+    "@types/jest": "26.0.10",
     "@types/jsonwebtoken": "8.5.0",
-    "@types/lodash": "4.14.159",
-    "@types/mongodb": "3.5.25",
-    "@types/node": "14.0.27",
+    "@types/lodash": "4.14.160",
+    "@types/mongodb": "3.5.26",
+    "@types/node": "14.6.0",
 {{#if sql}}
     "@types/uuid": "8.3.0",
 {{/if}}
-    "@typescript-eslint/eslint-plugin": "3.9.0",
-    "@typescript-eslint/parser": "3.9.0",
+    "@typescript-eslint/eslint-plugin": "3.10.1",
+    "@typescript-eslint/parser": "3.10.1",
     "cross-env": "7.0.2",
-    "eslint": "7.6.0",
+    "eslint": "7.7.0",
     "eslint-config-airbnb-base": "14.2.0",
     "eslint-config-prettier": "6.11.0",
     "eslint-plugin-import": "2.22.0",
     "eslint-plugin-prettier": "3.1.4",
-    "jest": "26.4.0",
+    "jest": "26.4.2",
     "jest-extended": "0.11.5",
     "moleculer-repl": "0.6.4",
-    "prettier": "2.0.5",
-    "ts-jest": "26.2.0",
-    "ts-node": "8.10.2",
+    "prettier": "2.1.1",
+    "ts-jest": "26.3.0",
+    "ts-node": "9.0.0",
     "typedoc": "0.18.0",
-    "typedoc-plugin-markdown": "2.4.0",
-    "typescript": "3.9.7",
+    "typedoc-plugin-markdown": "2.4.2",
+    "typescript": "4.0.2",
     "utility-types": "3.10.0"
   },
   "dependencies": {
@@ -54,23 +54,23 @@
     "dotenv": "8.2.0",
     "joiful": "2.0.1",
     "jsonwebtoken": "8.5.1",
-    "lodash": "4.17.19",
+    "lodash": "4.17.20",
 {{#if needDb}}    
     "mikro-orm": "3.6.15",
 {{/if}}
-    "moleculer": "0.14.9",
+    "moleculer": "0.14.10",
     "moleculer-context-db": "1.0.1",
     "moleculer-decorators": "1.3.0",
-    "moleculer-service-ts": "1.0.7",
+    "moleculer-service-ts": "1.0.8",
     "moment": "2.27.0",
 {{#if needDb}}
     "mongodb": "3.6.0",
 {{/if}}
 {{#if mongo}}
-    "mongodb-memory-server": "6.6.3",
+    "mongodb-memory-server": "6.6.6",
 {{/if}}    
     "notepack.io": "2.3.0",
-    "pg": "8.3.0",
+    "pg": "8.3.3",
     "pkg-dir": "4.2.0",
     "reflect-metadata": "0.1.13",
 {{#if sql}}

@@ -1,7 +1,7 @@
 /**
  * Copyright Byte Technology 2020. All rights reserved.
  */
-import { CTX } from '../service.types';
+import { CTX } from '../lib/moleculer/broker';
 import { AddTestEntityParams } from '../api/params/add.test.entity.params';
 import { TestEntity } from '../entities/index';
 

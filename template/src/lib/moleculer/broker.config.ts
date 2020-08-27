@@ -30,12 +30,8 @@ export const brokerConfig: BrokerOptions = {
   namespace: '',
   // Unique node identifier. Must be unique in a namespace.
   nodeID: `${process.env.npm_package_name}-${config.HOSTNAME}`,
-  // Log formatter for built-in console logger. Available values: default, simple, short. It can be also a `Function`.
-  logFormatter: config.LOG_FORMATTER,
   // Log level for built-in console logger. Available values: trace, debug, info, warn, error, fatal
   logLevel: config.LOG_LEVEL,
-  // Custom object & array printer for built-in console logger.
-  logObjectPrinter: undefined,
   // Enable/disable logging or use custom logger. More info: https://moleculer.services/docs/0.14/logging.html
   logger: [
     ...(config.LOG_HOST
