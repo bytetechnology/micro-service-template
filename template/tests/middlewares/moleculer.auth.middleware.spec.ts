@@ -7,7 +7,7 @@ import {
   authenticateMoleculerContext,
   getAuthMiddleware
 } from '../../src/middlewares/moleculer.auth.middleware';
-import { ContextMeta, CTX } from '../../src/service.types';
+import { ContextMeta, CTX } from '../../src/lib/moleculer/broker';
 import { managerAuthToken } from '../test.utils';
 
 describe('Auth middleware unit tests', () => {

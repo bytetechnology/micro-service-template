@@ -12,17 +12,9 @@ import {
   GenericEventWithoutPayload as EventNoData,
   GenericEventWithPayload as Event
 } from 'moleculer-service-ts';
-{{#if needDb}}
-import { MoleculerMikroContext as MCTX } from 'moleculer-context-db';
-{{/if}}
-{{#unless needDb}}
-import { Context as MCTX } from 'moleculer';
-{{/unless}}
 
 import { {{capitalizedServiceName}}Action, {{capitalizedServiceName}}Name } from './api';
-import { broker } from './lib/moleculer/broker';
 import { ExampleEvent } from './api/events/example.event';
-import { AuthTokenPayload } from './lib/auth.token';
 
 export type ServiceName = {{capitalizedServiceName}}Name;
 
@@ -35,14 +27,3 @@ export type ServiceEvent =
   | EventNoData<'eventWithoutPayload'>
   | Event<'eventWithPayload', ExampleEvent>;
 
-export type ContextMeta = {
-  authToken?: string;
-  auth?: AuthTokenPayload;
-};
-  
-export type CTX<P = unknown, M extends ContextMeta = ContextMeta> = MCTX<
-  P,
-  M
-> & {
-  broker: typeof broker;
-};

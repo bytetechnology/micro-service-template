@@ -4,7 +4,7 @@
  */
 import Moleculer from 'moleculer';
 
-import { CTX } from '../service.types';
+import { CTX } from '../lib/moleculer/broker';
 import { verifyAuthToken } from '../lib/auth.token';
 
 export const authenticateMoleculerContext = (ctx: CTX): void => {
