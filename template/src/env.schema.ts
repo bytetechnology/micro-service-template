@@ -9,7 +9,7 @@
  * Copyright Byte Technology 2020. All rights reserved.
  */
 {{#if needDb}}
-import { MikroORMOptions } from 'mikro-orm';
+import { MikroORMOptions } from '@mikro-orm/core';
 import * as jf from 'joiful';
 {{/if}}
 import { EnvBase } from './lib/env.base.schema';

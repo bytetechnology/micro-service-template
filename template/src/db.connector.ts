@@ -2,7 +2,6 @@
  * Copyright Byte Technology 2020. All rights reserved.
  */
 import { MikroConnector } from 'moleculer-context-db';
-import { ReflectMetadataProvider } from 'mikro-orm';
 {{#if mongo}}
 import { MongoDriver } from 'mikro-orm/dist/drivers/MongoDriver';
 {{/if}}
@@ -56,17 +55,16 @@ export async function getDbConnector(): Promise<MikroConnector{{#if mongo}}<Mong
         user: config.DB_CORE__USER,
         password: config.DB_CORE__PASSWORD,
         debug: config.DB_CORE__DEBUG,
-        entities: entities,
-        metadataProvider: ReflectMetadataProvider,
         cache: {
           enabled: false
         },
+        namingStrategy: TableNamingStrategy,
         {{#if mongoTransactions}}
         implicitTransactions: true,
         {{/if}}
-        namingStrategy: TableNamingStrategy
+        entities
       });
-
+      
       dbConnector = tmpConnector;
     } catch (err) {
       initError = err;

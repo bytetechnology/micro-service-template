@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /**
  * Custom TypeScript utilities
  *
@@ -24,3 +25,53 @@ export type Exact<T, U extends T> = U & Impossible<Exclude<keyof U, keyof T>>;
 
 // All optional properties are required and no additional allowed
 export type RequiredExact<T, U extends Required<T>> = Exact<T, U>;
+
+// npm object.omit seems to not work as expected
+export function omit<T extends object, K extends keyof T>(
+  obj: T,
+  keys: K[]
+): { [Key in keyof Omit<T, K>]: T[Key] } {
+  return Object.entries(obj)
+    .filter(([key]) => !keys.includes(key as any))
+    .reduce((o, [key, val]) => Object.assign(o, { [key]: val }), {}) as any;
+}
+
+// -----------------------------------------------------
+//  Utils to produce exact response type
+//
+
+// -----------------------------------------------------
+//  Utils to produce exact response type
+//
+
+export function exact<S, T>(object: ExactResponse<S, T>) {
+  return object;
+}
+
+export type ExactResponse<Expected, Actual> = Expected &
+  Actual & // Needed to infer `Actual`
+  (null extends Actual
+    ? null extends Expected
+      ? Actual extends null // If only null stop here, because NonNullable<null> = never
+        ? null
+        : CheckUndefined<Expected, Actual>
+      : never // Actual can be null but not Expected: forbid the field
+    : CheckUndefined<Expected, Actual>);
+
+type CheckUndefined<Expected, Actual> = undefined extends Actual
+  ? undefined extends Expected
+    ? Actual extends undefined // If only undefined stop here, because NonNullable<undefined> = never
+      ? undefined
+      : NonNullableExact<NonNullable<Expected>, NonNullable<Actual>>
+    : never // Actual can be undefined but not Expected: forbid the field
+  : NonNullableExact<NonNullable<Expected>, NonNullable<Actual>>;
+
+type NonNullableExact<Expected, Actual> = {
+  [K in keyof Actual]: K extends keyof Expected
+    ? Actual[K] extends (infer ActualElement)[]
+      ? Expected[K] extends (infer ExpectedElement)[] | undefined | null
+        ? ExactResponse<ExpectedElement, ActualElement>[]
+        : never // Not both array
+      : ExactResponse<Expected[K], Actual[K]>
+    : never; // Forbid extra properties
+};

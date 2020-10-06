@@ -10,6 +10,7 @@ import Moleculer from 'moleculer';
 import { EventEmitter } from 'events';
 import { {{capitalizedServiceName}}Service as Service } from '../{{serviceName}}.service';
 import { broker } from './moleculer/broker';
+import { serviceName } from '../api';
 
 let service: Moleculer.Service | null = null;
 
@@ -65,7 +66,7 @@ export async function startServiceAndBroker(
       middlewares.forEach(mw => broker.middlewares.add(mw));
       const tmpService = broker.createService(Service);
       await broker.start();
-      await broker.waitForServices('{{serviceName}}');
+      await broker.waitForServices({{serviceName}});
       service = tmpService;
     } catch (err) {
       pending.emit('error', err);

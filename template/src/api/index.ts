@@ -22,6 +22,9 @@ export type {{capitalizedServiceName}}Action =
 {{/if}}
 
 export type {{capitalizedServiceName}}Name = '{{serviceName}}';
+export const serviceName: {{capitalizedServiceName}}Name = '{{serviceName}}';
+
+export type ServiceEvent = never;
 
 // CASL permissions
 export type AppActions = 'manage';

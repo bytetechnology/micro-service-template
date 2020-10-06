@@ -4,7 +4,7 @@
  * Copyright Byte Technology 2020. All rights reserved.
  */
 
-import { Entity, Property } from 'mikro-orm';
+import { Entity, Property } from '@mikro-orm/core';
 
 import { BaseEntity } from './base.entity';
 

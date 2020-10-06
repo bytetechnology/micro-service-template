@@ -8,22 +8,28 @@
  *
  * Copyright Byte Technology 2020. All rights reserved.
  */
-import {
-  GenericEventWithoutPayload as EventNoData,
-  GenericEventWithPayload as Event
-} from 'moleculer-service-ts';
+import { MoleculerMikroContext as MCTX } from 'moleculer-context-db';
+import { ContextMeta } from '@bytetech/micro-authz';
 
-import { {{capitalizedServiceName}}Action, {{capitalizedServiceName}}Name } from './api';
-import { ExampleEvent } from './api/events/example.event';
+import {
+  ServiceName,
+  ServiceAction as {{capitalizedServiceName}}Actions,
+  ServiceEvent as {{capitalizedServiceName}}Events
+} from './api';
+import { broker } from './lib/moleculer/broker';
 
 export type ServiceName = {{capitalizedServiceName}}Name;
 
 // Add other services types here, eg;
 // export type ServiceAction = DiscountActions | UserActions | IotActions;
-export type ServiceAction = {{capitalizedServiceName}}Action;
+export type ServiceAction = {{capitalizedServiceName}}Actions;
 
 // These are the events we emit
-export type ServiceEvent =
-  | EventNoData<'eventWithoutPayload'>
-  | Event<'eventWithPayload', ExampleEvent>;
+export type ServiceEvent = {{capitalizedServiceName}}Events;
 
+export type CTX<P = unknown, M extends ContextMeta = ContextMeta> = MCTX<
+  P,
+  M
+> & {
+  broker: typeof broker;
+};

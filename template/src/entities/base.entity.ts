@@ -5,10 +5,10 @@
  */
 {{#if sql}}
 import { v4 } from 'uuid';
-import { PrimaryKey, Property } from 'mikro-orm';
+import { PrimaryKey, Property } from '@mikro-orm/core';
 {{/if}}
 {{#if mongo}}
-import { PrimaryKey, Property, SerializedPrimaryKey } from 'mikro-orm';
+import { PrimaryKey, Property, SerializedPrimaryKey } from '@mikro-orm/core';
 import { ObjectId } from 'mongodb';
 {{/if}}
 
