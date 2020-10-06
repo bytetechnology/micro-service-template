@@ -18,7 +18,7 @@ import {
 } from './api';
 import { broker } from './lib/moleculer/broker';
 
-export type ServiceName = {{capitalizedServiceName}}Name;
+export type ServiceName = ServiceName;
 
 // Add other services types here, eg;
 // export type ServiceAction = DiscountActions | UserActions | IotActions;

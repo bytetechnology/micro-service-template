@@ -13,7 +13,7 @@ import { AddTestEntityParams } from './params/add.test.entity.params';
 import { EditTestEntityParams } from './params/edit.test.entity.params';
 {{/if}}
 
-export type {{capitalizedServiceName}}Action =
+export type ServiceAction =
   | ActionNoParams<'{{serviceName}}.ping', string>
   | Action<'{{serviceName}}.welcome', WelcomeParams, string>
 {{#if needDb}}
@@ -21,8 +21,8 @@ export type {{capitalizedServiceName}}Action =
   | Action<'{{serviceName}}.editTestEntity', EditTestEntityParams, string>;
 {{/if}}
 
-export type {{capitalizedServiceName}}Name = '{{serviceName}}';
-export const serviceName: {{capitalizedServiceName}}Name = '{{serviceName}}';
+export type ServiceName = '{{serviceName}}';
+export const serviceName: ServiceName = '{{serviceName}}';
 
 export type ServiceEvent = never;
 
