@@ -4,19 +4,16 @@
 import { Ability, subject as createCaslSubject } from '@casl/ability';
 import { Errors } from 'moleculer';
 import { inspect } from 'util';
+{{#if needDb}}
 import { Collection } from '@mikro-orm/core';
+{{/if}}
 import { RuleCondition, ContextMeta, Auth } from '@bytetech/micro-authz';
 import { CTX } from '../service.types';
 import { AppActions, AppSubjects, serviceName } from '../api';
 
 export const { MoleculerError } = Errors;
 
-export const ANY_VALUE = Symbol('ANY_VALUE');
-
-type Conditions = {
-  [K in keyof RuleCondition]: RuleCondition[K] | undefined | typeof ANY_VALUE;
-};
-
+{{#if needDb}}
 type StringOnly<T> = T extends string ? T : never;
 
 // User for entities to omit Collections from constructor
@@ -28,6 +25,16 @@ export type CollectionsNames<Base extends object> = StringOnly<
     }[keyof Base]
   >
 >;
+
+export function getDbPagination(args: { page: number; pageLength: number }) {
+  const { page, pageLength } = args;
+
+  return {
+    offset: page * pageLength,
+    limit: pageLength
+  };
+}
+{{/if}}
 
 // Keep it for future
 // export function pick<T extends object, K extends keyof T>(
@@ -51,6 +58,12 @@ export type CollectionsNames<Base extends object> = StringOnly<
 // }
 
 // -----------------------------------------------------
+
+export const ANY_VALUE = Symbol('ANY_VALUE');
+
+type Conditions = {
+  [K in keyof RuleCondition]: RuleCondition[K] | undefined | typeof ANY_VALUE;
+};
 
 // eslint-disable-next-line import/export
 export function authorize(ctx: CTX) {
@@ -129,15 +142,6 @@ export function authorize(ctx: CTX) {
         }
       };
     }
-  };
-}
-
-export function getDbPagination(args: { page: number; pageLength: number }) {
-  const { page, pageLength } = args;
-
-  return {
-    offset: page * pageLength,
-    limit: pageLength
   };
 }
 
