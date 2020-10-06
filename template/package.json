@@ -52,6 +52,7 @@
     "utility-types": "3.10.0"
   },
   "dependencies": {
+    "@bytetech/micro-authz": "*",
     "@casl/ability": "4.1.5",
     "amqplib": "0.6.0",
     "dotenv": "8.2.0",
