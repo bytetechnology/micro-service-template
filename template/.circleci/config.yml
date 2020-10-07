@@ -46,14 +46,14 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: 'dependencies-{{ checksum "package-lock.json" }}-{{ arch}}'
+          key: 'dependencies-\{{ checksum "package-lock.json" }}-\{{ arch}}'
       - run:
           name: Install dependencies
           command: NODE_ENV=development npm ci # make sure we install devDependencies for test
       - save_cache:
           paths:
             - node_modules
-          key: 'dependencies-{{ checksum "package-lock.json" }}-{{ arch}}'
+          key: 'dependencies-\{{ checksum "package-lock.json" }}-\{{ arch}}'
       - run:
           name: Create environment file
           command: cp envs/circleci.test.env envs/local.test.env
