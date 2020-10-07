@@ -1,121 +1,201 @@
-version: 2
+version: 2.1
+
+# orbs
+orbs:
+  slack: circleci/slack@3.4.2
+
+# reusable commands
+commands:
+  gcloud-auth:
+    description: Authenticate with Google Cloud
+    steps:
+      - run: echo ${GOOGLE_AUTH} > ${HOME}/gcp-key.json
+      - run: gcloud auth activate-service-account --key-file ${HOME}/gcp-key.json
+      - run: gcloud --quiet config set project ${GOOGLE_PROJECT}
+  gcloud-docker:
+    description: Use gcloud helper for docker
+    steps:
+      - run:
+          name: Configure docker helper
+          command: gcloud --quiet auth configure-docker
+  date-time:
+    description: Set date and time
+    steps:
+      - run:
+          name: Set DATE_TIME variable
+          command: echo "export DATE_TIME=$(date +%Y-%m-%dT%H-%M-%S%Z)" >> $BASH_ENV
+  package-version:
+    description: Extract package version
+    steps:
+      - run:
+          name: Extract package version
+          command: |
+            echo "export PACKAGE_VERSION=$(cat package.json | grep version | head -1 | awk -F: '{ print $2 }' | sed 's/[\",]//g' | tr -d '[[:space:]]')" >> $BASH_ENV
+  latest-tag:
+    description: Get the latest tag with package_version-date_time combination
+    steps:
+      - run: |
+          echo "export LATEST_TAG=$(gcloud container images list-tags ${CONTAINER_REGISTRY}/${GOOGLE_PROJECT}/${CIRCLE_PROJECT_REPONAME} | grep latest | awk '{print $2}' | tr ',' '\n' | grep ${PACKAGE_VERSION}-)" >> $BASH_ENV
+
+# our jobs
 jobs:
-  build_and_test:
+  test:
     docker:
-      - image: circleci/node:lts
+      - image: circleci/node:12
     working_directory: ~/repo
     steps:
       - checkout
       - restore_cache:
-          keys:
-            - dependencies-\{{ checksum "package.json" }}
-            - dependencies-
+          key: 'dependencies-{{ checksum "package-lock.json" }}-{{ arch}}'
       - run:
           name: Install dependencies
-          command: npm ci
+          command: NODE_ENV=development npm ci # make sure we install devDependencies for test
       - save_cache:
           paths:
             - node_modules
-          key: dependencies-\{{ checksum "package.json" }}
+          key: 'dependencies-{{ checksum "package-lock.json" }}-{{ arch}}'
       - run:
           name: Create environment file
           command: cp envs/circleci.test.env envs/local.test.env
+      - run: pwd
+      - run: cat envs/local.test.env
       - run:
-          environment:
-            JEST_JUNIT_OUTPUT_DIR: "junit/"
           name: Run tests
           command: npm test
       - store_test_results:
-          path: ./junit
-  deploy_to_staging:
-    docker:
-      - image: google/cloud-sdk
-    environment:
-      - PROJECT_NAME: "{{projectName}}"
-      - GOOGLE_PROJECT_ID: "byte-micro-stg"
-      - GOOGLE_COMPUTE_ZONE: "us-west1-c"
-      - SWARM_MANAGER_NAME: "micro-manager"
-      - DOCKER_REPO: "bytetechnology"
-      - STACK_NAME: "byte"
+          path: ./tests/coverage
+      - slack/status:
+          mentions: "channel"
+          fail_only: true
+  publish:
+    machine:
+      image: ubuntu-1604:202004-01
     steps:
       - checkout
+      - gcloud-auth
+      - gcloud-docker
+      - date-time
+      - package-version
       - run:
-          name: Setup Google Cloud SDK
-          command: |
-            apt-get install -qq -y gettext
-            echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-            gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
-      - setup_remote_docker
+          name: Check DATE_TIME
+          command: echo ${DATE_TIME}
       - run:
-          name: Docker build and push
-          command: |
-            echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
-            docker build \
-              --build-arg COMMIT_REF=${CIRCLE_SHA1} \
-              --build-arg BUILD_DATE=`date -u +”%Y-%m-%dT%H:%M:%SZ”` \
-              -t ${PROJECT_NAME} .
-            docker tag ${PROJECT_NAME} ${DOCKER_REPO}/${PROJECT_NAME}:${CIRCLE_SHA1}
-            docker push ${DOCKER_REPO}/${PROJECT_NAME}:${CIRCLE_SHA1}
-            docker tag ${PROJECT_NAME} ${DOCKER_REPO}/${PROJECT_NAME}:staging
-            docker push ${DOCKER_REPO}/${PROJECT_NAME}:staging
+          name: Check PACKAGE_VERSION
+          command: echo ${PACKAGE_VERSION}
       - run:
-          name: Deploy to Docker Swarm
-          command: |
-            gcloud --quiet compute ssh ${SWARM_MANAGER_NAME}\
-              --  "sudo -H -u docker-user bash -c 'sudo docker service update --image " \
-              "$DOCKER_REPO/$PROJECT_NAME:$CIRCLE_SHA1 ${STACK_NAME}_$PROJECT_NAME'"
-  deploy_to_production:
-    docker:
-      - image: google/cloud-sdk
-    environment:
-      - PROJECT_NAME: "{{projectName}}"
-      - GOOGLE_PROJECT_ID: "byte-micro-prd"
-      - GOOGLE_COMPUTE_ZONE: "us-west1-c"
-      - SWARM_MANAGER_NAME: "micro-manager"
-      - DOCKER_REPO: "bytetechnology"
+          name: Tag name
+          command: echo ${PACKAGE_VERSION}-${DATE_TIME}
+      - run:
+          name: Build docker image
+          command: docker build -t ${CONTAINER_REGISTRY}/${GOOGLE_PROJECT}/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_SHA1 .
+      - run:
+          name: Run docker image
+          command: docker run --detach --name ${CIRCLE_PROJECT_REPONAME} -e NODE_ENV ${CONTAINER_REGISTRY}/${GOOGLE_PROJECT}/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_SHA1
+      - run:
+          name: Wait for service
+          command: sleep 5
+      - run:
+          name: Check service health status
+          command: docker logs ${CIRCLE_PROJECT_REPONAME} | grep ${SERVICE_NAME} | grep available | wc -l | xargs -n 1 test 1 -eq
+      - run:
+          name: Stop docker container
+          command: docker stop ${CIRCLE_PROJECT_REPONAME}
+      - run: docker tag ${CONTAINER_REGISTRY}/${GOOGLE_PROJECT}/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_SHA1 ${CONTAINER_REGISTRY}/${GOOGLE_PROJECT}/${CIRCLE_PROJECT_REPONAME}:latest
+      - run: docker tag ${CONTAINER_REGISTRY}/${GOOGLE_PROJECT}/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_SHA1 ${CONTAINER_REGISTRY}/${GOOGLE_PROJECT}/${CIRCLE_PROJECT_REPONAME}:${PACKAGE_VERSION}
+      - run: docker tag ${CONTAINER_REGISTRY}/${GOOGLE_PROJECT}/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_SHA1 ${CONTAINER_REGISTRY}/${GOOGLE_PROJECT}/${CIRCLE_PROJECT_REPONAME}:${PACKAGE_VERSION}-${DATE_TIME}
+      - run: docker push ${CONTAINER_REGISTRY}/${GOOGLE_PROJECT}/${CIRCLE_PROJECT_REPONAME}:latest
+      - run: docker push ${CONTAINER_REGISTRY}/${GOOGLE_PROJECT}/${CIRCLE_PROJECT_REPONAME}:${PACKAGE_VERSION}
+      - run: docker push ${CONTAINER_REGISTRY}/${GOOGLE_PROJECT}/${CIRCLE_PROJECT_REPONAME}:${PACKAGE_VERSION}-${DATE_TIME}
+      - run: docker push ${CONTAINER_REGISTRY}/${GOOGLE_PROJECT}/${CIRCLE_PROJECT_REPONAME}:$CIRCLE_SHA1
+      - slack/status:
+          mentions: "channel"
+          fail_only: false
+  deploy:
+    machine:
+      image: ubuntu-1604:202004-01
     steps:
+      - checkout
+      - gcloud-auth
+      - gcloud-docker
+      - package-version
+      - latest-tag
       - run:
-          name: Setup Google Cloud SDK
-          command: |
-            apt-get install -qq -y gettext
-            echo $GCLOUD_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-            gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json
-            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
-            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
-            gcloud --quiet container clusters get-credentials ${GOOGLE_CLUSTER_NAME}
-      - setup_remote_docker
+          name: Copy deployment compose file
+          command: gcloud --quiet compute scp docker-compose.yml ${SWARM_MANAGER}:~/docker-compose.${CIRCLE_PROJECT_REPONAME}.yml --zone=${GOOGLE_ZONE}
       - run:
-          name: Docker build and push
-          command: |
-            echo $DOCKER_PWD | docker login -u $DOCKER_LOGIN --password-stdin
-            docker build \
-              --build-arg COMMIT_REF=${CIRCLE_SHA1} \
-              --build-arg BUILD_DATE=`date -u +”%Y-%m-%dT%H:%M:%SZ”` \
-              -t ${PROJECT_NAME} .
-            docker tag ${PROJECT_NAME} ${DOCKER_REPO}/${PROJECT_NAME}:${CIRCLE_SHA1}
-            docker push ${DOCKER_REPO}/${PROJECT_NAME}:${CIRCLE_SHA1}
-            docker tag ${PROJECT_NAME} ${DOCKER_REPO}/${PROJECT_NAME}:production
-            docker push ${DOCKER_REPO}/${PROJECT_NAME}:production
+          name: Copy gcloud deployment environment file
+          command: gcloud --quiet compute scp deploy.gcloud.env ${SWARM_MANAGER}:~/deploy.gcloud.${CIRCLE_PROJECT_REPONAME}.env --zone=${GOOGLE_ZONE}
       - run:
-          name: Deploy to Docker Swarm
+          name: Deploy ${CIRCLE_PROJECT_REPONAME} service
           command: |
-            gcloud compute ssh ${SWARM_MANAGER_NAME}\
-              --  "sudo docker service update " \
-              "--image $REGISTRY_NAME/$PROJECT_NAME:$CIRCLE_SHA1 $PROJECT_NAME"
+            gcloud --quiet compute ssh ${SWARM_MANAGER} --zone=${GOOGLE_ZONE} \
+            --command="source deploy.gcloud.${CIRCLE_PROJECT_REPONAME}.env && export NODE_ENV=${NODE_ENV} && docker stack deploy -c docker-compose.${CIRCLE_PROJECT_REPONAME}.yml --with-registry-auth bytetech"
+      - slack/status:
+          mentions: "channel"
+          fail_only: false
+
+# our workflows
 workflows:
   version: 2
-  build_test_deploy:
+  test-publish-deploy:
     jobs:
-      - build_and_test
-      - deploy_to_staging:
+      - test:
+          name: test-all
+          context: staging
+          filters:
+            branches:
+              ignore: master
+      - test:
+          name: test-production
+          context: production
+          filters:
+            branches:
+              only: master
+      - publish:
+          name: publish-development
+          context: development
           requires:
-            - build_and_test
+            - test-all
           filters:
             branches:
               only: develop
-      - deploy_to_production:
+      - deploy:
+          name: deploy-developmement
+          context: development
+          requires:
+            - publish-development
+          filters:
+            branches:
+              only: develop   
+      - publish:
+          name: publish-staging
+          context: staging
+          requires:
+            - test-all
+          filters:
+            branches:
+              only: /release\/.*/
+      - deploy:
+          name: deploy-staging
+          context: staging
+          requires:
+            - publish-staging
+          filters:
+            branches:
+              only: /release\/.*/
+      - publish:
+          name: publish-production
+          context: production
+          requires:
+            - test-production
+          filters:
+            branches:
+              only: master
+      - deploy:
+          name: deploy-production
+          context: production
+          requires:
+            - publish-production
           filters:
             branches:
               only: master
