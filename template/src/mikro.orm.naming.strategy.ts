@@ -3,7 +3,7 @@
  * Copyright Byte Technology 2020. All rights reserved.
  */
 {{#if sql}}
-import { UnderscoreNamingStrategy } from 'mikro-orm';
+import { UnderscoreNamingStrategy } from '@mikro-orm/core';
 
 export class TableNamingStrategy extends UnderscoreNamingStrategy {
   classToTableName(entityName: string): string {
@@ -20,7 +20,7 @@ export class TableNamingStrategy extends UnderscoreNamingStrategy {
 }
 {{/if}}
 {{#if mongo}}
-import { MongoNamingStrategy } from 'mikro-orm';
+import { MongoNamingStrategy } from '@mikro-orm/core';
 
 export class TableNamingStrategy extends MongoNamingStrategy {
   classToTableName(entityName: string): string {

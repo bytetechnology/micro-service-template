@@ -5,11 +5,11 @@
  */
 {{#if sql}}
 import { v4 } from 'uuid';
-import { PrimaryKey, Property } from 'mikro-orm';
+import { PrimaryKey, Property } from '@mikro-orm/core';
 {{/if}}
 {{#if mongo}}
-import { PrimaryKey, Property, SerializedPrimaryKey } from 'mikro-orm';
-import { ObjectId } from 'mongodb';
+import { PrimaryKey, Property, SerializedPrimaryKey } from '@mikro-orm/core';
+import { ObjectId } from '@mikro-orm/mongodb';
 {{/if}}
 
 export abstract class BaseEntity {

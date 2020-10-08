@@ -1,8 +1,11 @@
 {
-  "name": "micro-{{serviceName}}",
+  "name": "@bytetech/micro-{{serviceName}}",
   "version": "0.0.1",
   "description": "{{serviceName}} microservice",
   "main": "dist/api",
+  "files": [
+    "dist/api"
+  ],
   "scripts": {
     "build": "tsc -p src/tsconfig.json",
     "check": "npm run lint && npm run format && npm run build && npm run test && npm run docs && npm run cli-test",
@@ -12,8 +15,15 @@
     "docs": "typedoc --theme markdown --out apidocs src",
     "format": "prettier --write \"{src,{tests,mocks}}/**/*.{js,ts}\"",
     "lint": "eslint --fix \"{src,{tests,mocks}}/**/*.{js,ts}\"",
-    "start": "cross-env  NODE_ENV=production  node dist/main.js",
-    "test": "cross-env  ENV_FILE=envs/local.test.env  jest --coverage --runInBand"
+    "prepublishOnly": "npm run check",
+    "preversion": "npm run lint",
+    "postversion": "git push && git push --tags",
+    "start": "NODE_ENV=${NODE_ENV:-production} node dist/main.js",
+    "test": "cross-env  ENV_FILE=envs/local.test.env  jest --coverage --runInBand",
+    "setup:local": "ts-node dev/setup.local.ts",
+    "publish:patch": "npm version patch && npm publish",
+    "publish:minor": "npm version patch && npm publish",
+    "publish:major": "npm version patch && npm publish"
   },
   "keywords": [
     "microservices",
@@ -21,64 +31,65 @@
   ],
   "author": "Byte Technology",
   "devDependencies": {
-    "@types/jest": "26.0.10",
+    "@types/jest": "26.0.14",
     "@types/jsonwebtoken": "8.5.0",
-    "@types/lodash": "4.14.160",
-    "@types/mongodb": "3.5.26",
-    "@types/node": "14.6.0",
+    "@types/lodash": "4.14.161",
+    "@types/mongodb": "3.5.27",
+    "@types/node": "14.11.5",
 {{#if sql}}
     "@types/uuid": "8.3.0",
 {{/if}}
-    "@typescript-eslint/eslint-plugin": "3.10.1",
-    "@typescript-eslint/parser": "3.10.1",
+    "@typescript-eslint/eslint-plugin": "4.4.0",
+    "@typescript-eslint/parser": "4.4.0",
     "cross-env": "7.0.2",
-    "eslint": "7.7.0",
+    "eslint": "7.10.0",
     "eslint-config-airbnb-base": "14.2.0",
-    "eslint-config-prettier": "6.11.0",
-    "eslint-plugin-import": "2.22.0",
+    "eslint-config-prettier": "6.12.0",
+    "eslint-plugin-import": "2.22.1",
     "eslint-plugin-prettier": "3.1.4",
-    "jest": "26.4.2",
+    "husky": "4.3.0",
+    "jest": "26.5.2",
     "jest-extended": "0.11.5",
     "moleculer-repl": "0.6.4",
-    "prettier": "2.1.1",
-    "ts-jest": "26.3.0",
+{{#if mongo}}
+    "mongodb-memory-server": "6.9.1",
+{{/if}}
+    "prettier": "2.1.2",
+    "ts-jest": "26.4.1",
     "ts-node": "9.0.0",
-    "typedoc": "0.18.0",
-    "typedoc-plugin-markdown": "2.4.2",
-    "typescript": "4.0.2",
+    "typedoc": "0.19.2",
+    "typedoc-plugin-markdown": "3.0.7",
+    "typescript": "4.0.3",
     "utility-types": "3.10.0"
   },
   "dependencies": {
-    "@casl/ability": "4.1.5",
+    "@casl/ability": "4.1.6",
+{{#if needDb}}    
+    "@mikro-orm/core": "4.0.7",
+  {{#if mongo}}
+    "@mikro-orm/mongodb": "4.0.7",
+  {{/if}}
+  {{#if sql}}
+    "@mikro-orm/postgresql": "4.0.7",
+    "@mikro-orm/sqlite": "4.0.7",
+  {{/if}}
+{{/if}}
     "amqplib": "0.6.0",
     "dotenv": "8.2.0",
     "joiful": "2.0.1",
     "jsonwebtoken": "8.5.1",
     "lodash": "4.17.20",
-{{#if needDb}}    
-    "mikro-orm": "3.6.15",
-{{/if}}
-    "moleculer": "0.14.10",
-    "moleculer-context-db": "1.0.1",
+    "moleculer": "0.14.11",
+    "moleculer-context-db": "1.1.8",
     "moleculer-decorators": "1.3.0",
     "moleculer-service-ts": "1.0.8",
-    "moment": "2.27.0",
-{{#if needDb}}
-    "mongodb": "3.6.0",
-{{/if}}
-{{#if mongo}}
-    "mongodb-memory-server": "6.6.6",
-{{/if}}    
+    "moment": "2.29.1",    
     "notepack.io": "2.3.0",
-    "pg": "8.3.3",
     "pkg-dir": "4.2.0",
     "reflect-metadata": "0.1.13",
-{{#if sql}}
-    "sqlite3": "4.2.0",
-{{/if}}
     "thunky": "1.1.0",
 {{#if sql}}
-    "uuid": "8.3.0",
+    "uuid": "8.3.1",
 {{/if}}
     "winston": "3.3.3",
     "winston-gelf-transporter": "1.0.2"
@@ -89,10 +100,16 @@
 {{#if mongo}}
   "config": {
     "mongodbMemoryServer": {
-      "version": "4.2.5"
+      "version": "4.4.0"
     }
   },
 {{/if}}
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run format && npm run lint",
+      "pre-push": "npm run check"
+    }
+  },
   "jest": {
     "testEnvironment": "node",
     "rootDir": ".",
