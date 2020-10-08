@@ -39,22 +39,24 @@ test('Not restricted, with auth', async () => {
 });
 
 test('Restricted, no auth', async () => {
-  await expect(async () =>
+  await expect(
     broker.call('{{serviceName}}.pingAuth', undefined, {})
   ).rejects.toMatchObject({ code: 401 });
 });
 
 test('Restricted, invalid auth', async () => {
-  await expect(async () => {
+  await expect(
     broker.call('{{serviceName}}.pingAuth', undefined, {
       meta: { auth: { invalid: 'auth object' } as any }
-    });
-  }).rejects.toMatchObject({ code: 401 });
+    })
+  ).rejects.toMatchObject({ code: 401 });
 });
 
 test('Not restricted, with auth', async () => {
   const pingSpy = jest.spyOn(ping, 'ping');
-  await broker.call('{{serviceName}}.pingAuth', undefined, { meta: { auth: sudoAuth } });
+  await broker.call('{{serviceName}}.pingAuth', undefined, {
+    meta: { auth: sudoAuth }
+  });
 
   expect(pingSpy).toHaveBeenCalledTimes(1);
   expect(pingSpy).toHaveBeenCalledWith(

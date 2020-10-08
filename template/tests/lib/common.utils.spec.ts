@@ -3,7 +3,7 @@
  */
 // eslint-disable-next-line import/no-unresolved
 import { PartialDeep } from 'type-fest';
-import { ANY_VALUE, authorize } from '../../src/lib/common.utils';
+import { ANY_VALUE, authorize, getDbPagination } from '../../src/lib/common.utils';
 import { CTX } from '../../src/lib/moleculer/broker';
 import { createAuth } from '../test.utils';
 
@@ -144,5 +144,12 @@ describe('authorize()', () => {
           .where({ clientId: '1' })
       ).toBe(false);
     });
+  });
+});
+
+describe('getDbPagination()', () => {
+  test('Basic coverage test', () => {
+    const result = getDbPagination({ page: 2, pageLength: 4 });
+    expect(result).toStrictEqual({ offset: 8, limit: 4 });
   });
 });

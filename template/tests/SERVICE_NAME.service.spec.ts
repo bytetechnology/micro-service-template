@@ -147,7 +147,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
       { caller: 'jest', meta: { auth: managerAuth } }
     );
 
-    expect(updatedEntityId).toBe({ ok: true });
+    expect(updatedEntityId).toStrictEqual({ ok: true });
 
     done();
   });
