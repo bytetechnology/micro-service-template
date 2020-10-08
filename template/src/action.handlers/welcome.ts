@@ -11,9 +11,11 @@ import { exact } from '../lib/type.utils';
 /**
  * An action that returns a welcome message
  */
-export async function welcome(ctx: CTX<WelcomeParams>): Promise<WelcomeResponse> {
+export async function welcome(
+  ctx: CTX<WelcomeParams>
+): Promise<WelcomeResponse> {
   authorize(ctx)
-    .throwIfuser()
+    .throwIfUser()
     .cannot('welcome', '{{serviceName}}')
     .where({ clientId: 'client you want to welcome' });
 

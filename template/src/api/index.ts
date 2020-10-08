@@ -29,7 +29,7 @@ export const serviceName: ServiceName = '{{serviceName}}';
 export type ServiceEvent = never;
 
 // CASL permissions
-export type AppActions = 'manage';
+export type AppActions = 'manage' | 'welcome';
 export type AppSubjects = 'all' | '{{serviceName}}';
 
 {{#if needDb}}

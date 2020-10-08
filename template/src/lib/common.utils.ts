@@ -72,13 +72,14 @@ export function authorize(ctx: CTX) {
         cannot(action: AppActions, subject: AppSubjects) {
           return {
             where(conditions: Conditions): void {
-              const { auth } = ctx.meta as Required<ContextMeta>; // At this point, we should be authorized
+              const { auth } = ctx.meta || {}; // At this point, we should be authorized
 
               if (!auth) {
                 throw new MoleculerError(`Unauthorized`, 401);
               }
 
               const ability = new Ability<[AppActions, AppSubjects]>(
+                /* istanbul ignore next */
                 auth.permissions?.rules as any
               );
 
@@ -120,7 +121,7 @@ export function authorize(ctx: CTX) {
         can(action: AppActions, subject: AppSubjects) {
           return {
             where(conditions: T): boolean {
-              const { auth } = ctx.meta as Required<ContextMeta>; // At this point, we should be authorized
+              const { auth } = ctx.meta || {}; // At this point, we should be authorized
 
               if (!auth) {
                 throw new MoleculerError(`Unauthorized`, 401);
