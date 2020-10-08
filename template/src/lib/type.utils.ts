@@ -40,10 +40,6 @@ export function omit<T extends object, K extends keyof T>(
 //  Utils to produce exact response type
 //
 
-// -----------------------------------------------------
-//  Utils to produce exact response type
-//
-
 export function exact<S, T>(object: ExactResponse<S, T>) {
   return object;
 }

@@ -39,17 +39,17 @@ test('Not restricted, with auth', async () => {
 });
 
 test('Restricted, no auth', async () => {
-  await expect(
+  await expect(async () =>
     broker.call('{{serviceName}}.pingAuth', undefined, {})
   ).rejects.toMatchObject({ code: 401 });
 });
 
 test('Restricted, invalid auth', async () => {
-  await expect(
+  await expect(async () => {
     broker.call('{{serviceName}}.pingAuth', undefined, {
       meta: { auth: { invalid: 'auth object' } as any }
-    })
-  ).rejects.toMatchObject({ code: 401 });
+    });
+  }).rejects.toMatchObject({ code: 401 });
 });
 
 test('Not restricted, with auth', async () => {

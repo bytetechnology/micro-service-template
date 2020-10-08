@@ -64,7 +64,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
     );
     const expectedResponse: WelcomeResponse = { greetings: 'Welcome John Doe; caller: jest!' };
 
-    expect(response).toBe(expectedResponse);
+    expect(response).toStrictEqual(expectedResponse);
     done();
   });
 
