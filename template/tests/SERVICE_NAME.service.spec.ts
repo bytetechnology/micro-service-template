@@ -14,7 +14,7 @@ import { resetServiceDB } from './utils';
 import { startAll, stopAll } from '../src/start.stop.all';
 import { getService } from '../src/lib/start.service.and.broker';
 import { broker } from '../src/lib/moleculer/broker';
-import { managerAuthToken } from './test.utils';
+import { managerAuth } from './test.utils';
 
 describe('{{capitalizedServiceName}} unit tests', () => {
   let service: MoleculerService;
@@ -59,7 +59,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
       {
         name: 'John Doe'
       },
-      { caller: 'jest', meta: { auth: managerAuthToken } }
+      { caller: 'jest', meta: { auth: managerAuth } }
     );
     expect(response).toBe('Welcome John Doe; caller: jest!');
     done();
@@ -114,7 +114,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
         aKey: 'A Key',
         aValue: 'A Value'
       },
-      { caller: 'jest', meta: { auth: managerAuthToken } }
+      { caller: 'jest', meta: { auth: managerAuth } }
     );
 
     expect(entityId).toBeTruthy();
@@ -129,7 +129,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
         aKey: 'A Key',
         aValue: 'A Value'
       },
-      { caller: 'jest', meta: { auth: managerAuthToken } }
+      { caller: 'jest', meta: { auth: managerAuth } }
     );
 
     expect(entityId).toBeTruthy();
@@ -141,7 +141,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
         aKey: 'Another Key',
         aValue: 'Another Value'
       },
-      { caller: 'jest', meta: { auth: managerAuthToken } }
+      { caller: 'jest', meta: { auth: managerAuth } }
     );
 
     expect(updatedEntityId).toBe(entityId);

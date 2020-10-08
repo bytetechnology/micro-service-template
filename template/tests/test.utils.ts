@@ -10,7 +10,17 @@ import moment from 'moment';
 import { Auth } from '@bytetech/micro-authz';
 {{#if needDb}}
 import { getDbConnector } from '../src/db.connector';
+{{/if}}
 
+export const managerAuth: Auth = {
+  primaryClientId: 'TEST-CLIENT-ID',
+  currentClientId: 'TEST-CLIENT-ID',
+  userId: 'TEST-USER-ID',
+  permissions: {
+    rules: [{ action: 'manage', subject: 'all' }]
+  }
+};
+{{#if needDb}}
 export async function getEm(): Promise<EntityManager> {
   const dbc = await getDbConnector();
   const { em } = dbc.getORM();
