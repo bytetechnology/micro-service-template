@@ -84,7 +84,9 @@ export function now(): Date {
 }
 
 export function future(amount: number, unit: TimeUnit): Date;
+// eslint-disable-next-line no-redeclare
 export function future(from: Date, amount: number, unit: TimeUnit): Date;
+// eslint-disable-next-line no-redeclare
 export function future(...args: any[]): Date {
   const { from, amount, unit } = resolveArgsOfFutureAndPastFunctions(...args);
 
