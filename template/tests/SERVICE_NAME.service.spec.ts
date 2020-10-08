@@ -59,7 +59,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
       {
         name: 'John Doe'
       },
-      { caller: 'jest', meta: { authToken: managerAuthToken } }
+      { caller: 'jest', meta: { auth: managerAuthToken } }
     );
     expect(response).toBe('Welcome John Doe; caller: jest!');
     done();
@@ -114,7 +114,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
         aKey: 'A Key',
         aValue: 'A Value'
       },
-      { caller: 'jest', meta: { authToken: managerAuthToken } }
+      { caller: 'jest', meta: { auth: managerAuthToken } }
     );
 
     expect(entityId).toBeTruthy();
@@ -129,7 +129,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
         aKey: 'A Key',
         aValue: 'A Value'
       },
-      { caller: 'jest', meta: { authToken: managerAuthToken } }
+      { caller: 'jest', meta: { auth: managerAuthToken } }
     );
 
     expect(entityId).toBeTruthy();
@@ -141,7 +141,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
         aKey: 'Another Key',
         aValue: 'Another Value'
       },
-      { caller: 'jest', meta: { authToken: managerAuthToken } }
+      { caller: 'jest', meta: { auth: managerAuthToken } }
     );
 
     expect(updatedEntityId).toBe(entityId);

@@ -13,3 +13,8 @@ export class EditTestEntityParams {
   @(jf.string().required())
   aValue!: string;
 }
+
+export class EditTestEntityResponse {
+  @(jf.boolean().required().valid(true))
+  ok!: true;
+}

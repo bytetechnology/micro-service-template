@@ -7,3 +7,8 @@ export class WelcomeParams {
   @(jf.string().required())
   name!: string;
 }
+
+export class WelcomeResponse {
+  @(jf.string().required())
+  greetings!: string;
+}

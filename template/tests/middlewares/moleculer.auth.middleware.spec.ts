@@ -3,93 +3,61 @@
  *
  * Copyright Byte Technology 2020. All rights reserved.
  */
-import {
-  authenticateMoleculerContext,
-  getAuthMiddleware
-} from '../../src/middlewares/moleculer.auth.middleware';
-import { ContextMeta, CTX } from '../../src/lib/moleculer/broker';
-import { managerAuthToken } from '../test.utils';
+import { startAll, stopAll } from '../../src/start.stop.all';
+import { broker } from '../../src/lib/moleculer/broker';
+import * as ping from '../../src/action.handlers/ping';
+import { sudoAuth } from '../../src/lib/common.utils';
 
-describe('Auth middleware unit tests', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+beforeAll(async () => {
+  await startAll();
+});
 
-  test('Auth middleware dummy coverage test', async done => {
-    const auth = jest.fn(() => {});
-    const next = jest.fn(() => {});
-    const restrictedAction = { restricted: true };
-    const unrestrictedAction = {};
-    const ctx: Partial<CTX<unknown, ContextMeta>> = {
-      action: {
-        name: 'TestAction'
-      },
-      caller: 'TestCaller',
-      meta: { authToken: managerAuthToken }
-    };
+afterAll(async () => {
+  await stopAll();
+});
 
-    const mw = getAuthMiddleware(auth);
+afterEach(() => {
+  jest.clearAllMocks();
+});
 
-    (mw as any).localAction(next, unrestrictedAction)(ctx);
+test('Not restricted, no auth', async () => {
+  const pingSpy = jest.spyOn(ping, 'ping');
+  await broker.call('{{serviceName}}.ping', undefined, {});
 
-    expect(auth).toHaveBeenCalledTimes(0);
-    expect(next).toHaveBeenCalledTimes(1);
+  expect(pingSpy).toHaveBeenCalledTimes(1);
+  expect(pingSpy).toHaveBeenCalledWith(expect.objectContaining({ meta: {} }));
+});
 
-    (mw as any).localAction(next, restrictedAction)(ctx);
+test('Not restricted, with auth', async () => {
+  const pingSpy = jest.spyOn(ping, 'ping');
+  await broker.call('{{serviceName}}.ping', undefined, { meta: { auth: sudoAuth } });
 
-    expect(auth).toHaveBeenCalledTimes(1);
+  expect(pingSpy).toHaveBeenCalledTimes(1);
+  expect(pingSpy).toHaveBeenCalledWith(
+    expect.objectContaining({ meta: { auth: sudoAuth } })
+  );
+});
 
-    expect(next).toHaveBeenCalledTimes(2);
-    expect(next).toHaveBeenCalledWith(ctx);
+test('Restricted, no auth', async () => {
+  await expect(
+    broker.call('{{serviceName}}.pingAuth', undefined, {})
+  ).rejects.toMatchObject({ code: 401 });
+});
 
-    done();
-  });
+test('Restricted, invalid auth', async () => {
+  await expect(
+    broker.call('{{serviceName}}.pingAuth', undefined, {
+      meta: { auth: { invalid: 'auth object' } as any }
+    })
+  ).rejects.toMatchObject({ code: 401 });
+});
 
-  test('Auth middleware with authenticator', async done => {
-    const next = jest.fn(() => {});
-    const restrictedAction = { restricted: true };
-    const unrestrictedAction = {};
-    const ctx: Partial<CTX<unknown, ContextMeta>> = {
-      action: {
-        name: 'TestAction'
-      },
-      caller: 'TestCaller',
-      meta: { authToken: managerAuthToken }
-    };
+test('Not restricted, with auth', async () => {
+  const pingSpy = jest.spyOn(ping, 'ping');
+  await broker.call('{{serviceName}}.pingAuth', undefined, { meta: { auth: sudoAuth } });
 
-    const mw = getAuthMiddleware(authenticateMoleculerContext);
-
-    (mw as any).localAction(next, unrestrictedAction)(ctx);
-
-    expect(next).toHaveBeenCalledTimes(1);
-
-    (mw as any).localAction(next, restrictedAction)(ctx);
-
-    expect(next).toHaveBeenCalledTimes(2);
-    expect(next).toHaveBeenCalledWith(ctx);
-
-    expect(ctx.meta?.auth).toBeTruthy();
-
-    done();
-  });
-
-  test('Auth middleware with missing auth token', async done => {
-    const next = jest.fn(() => {});
-    const restrictedAction = { restricted: true };
-    const ctx: Partial<CTX<unknown, ContextMeta>> = {
-      action: {
-        name: 'TestAction'
-      },
-      caller: 'TestCaller'
-    };
-
-    const mw = getAuthMiddleware(authenticateMoleculerContext);
-
-    const result = () => (mw as any).localAction(next, restrictedAction)(ctx);
-
-    expect(result).toThrow();
-    expect(next).toHaveBeenCalledTimes(0);
-
-    done();
-  });
+  expect(pingSpy).toHaveBeenCalledTimes(1);
+  expect(pingSpy).toHaveBeenCalledWith(
+    expect.objectContaining({ meta: { auth: sudoAuth } })
+  );
 });

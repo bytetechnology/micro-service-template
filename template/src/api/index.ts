@@ -7,19 +7,21 @@ import {
   GenericActionWithParameters as Action,
   GenericActionWithoutParameters as ActionNoParams
 } from 'moleculer-service-ts';
-import { WelcomeParams } from './params/welcome.params';
+import { WelcomeParams, WelcomeResponse } from './params/welcome.params';
 {{#if needDb}}
-import { AddTestEntityParams } from './params/add.test.entity.params';
-import { EditTestEntityParams } from './params/edit.test.entity.params';
+import { AddTestEntityParams, AddTestEntityResponse } from './params/add.test.entity.params';
+import { EditTestEntityParams, EditTestEntityResponse } from './params/edit.test.entity.params';
 {{/if}}
 
 export type ServiceAction =
   | ActionNoParams<'{{serviceName}}.ping', string>
-  | Action<'{{serviceName}}.welcome', WelcomeParams, string>
+  | ActionNoParams<'{{serviceName}}.pingAuth', string>
+  | Action<'{{serviceName}}.welcome', WelcomeParams, WelcomeResponse>
 {{#if needDb}}
-  | Action<'{{serviceName}}.addTestEntity', AddTestEntityParams, string>
-  | Action<'{{serviceName}}.editTestEntity', EditTestEntityParams, string>;
+  | Action<'{{serviceName}}.addTestEntity', AddTestEntityParams, AddTestEntityResponse>
+  | Action<'{{serviceName}}.editTestEntity', EditTestEntityParams, EditTestEntityResponse>
 {{/if}}
+;
 
 export type ServiceName = '{{serviceName}}';
 export const serviceName: ServiceName = '{{serviceName}}';

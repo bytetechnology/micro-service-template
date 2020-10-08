@@ -37,6 +37,11 @@ export class {{capitalizedServiceName}}Service extends moleculer.Service {
   ping(/* ctx: CTX */) {
     return `Hello Byte!`;
   }
+  
+  @Action({ restricted: true })
+  pingAuth(ctx: CTX) {
+    return ping.ping(ctx);
+  }
 
   @Action({ restricted: true })
   welcome(ctx: CTX<WelcomeParams>) {
