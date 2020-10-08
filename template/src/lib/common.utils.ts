@@ -35,7 +35,6 @@ export function getDbPagination(args: { page: number; pageLength: number }) {
   };
 }
 {{/if}}
-
 // Keep it for future
 // export function pick<T extends object, K extends keyof T>(
 //   obj: T,

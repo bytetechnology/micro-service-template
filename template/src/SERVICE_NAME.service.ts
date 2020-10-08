@@ -23,7 +23,7 @@ import { addTestEntity } from './action.handlers/add.test.entity';
 import { editTestEntity } from './action.handlers/edit.test.entity';
 {{/if}}
 import { eventWithPayload } from './event.handlers/event.with.payload';
-import { CTX } from './service.types';
+import { CTX } from './lib/moleculer/broker';
 
 // Define our {{serviceName}} service
 @Service({
