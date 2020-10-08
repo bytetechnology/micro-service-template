@@ -17,7 +17,7 @@ import { EditTestEntityParams, EditTestEntityResponse } from './api/params/edit.
 {{/if}}
 import { ExampleEvent } from './api/events/example.event';
 import { validateParams } from './lib/validate.data';
-import { ping } from './action.handlers/ping';
+import * as ping from './action.handlers/ping';
 import { welcome } from './action.handlers/welcome';
 {{#if needDb}}
 import { addTestEntity } from './action.handlers/add.test.entity';
@@ -35,13 +35,13 @@ import { CTX } from './lib/moleculer/broker';
 export class {{capitalizedServiceName}}Service extends moleculer.Service {
   // Our actions
   @Action()
-  async ping(/* ctx: CTX */): Promise<string> {
-    return ping(ctx);
+  async ping(ctx: CTX): Promise<string> {
+    return ping.ping(ctx);
   }
 
   @Action({ restricted: true })
   async pingAuth(ctx: CTX): Promise<string> {
-    return ping(ctx);
+    return ping.ping(ctx);
   }
 
   @Action({ restricted: true })
