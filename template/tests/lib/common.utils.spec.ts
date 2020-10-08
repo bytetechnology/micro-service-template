@@ -1,7 +1,6 @@
 /**
  * Copyright Byte Technology 2020. All rights reserved.
  */
-import { Auth } from '@bytetech/micro-authz/dist/api';
 import { PartialDeep } from 'type-fest';
 import { ANY_VALUE, authorize } from '../../src/lib/common.utils';
 import { CTX } from '../../src/lib/moleculer/broker';

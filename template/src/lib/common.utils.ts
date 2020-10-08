@@ -7,7 +7,7 @@ import { inspect } from 'util';
 {{#if needDb}}
 import { Collection } from '@mikro-orm/core';
 {{/if}}
-import { RuleCondition, ContextMeta, Auth } from '@bytetech/micro-authz';
+import { RuleCondition, Auth } from '@bytetech/micro-authz';
 import { AppActions, AppSubjects, serviceName } from '../api';
 import { CTX } from './moleculer/broker';
 
