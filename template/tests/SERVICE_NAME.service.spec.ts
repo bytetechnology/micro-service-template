@@ -126,7 +126,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
 
   test('Test database entity update', async done => {
     // create a sample entity
-    const entityId = await broker.call(
+    const responseWithId = await broker.call(
       '{{serviceName}}.addTestEntity',
       {
         aKey: 'A Key',
@@ -135,19 +135,19 @@ describe('{{capitalizedServiceName}} unit tests', () => {
       { caller: 'jest', meta: { auth: managerAuth } }
     );
 
-    expect(entityId).toBeTruthy();
+    expect(responseWithId).toMatchObject({ id: expect.stringMatching(/\w+/) });
 
     const updatedEntityId = await broker.call(
       '{{serviceName}}.editTestEntity',
       {
-        id: entityId,
+        id: responseWithId.id,
         aKey: 'Another Key',
         aValue: 'Another Value'
       },
       { caller: 'jest', meta: { auth: managerAuth } }
     );
 
-    expect(updatedEntityId).toBe(entityId);
+    expect(updatedEntityId).toBe({ ok: true });
 
     done();
   });

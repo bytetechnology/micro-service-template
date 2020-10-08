@@ -16,5 +16,5 @@ export class EditTestEntityParams {
 
 export class EditTestEntityResponse {
   @(jf.boolean().required().valid(true))
-  ok!: true;
+  ok!: boolean;
 }

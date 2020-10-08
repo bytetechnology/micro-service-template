@@ -12,7 +12,7 @@ import { PrimaryKey, Property, SerializedPrimaryKey } from '@mikro-orm/core';
 import { ObjectId } from 'mongodb';
 {{/if}}
 
-export abstract class BaseEntity {
+export class BaseEntity {
   @PrimaryKey()
 {{#if sql}}
   id: string = v4();
