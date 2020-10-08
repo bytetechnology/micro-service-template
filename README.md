@@ -15,59 +15,62 @@ This is a moleculer template for Byte Technology micro-services. This will provi
 ## Create new service:
 
 1. Create new service code via moleculer-cli. Below command will create service basing on `master` branch of [micro-service-template](https://github.com/bytetechnology/micro-service-template) repo in BYTE_SW_MICRO_REPO_PATH:
-  ```sh
-  moleculer init --no-install "bytetechnology/micro-service-template" micro-<SERVICE_NAME>
-  ```
-  You can specify branch using `#`:
-  ```sh
-  moleculer init --no-install "bytetechnology/micro-service-template#my/branch" micro-<SERVICE_NAME>
-  ```
+
+```sh
+moleculer init --no-install "bytetechnology/micro-service-template" micro-<SERVICE_NAME>
+```
+
+You can specify branch using `#`:
+
+```sh
+moleculer init --no-install "bytetechnology/micro-service-template#my/branch" micro-<SERVICE_NAME>
+```
 
 2. Add your new service to git repo `https://github.com/bytetechnology/micro-<SERVICE_NAME>`
 
 3. Add new service from BYTE_SW_MICRO_REPO_PATH/micro-dev-environment
-  ```sh
-  sh add-new-service.sh <SERVICE_NAME>
-  ```
+
+```sh
+sh add-new-service.sh <SERVICE_NAME>
+```
 
 At point 3. you created new file `micro-dev-environment/docker-compose.<SERVICE_NAME>.yml` - it is definition of container that serves you to run service in dev env. To use it just call from micro-dev-environment `sh up.sh -d`.
 
 ## Development of new service
 
 You have 2 options for development:
+
 1. Run service on host OS - can be faster but you will be only able to run tests (no dev mode runtime)
 2. Run service in container.
 
 ! Imporant:
+
 - If you made `npm install` from host OS and you want to work inside container then remove node_modules direcory and install it again from inside container. The same for opposite scenario.
 
 ### 1. Run service on host OS:
 
-  Prerequisites:
+Prerequisites:
 
-  Windows:
-    - `npm i -g windows-build-tools` via admin powershell
+Windows: - `npm i -g windows-build-tools` via admin powershell
 
-  Linux:
-    - `apk add --no-cache make gcc g++ python git`
+Linux: - `apk add --no-cache make gcc g++ python git`
 
-  - `npm install` from `micro-<SERVICE_NAME>` dir. If failed try multiple times.
-  - `npm test` to run tests
+- `npm install` from `micro-<SERVICE_NAME>` dir. If failed try multiple times.
+- `npm test` to run tests
 
 ### 2. Run inside container:
 
-  Prerequisites:
+Prerequisites:
 
-  - After you've created new `.yml` file via `sh add-new-service.sh <SERIVCE_NAME>` you should have running container for your new service. From BYTE_SW_MICRO_REPO_PATH/micro-dev-environment call `sh up.sh`
+- After you've created new `.yml` file via `sh add-new-service.sh <SERIVCE_NAME>` you should have running container for your new service. From BYTE_SW_MICRO_REPO_PATH/micro-dev-environment call `sh up.sh`
 
-  Steps:
+Steps:
 
-  - go into container. From  `micro-<SERVICE_NAME>` dir call:
-  - `sh enter-conatiner`
-  - `npm install`
-  - `npm test` to run tests
-  - `npm run dev` to run service in development environment with interactive [moleculer-cli](https://moleculer.services/docs/0.14/moleculer-cli.html).
-
+- go into container. From `micro-<SERVICE_NAME>` dir call:
+- `sh enter-container`
+- `npm install`
+- `npm test` to run tests
+- `npm run dev` to run service in development environment with interactive [moleculer-cli](https://moleculer.services/docs/0.14/moleculer-cli.html).
 
 ## Rules
 

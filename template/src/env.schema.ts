@@ -9,7 +9,7 @@
  * Copyright Byte Technology 2020. All rights reserved.
  */
 {{#if needDb}}
-import { MikroORMOptions } from 'mikro-orm';
+import { MikroORMOptions } from '@mikro-orm/core';
 import * as jf from 'joiful';
 {{/if}}
 import { EnvBase } from './lib/env.base.schema';
@@ -25,17 +25,22 @@ export class Env extends EnvBase {
   // ---------------------------------------------------------------
   //  Mikro-orm db connector
   @(optional()
-    .default('sqlite')
+    .default({{#if sql}}'sqlite'{{/if}}{{#if mongo}}'mongo'{{/if}})
     .valid('mongo', 'mysql', 'mariadb', 'postgresql', 'sqlite'))
   DB_CORE__TYPE!: MikroORMOptions['type'];
 
-  @(optional().default(':memory:'))
+  @(optional().default({{#if sql}}':memory:'{{/if}}{{#if mongo}}'{{serviceName}}db'{{/if}}))
   DB_CORE__DB_NAME!: string;
 
   @optional()
   DB_CORE__NAME?: string;
 
+  {{#if sql}}
   @optional()
+  {{/if}}
+  {{#if mongo}}
+  @(jf.string().required())
+  {{/if}}
   DB_CORE__CLIENT_URL?: string;
 
   @optional()

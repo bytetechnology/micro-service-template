@@ -2,9 +2,8 @@
  * Copyright Byte Technology 2020. All rights reserved.
  */
 import { MikroConnector } from 'moleculer-context-db';
-import { ReflectMetadataProvider } from 'mikro-orm';
 {{#if mongo}}
-import { MongoDriver } from 'mikro-orm/dist/drivers/MongoDriver';
+import { MongoDriver } from '@mikro-orm/mongodb';
 {{/if}}
 import { EventEmitter } from 'events';
 
@@ -57,7 +56,6 @@ export async function getDbConnector(): Promise<MikroConnector{{#if mongo}}<Mong
         password: config.DB_CORE__PASSWORD,
         debug: config.DB_CORE__DEBUG,
         entities: entities,
-        metadataProvider: ReflectMetadataProvider,
         cache: {
           enabled: false
         },
