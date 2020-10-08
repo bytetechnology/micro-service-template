@@ -8,8 +8,8 @@ import { inspect } from 'util';
 import { Collection } from '@mikro-orm/core';
 {{/if}}
 import { RuleCondition, ContextMeta, Auth } from '@bytetech/micro-authz';
-import { CTX } from '../service.types';
 import { AppActions, AppSubjects, serviceName } from '../api';
+import { CTX } from './moleculer/broker';
 
 export const { MoleculerError } = Errors;
 

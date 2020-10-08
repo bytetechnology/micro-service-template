@@ -7,11 +7,8 @@
  */
 
 // Moleculer micro-services framework
-import moleculer{{#unless needDb}}, { Context as CTX }{{/unless}} from 'moleculer';
+import moleculer from 'moleculer';
 import { Action, Event, Service, Method } from 'moleculer-decorators';
-{{#if needDb}}
-import { MoleculerMikroContext as CTX } from 'moleculer-context-db';
-{{/if}}
 
 import { WelcomeParams } from './api/params/welcome.params';
 {{#if needDb}}
@@ -26,7 +23,7 @@ import { addTestEntity } from './action.handlers/add.test.entity';
 import { editTestEntity } from './action.handlers/edit.test.entity';
 {{/if}}
 import { eventWithPayload } from './event.handlers/event.with.payload';
-import { CTX } from './lib/moleculer/broker';
+import { CTX } from './service.types';
 
 // Define our {{serviceName}} service
 @Service({
