@@ -6,6 +6,7 @@
  */
 
 import { Service as MoleculerService } from 'moleculer';
+import { WelcomeResponse } from '../src/api';
 
 import { globalSetup, globalTearDown } from './setup';
 {{#if needDb}}
@@ -54,14 +55,16 @@ describe('{{capitalizedServiceName}} unit tests', () => {
 
   test('Action with required parameter', async done => {
     // call an action with a parameter object
-    const response: string = await broker.call(
+    const response = await broker.call(
       '{{serviceName}}.welcome',
       {
         name: 'John Doe'
       },
       { caller: 'jest', meta: { auth: managerAuth } }
     );
-    expect(response).toBe('Welcome John Doe; caller: jest!');
+    const expectedResponse: WelcomeResponse = { greetings: 'Welcome John Doe; caller: jest!' };
+
+    expect(response).toBe(expectedResponse);
     done();
   });
 
@@ -88,7 +91,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
     const spy = jest.spyOn(service, 'eventTester');
 
     // emit an event as well so that that can get tested. no return on event
-    await broker.emit('eventWithoutPayload');
+    await (broker as any).emit('eventWithoutPayload', undefined);
 
     expect(spy).toBeCalledTimes(1);
     done();
@@ -99,7 +102,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
     const spy = jest.spyOn(service, 'eventTester');
 
     // emit an event as well so that that can get tested. no return on event
-    await broker.emit('eventWithPayload', { id: '1234' });
+    await (broker as any).emit('eventWithPayload', { id: '1234' });
 
     expect(spy).toBeCalledTimes(1);
     done();

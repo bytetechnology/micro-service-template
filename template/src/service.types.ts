@@ -13,7 +13,6 @@ import {
   ServiceAction as {{capitalizedServiceName}}Actions,
   ServiceEvent as {{capitalizedServiceName}}Events
 } from './api';
-import { broker } from './lib/moleculer/broker';
 
 export type { ServiceName };
 
@@ -21,5 +20,5 @@ export type { ServiceName };
 // export type ServiceAction = DiscountActions | UserActions | IotActions;
 export type ServiceAction = {{capitalizedServiceName}}Actions;
 
-// These are the events we emit
+// These are the events ONLY we emit (not related to what we listen for)
 export type ServiceEvent = {{capitalizedServiceName}}Events;
