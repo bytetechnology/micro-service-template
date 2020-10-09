@@ -9,21 +9,16 @@
  * Copyright Byte Technology 2020. All rights reserved.
  */
 import {
-  GenericEventWithoutPayload as EventNoData,
-  GenericEventWithPayload as Event
-} from 'moleculer-service-ts';
+  ServiceName,
+  ServiceAction as {{capitalizedServiceName}}Actions,
+  ServiceEvent as {{capitalizedServiceName}}Events
+} from './api';
 
-import { {{capitalizedServiceName}}Action, {{capitalizedServiceName}}Name } from './api';
-import { ExampleEvent } from './api/events/example.event';
-
-export type ServiceName = {{capitalizedServiceName}}Name;
+export type { ServiceName };
 
 // Add other services types here, eg;
 // export type ServiceAction = DiscountActions | UserActions | IotActions;
-export type ServiceAction = {{capitalizedServiceName}}Action;
+export type ServiceAction = {{capitalizedServiceName}}Actions;
 
-// These are the events we emit
-export type ServiceEvent =
-  | EventNoData<'eventWithoutPayload'>
-  | Event<'eventWithPayload', ExampleEvent>;
-
+// These are the events ONLY we emit (not related to what we listen for)
+export type ServiceEvent = {{capitalizedServiceName}}Events;
