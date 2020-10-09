@@ -3,17 +3,20 @@
  *
  * Copyright Byte Technology 2020. All rights reserved.
  */
+import { globalSetup, globalTearDown } from '../setup';
 import { startAll, stopAll } from '../../src/start.stop.all';
 import { broker } from '../../src/lib/moleculer/broker';
 import * as ping from '../../src/action.handlers/ping';
 import { sudoAuth } from '../../src/lib/common.utils';
 
 beforeAll(async () => {
+  await globalSetup();
   await startAll();
 });
 
 afterAll(async () => {
   await stopAll();
+  await globalTearDown();
 });
 
 afterEach(() => {
@@ -52,7 +55,7 @@ test('Restricted, invalid auth', async () => {
   ).rejects.toMatchObject({ code: 401 });
 });
 
-test('Not restricted, with auth', async () => {
+test('Restricted, with auth', async () => {
   const pingSpy = jest.spyOn(ping, 'ping');
   await broker.call('{{serviceName}}.pingAuth', undefined, {
     meta: { auth: sudoAuth }

@@ -3,7 +3,7 @@
  */
 import { MikroConnector } from 'moleculer-context-db';
 {{#if mongo}}
-import { MongoDriver } from 'mikro-orm/dist/drivers/MongoDriver';
+import { MongoDriver } from '@mikro-orm/mongodb';
 {{/if}}
 import { EventEmitter } from 'events';
 
@@ -55,14 +55,14 @@ export async function getDbConnector(): Promise<MikroConnector{{#if mongo}}<Mong
         user: config.DB_CORE__USER,
         password: config.DB_CORE__PASSWORD,
         debug: config.DB_CORE__DEBUG,
+        entities,
         cache: {
           enabled: false
         },
         namingStrategy: TableNamingStrategy,
         {{#if mongoTransactions}}
-        implicitTransactions: true,
+        implicitTransactions: true
         {{/if}}
-        entities
       });
       
       dbConnector = tmpConnector;

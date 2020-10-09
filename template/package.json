@@ -19,7 +19,7 @@
     "preversion": "npm run lint",
     "postversion": "git push && git push --tags",
     "start": "NODE_ENV=${NODE_ENV:-production} node dist/main.js",
-    "test": "cross-env  ENV_FILE=envs/local.test.env  jest --coverage --runInBand",
+    "test": "cross-env  ENV_FILE=envs/local.test.env  jest --coverage --runInBand --no-cache",
     "setup:local": "ts-node dev/setup.local.ts",
     "publish:patch": "npm version patch && npm publish",
     "publish:minor": "npm version patch && npm publish",

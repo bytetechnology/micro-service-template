@@ -9,7 +9,7 @@ import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 {{/if}}
 {{#if mongo}}
 import { Entity, PrimaryKey, Property, SerializedPrimaryKey } from '@mikro-orm/core';
-import { ObjectId } from 'mongodb';
+import { ObjectId } from '@mikro-orm/mongodb';
 {{/if}}
 
 @Entity()

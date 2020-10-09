@@ -44,12 +44,8 @@ async function globalSetup() {
   mongod = new MongoMemoryServer();
   {{/unless}}
 
-  const uri = await mongod.getUri();
-  const dbName = await mongod.getDbName();
-
-  config.DB_CORE__TYPE = 'mongo';
-  config.DB_CORE__CLIENT_URL = uri;
-  config.DB_CORE__DB_NAME = dbName;
+  config.DB_CORE__CLIENT_URL = await mongod.getUri();
+  config.DB_CORE__DB_NAME = await mongod.getDbName();
 {{/if}}
 }
 
