@@ -7,25 +7,24 @@
  */
 
 // Moleculer micro-services framework
-import moleculer{{#unless needDb}}, { Context as CTX }{{/unless}} from 'moleculer';
+import moleculer from 'moleculer';
 import { Action, Event, Service, Method } from 'moleculer-decorators';
-{{#if needDb}}
-import { MoleculerMikroContext as CTX } from 'moleculer-context-db';
-{{/if}}
 
-import { WelcomeParams } from './api/params/welcome.params';
+import { WelcomeParams, WelcomeResponse } from './api/params/welcome.params';
 {{#if needDb}}
-import { AddTestEntityParams } from './api/params/add.test.entity.params';
-import { EditTestEntityParams } from './api/params/edit.test.entity.params';
+import { AddTestEntityParams, AddTestEntityResponse } from './api/params/add.test.entity.params';
+import { EditTestEntityParams, EditTestEntityResponse } from './api/params/edit.test.entity.params';
 {{/if}}
 import { ExampleEvent } from './api/events/example.event';
 import { validateParams } from './lib/validate.data';
+import * as ping from './action.handlers/ping';
 import { welcome } from './action.handlers/welcome';
 {{#if needDb}}
 import { addTestEntity } from './action.handlers/add.test.entity';
 import { editTestEntity } from './action.handlers/edit.test.entity';
 {{/if}}
 import { eventWithPayload } from './event.handlers/event.with.payload';
+import { CTX } from './lib/moleculer/broker';
 
 // Define our {{serviceName}} service
 @Service({
@@ -36,30 +35,34 @@ import { eventWithPayload } from './event.handlers/event.with.payload';
 export class {{capitalizedServiceName}}Service extends moleculer.Service {
   // Our actions
   @Action()
-  ping(/* ctx: CTX */) {
-    return `Hello Byte!`;
+  async ping(ctx: CTX): Promise<string> {
+    return ping.ping(ctx);
   }
 
   @Action({ restricted: true })
-  welcome(ctx: CTX<WelcomeParams>) {
+  async pingAuth(ctx: CTX): Promise<string> {
+    return ping.ping(ctx);
+  }
+
+  @Action({ restricted: true })
+  async welcome(ctx: CTX<WelcomeParams>): Promise<WelcomeResponse> {
     validateParams(ctx, WelcomeParams);
     return welcome(ctx);
   }
 
   {{#if needDb}}
   @Action({ restricted: true })
-  async addTestEntity(ctx: CTX<AddTestEntityParams>) {
+  async addTestEntity(ctx: CTX<AddTestEntityParams>): Promise<AddTestEntityResponse> {
     validateParams(ctx, AddTestEntityParams);
     return addTestEntity(ctx);
   }
 
   @Action({ restricted: true })
-  async editTestEntity(ctx: CTX<EditTestEntityParams>) {
+  async editTestEntity(ctx: CTX<EditTestEntityParams>): Promise<EditTestEntityResponse> {
     validateParams(ctx, EditTestEntityParams);
     return editTestEntity(ctx);
   }
   {{/if}}
-
   // Incoming events
   @Event()
   eventWithoutPayload(/* _: any, sender: string, eventName: string */) {

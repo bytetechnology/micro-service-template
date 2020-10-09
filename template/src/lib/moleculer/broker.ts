@@ -2,6 +2,7 @@
  * Copyright Byte Technology 2020. All rights reserved.
  */
 import { TypedServiceBroker } from 'moleculer-service-ts';
+import { ContextMeta } from '@bytetech/micro-authz';
 {{#if needDb}}
 import { MoleculerMikroContext as MCTX } from 'moleculer-context-db';
 {{/if}}
@@ -10,17 +11,7 @@ import { Context as MCTX } from 'moleculer';
 {{/unless}}
 
 import { brokerConfig } from './broker.config';
-import {
-  ServiceAction,
-  ServiceEvent,
-  ServiceName
-} from '../../service.types';
-import { AuthTokenPayload } from '../auth.token';
-
-export type ContextMeta = {
-  authToken?: string;
-  auth?: AuthTokenPayload;
-};
+import { ServiceAction, ServiceEvent, ServiceName } from '../../service.types';
 
 export const broker: TypedServiceBroker<
   ServiceAction,

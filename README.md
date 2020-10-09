@@ -10,7 +10,7 @@ This is a moleculer template for Byte Technology micro-services. This will provi
 
 - Install Node.js (preferred version 12 or higher) and npm.
 - Setup [micro-dev-environment](https://github.com/bytetechnology/micro-dev-environment) (BYTE_SW_MICRO_REPO_PATH should be set)
-- Install moleculer comman line interface `npm install -g moleculer-cli`
+- Install moleculer comman line interface `sudo npm install -g moleculer-cli`
 
 ## Create new service:
 

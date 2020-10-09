@@ -10,3 +10,8 @@ export class AddTestEntityParams {
   @(jf.string().required())
   aValue!: string;
 }
+
+export class AddTestEntityResponse {
+  @(jf.string().required())
+  id!: string;
+}

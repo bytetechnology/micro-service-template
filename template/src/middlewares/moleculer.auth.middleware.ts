@@ -3,18 +3,26 @@
  * Copyright Byte Technology 2020. All rights reserved.
  */
 import Moleculer from 'moleculer';
+import * as jf from 'joiful';
+import { Auth } from '@bytetech/micro-authz';
 
 import { CTX } from '../lib/moleculer/broker';
-import { verifyAuthToken } from '../lib/auth.token';
+import { MoleculerError } from '../lib/common.utils';
 
 export const authenticateMoleculerContext = (ctx: CTX): void => {
-  if (!(ctx.meta && ctx.meta.authToken)) {
-    throw new Moleculer.Errors.MoleculerError(`Missing authToken!`, 401);
+  if (!ctx.meta.auth) {
+    throw new MoleculerError(`Missing meta.auth`, 401, 'UNAUTHORIZED');
   }
 
-  const auth = verifyAuthToken(ctx.meta.authToken);
-
-  ctx.meta.auth = auth;
+  const { error } = jf.validateAsClass(ctx.meta.auth, Auth);
+  if (error) {
+    throw new MoleculerError(
+      `Invalid meta.auth. Details: ${error}`,
+      401,
+      'UNAUTHORIZED',
+      ctx.meta.auth
+    );
+  }
 };
 
 export function getAuthMiddleware(authenticator: (ctx: CTX) => void) {

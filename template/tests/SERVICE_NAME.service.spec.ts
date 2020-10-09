@@ -6,6 +6,7 @@
  */
 
 import { Service as MoleculerService } from 'moleculer';
+import { WelcomeResponse } from '../src/api';
 
 import { globalSetup, globalTearDown } from './setup';
 {{#if needDb}}
@@ -14,7 +15,7 @@ import { resetServiceDB } from './utils';
 import { startAll, stopAll } from '../src/start.stop.all';
 import { getService } from '../src/lib/start.service.and.broker';
 import { broker } from '../src/lib/moleculer/broker';
-import { managerAuthToken } from './test.utils';
+import { managerAuth } from './test.utils';
 
 describe('{{capitalizedServiceName}} unit tests', () => {
   let service: MoleculerService;
@@ -54,14 +55,16 @@ describe('{{capitalizedServiceName}} unit tests', () => {
 
   test('Action with required parameter', async done => {
     // call an action with a parameter object
-    const response: string = await broker.call(
+    const response = await broker.call(
       '{{serviceName}}.welcome',
       {
         name: 'John Doe'
       },
-      { caller: 'jest', meta: { authToken: managerAuthToken } }
+      { caller: 'jest', meta: { auth: managerAuth } }
     );
-    expect(response).toBe('Welcome John Doe; caller: jest!');
+    const expectedResponse: WelcomeResponse = { greetings: 'Welcome John Doe; caller: jest!' };
+
+    expect(response).toStrictEqual(expectedResponse);
     done();
   });
 
@@ -88,7 +91,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
     const spy = jest.spyOn(service, 'eventTester');
 
     // emit an event as well so that that can get tested. no return on event
-    await broker.emit('eventWithoutPayload');
+    await (broker as any).emit('eventWithoutPayload', undefined);
 
     expect(spy).toBeCalledTimes(1);
     done();
@@ -99,7 +102,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
     const spy = jest.spyOn(service, 'eventTester');
 
     // emit an event as well so that that can get tested. no return on event
-    await broker.emit('eventWithPayload', { id: '1234' });
+    await (broker as any).emit('eventWithPayload', { id: '1234' });
 
     expect(spy).toBeCalledTimes(1);
     done();
@@ -114,7 +117,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
         aKey: 'A Key',
         aValue: 'A Value'
       },
-      { caller: 'jest', meta: { authToken: managerAuthToken } }
+      { caller: 'jest', meta: { auth: managerAuth } }
     );
 
     expect(entityId).toBeTruthy();
@@ -123,28 +126,28 @@ describe('{{capitalizedServiceName}} unit tests', () => {
 
   test('Test database entity update', async done => {
     // create a sample entity
-    const entityId = await broker.call(
+    const responseWithId = await broker.call(
       '{{serviceName}}.addTestEntity',
       {
         aKey: 'A Key',
         aValue: 'A Value'
       },
-      { caller: 'jest', meta: { authToken: managerAuthToken } }
+      { caller: 'jest', meta: { auth: managerAuth } }
     );
 
-    expect(entityId).toBeTruthy();
+    expect(responseWithId).toMatchObject({ id: expect.stringMatching(/\w+/) });
 
     const updatedEntityId = await broker.call(
       '{{serviceName}}.editTestEntity',
       {
-        id: entityId,
+        id: responseWithId.id,
         aKey: 'Another Key',
         aValue: 'Another Value'
       },
-      { caller: 'jest', meta: { authToken: managerAuthToken } }
+      { caller: 'jest', meta: { auth: managerAuth } }
     );
 
-    expect(updatedEntityId).toBe(entityId);
+    expect(updatedEntityId).toStrictEqual({ ok: true });
 
     done();
   });
