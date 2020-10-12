@@ -52,7 +52,7 @@
     "jest-extended": "0.11.5",
     "moleculer-repl": "0.6.4",
 {{#if mongo}}
-    "mongodb-memory-server": "6.9.1",
+    "mongodb-memory-server": "6.9.2",
 {{/if}}
     "prettier": "2.1.2",
     "ts-jest": "26.4.1",
