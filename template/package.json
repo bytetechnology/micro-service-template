@@ -11,6 +11,7 @@
     "check": "npm run lint && npm run format && npm run build && npm run test && npm run docs && npm run cli-test",
     "cli-test": "cross-env ENV_FILE=envs/local.test.env BLUEBIRD_W_FORGOTTEN_RETURN=0  ts-node --files src/main.ts",
     "dev": "cross-env ENV_FILE=envs/local.dev.env  BLUEBIRD_W_FORGOTTEN_RETURN=0  ts-node --files src/main.ts",
+    "ui": "ts-node-dev src/main.ts",
     "debug": "cross-env ENV_FILE=envs/local.dev.env TS_NODE_FILES=true node --inspect-brk -r ts-node/register src/main.ts",
     "docs": "typedoc --theme markdown --out apidocs src",
     "format": "prettier --write \"{src,{tests,mocks}}/**/*.{js,ts}\"",
@@ -21,9 +22,13 @@
     "start": "NODE_ENV=${NODE_ENV:-production} node dist/main.js",
     "test": "cross-env  ENV_FILE=envs/local.test.env  jest --coverage --runInBand --no-cache",
     "setup:local": "ts-node dev/setup.local.ts",
-    "publish:patch": "npm version patch && npm publish",
-    "publish:minor": "npm version patch && npm publish",
-    "publish:major": "npm version patch && npm publish"
+    "pub:patch": "npm version patch  &&  npm publish",
+    "pub:minor": "npm version minor  &&  npm publish",
+    "pub:major": "npm version major  &&  npm publish",
+    "pub:prepatch": "npm version prepatch --preid dev  &&  npm publish",
+    "pub:preminor": "npm version preminor --preid dev  &&  npm publish",
+    "pub:premajor": "npm version premajor --preid dev  &&  npm publish",
+    "update:all": "npm i  @bytetech/micro-authz@latest"
   },
   "keywords": [
     "microservices",
