@@ -22,7 +22,7 @@
     "start": "NODE_ENV=${NODE_ENV:-production} node dist/main.js",
     "test": "cross-env  ENV_FILE=envs/local.test.env  jest --coverage --runInBand --no-cache",
     "setup:local": "ts-node dev/setup.local.ts",
-    "update:all": "npm i  @bytetech/micro-authz@latest"
+    "update:all": "npm i  @bytetech/authz-api@latest"
   },
   "keywords": [
     "microservices",
@@ -30,6 +30,7 @@
   ],
   "author": "Byte Technology",
   "devDependencies": {
+    "@bytetech/authz-api": "*",
     "@types/jest": "26.0.20",
     "@types/jsonwebtoken": "8.5.0",
     "@types/lodash": "4.14.168",
@@ -62,11 +63,10 @@
     "utility-types": "3.10.0"
   },
   "dependencies": {
-    "@bytetech/micro-authz": "*",
-    "@casl/ability": "4.1.6",
+    "@casl/ability": "5.2.2",
 {{#if needDb}} 
     "@mikro-orm/cli": "4.0.7",   
-    "@mikro-orm/core": "4.0.7",
+    "@mikro-orm/core": "4.4.4",
   {{#if mongo}}
     "@mikro-orm/mongodb": "4.0.7",
   {{/if}}
