@@ -1,5 +1,9 @@
 "use strict";
 
+TODO
+- add crateCall and other helpers
+- add typings to all @casl abilities and builders
+
 var fs = require("fs");
 var path = require("path");
 
