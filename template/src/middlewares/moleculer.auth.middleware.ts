@@ -4,7 +4,7 @@
  */
 import Moleculer from 'moleculer';
 import * as jf from 'joiful';
-import { Auth } from '@bytetech/micro-authz';
+import { Auth } from '@bytetech/authz-api';
 
 import { CTX } from '../lib/moleculer/broker';
 import { MoleculerError } from '../lib/common.utils';

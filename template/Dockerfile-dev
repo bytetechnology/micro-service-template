@@ -1,12 +1,7 @@
 # Dockerfile for local UI development
 #
 # Copyright 2020 Byte Technology. All rights reserved.
-FROM node:12-buster-slim
-
-RUN apt-get update && apt-get upgrade -y && \
-  apt-get install -y iproute2 iputils-ping sudo procps && \
-  apt-get auto-remove && \
-  rm -r /var/lib/apt/lists /var/cache/apt/archives
+FROM bytetechnology/node-dev:12.16.2
 
 WORKDIR /home/node/micro-{{serviceName}}
 

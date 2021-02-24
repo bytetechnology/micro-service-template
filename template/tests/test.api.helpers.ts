@@ -1,4 +1,4 @@
-import { Auth } from '@bytetech/micro-authz';
+import { Auth } from '@bytetech/authz-api';
 import { 
   WelcomeParams, 
   WelcomeResponse,

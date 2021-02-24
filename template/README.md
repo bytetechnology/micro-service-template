@@ -1,4 +1,4 @@
-# {{capitalizedServiceName}} service
+# {{capitalizedCamelCaseServiceName}} service
 
 ## About
 

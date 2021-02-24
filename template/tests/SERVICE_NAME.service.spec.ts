@@ -17,7 +17,7 @@ import { getService } from '../src/lib/start.service.and.broker';
 import { broker } from '../src/lib/moleculer/broker';
 import { managerAuth } from './test.utils';
 
-describe('{{capitalizedServiceName}} unit tests', () => {
+describe('{{capitalizedCamelCaseServiceName}} unit tests', () => {
   let service: MoleculerService;
 
   beforeAll(async done => {

@@ -7,7 +7,7 @@ import { EntityManager } from '@mikro-orm/core';
 {{/if}}
 import moment from 'moment';
 
-import { Auth } from '@bytetech/micro-authz';
+import { Auth } from '@bytetech/authz-api';
 {{#if needDb}}
 import { getDbConnector } from '../src/db.connector';
 {{/if}}

@@ -3,6 +3,10 @@
 var fs = require("fs");
 var path = require("path");
 
+function capitalize(string) {
+  return string.charAt(0).toUpperCase() + string.substring(1);
+}
+
 module.exports = function (values) {
   return {
     questions: [{
@@ -45,15 +49,18 @@ module.exports = function (values) {
         // then serviceName is "discount"
         // if projectName does not start with "micro-", then serviceName = projectName
         const projectName = metalsmith._metadata.projectName;
-        let serviceName, capitalizedServiceName;
+        let serviceName, capitalizedCamelCaseServiceName;
         let prefixExists = metalsmith._metadata.projectName.startsWith(
           "micro-"
         );
         serviceName = prefixExists ? projectName.slice(6) : projectName;
-        capitalizedServiceName =
-          serviceName.charAt(0).toUpperCase() + serviceName.slice(1);
+        capitalizedCamelCaseServiceName =
+          serviceName
+            .split(/[_-]/)
+            .map(capitalize)
+            .join('');
         metalsmith._metadata.serviceName = serviceName;
-        metalsmith._metadata.capitalizedServiceName = capitalizedServiceName;
+        metalsmith._metadata.capitalizedCamelCaseServiceName = capitalizedCamelCaseServiceName;
         // if we are using a database, set the appropriate database flag to true since handlebars can't compare values without helpers
         if (metalsmith._metadata.needDb) {
           const dbType = metalsmith._metadata.db;
