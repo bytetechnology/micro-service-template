@@ -15,7 +15,7 @@ import { resetServiceDB } from './utils';
 import { startAll, stopAll } from '../src/start.stop.all';
 import { getService } from '../src/lib/start.service.and.broker';
 import { broker } from '../src/lib/moleculer/broker';
-import { managerAuth } from './test.utils';
+import { sudoCall } from '../src/lib/common.utils';
 
 describe('{{capitalizedCamelCaseServiceName}} unit tests', () => {
   let service: MoleculerService;
@@ -60,7 +60,7 @@ describe('{{capitalizedCamelCaseServiceName}} unit tests', () => {
       {
         name: 'John Doe'
       },
-      { caller: 'jest', meta: { auth: managerAuth } }
+      sudoCall
     );
     const expectedResponse: WelcomeResponse = { greetings: 'Welcome John Doe; caller: jest!' };
 
@@ -117,7 +117,7 @@ describe('{{capitalizedCamelCaseServiceName}} unit tests', () => {
         aKey: 'A Key',
         aValue: 'A Value'
       },
-      { caller: 'jest', meta: { auth: managerAuth } }
+      sudoCall
     );
 
     expect(entityId).toBeTruthy();
@@ -132,7 +132,7 @@ describe('{{capitalizedCamelCaseServiceName}} unit tests', () => {
         aKey: 'A Key',
         aValue: 'A Value'
       },
-      { caller: 'jest', meta: { auth: managerAuth } }
+      sudoCall
     );
 
     expect(responseWithId).toMatchObject({ id: expect.stringMatching(/\w+/) });
@@ -144,7 +144,7 @@ describe('{{capitalizedCamelCaseServiceName}} unit tests', () => {
         aKey: 'Another Key',
         aValue: 'Another Value'
       },
-      { caller: 'jest', meta: { auth: managerAuth } }
+      sudoCall
     );
 
     expect(updatedEntityId).toStrictEqual({ ok: true });

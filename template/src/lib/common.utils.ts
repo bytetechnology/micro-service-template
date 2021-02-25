@@ -1,7 +1,11 @@
 /**
  * Copyright Byte Technology 2020. All rights reserved.
  */
-import { Ability, subject as createCaslSubject, AbilityBuilder, PureAbility } from '@casl/ability';
+import {
+  Ability,
+  subject as createCaslSubject,
+  PureAbility
+} from '@casl/ability';
 import { Errors, CallingOptions } from 'moleculer';
 import { inspect } from 'util';
 {{#if needDb}}
@@ -11,6 +15,8 @@ import * as AuthzApi from '@bytetech/authz-api';
 import { CTX } from './moleculer/broker';
 
 export const { MoleculerError } = Errors;
+
+const serviceName = '{{serviceName}}';
 
 {{#if needDb}}
 type StringOnly<T> = T extends string ? T : never;

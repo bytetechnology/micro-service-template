@@ -30,7 +30,6 @@
   ],
   "author": "Byte Technology",
   "devDependencies": {
-    "@bytetech/authz-api": "*",
     "@types/jest": "26.0.20",
     "@types/jsonwebtoken": "8.5.0",
     "@types/lodash": "4.14.168",
@@ -63,6 +62,7 @@
     "utility-types": "3.10.0"
   },
   "dependencies": {
+    "@bytetech/authz-api": "*",
     "@casl/ability": "5.2.2",
 {{#if needDb}} 
     "@mikro-orm/cli": "4.0.7",   
