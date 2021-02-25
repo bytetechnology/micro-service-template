@@ -3,17 +3,26 @@
  */
 // eslint-disable-next-line import/no-unresolved
 import { PartialDeep } from 'type-fest';
-import { ANY_VALUE, authorize{{#if needDb}}, getDbPagination{{/if}} } from '../../src/lib/common.utils';
+import { 
+  ANY_VALUE,
+  commonAuthorize,
+  userCall{{#if needDb}}, getDbPagination{{/if}} } from '../../src/lib/common.utils';
 import { CTX } from '../../src/lib/moleculer/broker';
 import { createAuth } from '../test.utils';
 
-describe('authorize()', () => {
+describe('userCall()', () => {
+  test('Dummy coverage test', async () => {
+    userCall({ meta: { auth: {} as any } });
+  });
+});
+
+describe('commonAuthorize()', () => {
   describe('.throwIfUser()', () => {
     test('context without meta', async () => {
       const ctx = {} as any;
 
       await expect(async () =>
-        authorize(ctx)
+        commonAuthorize(ctx)
           .throwIfUser()
           .cannot('manage', 'all')
           .where({ clientId: '1' })
@@ -29,7 +38,7 @@ describe('authorize()', () => {
         }
       };
 
-      authorize(ctx as CTX)
+      commonAuthorize(ctx as CTX)
         .throwIfUser()
         .cannot('do' as any, 'something' as any)
         .where({ clientId: '1' });
@@ -45,7 +54,7 @@ describe('authorize()', () => {
       };
 
       await expect(async () =>
-        authorize(ctx as CTX)
+        commonAuthorize(ctx as CTX)
           .throwIfUser()
           .cannot('do' as any, 'something' as any)
           .where({ clientId: '2' })
@@ -62,7 +71,7 @@ describe('authorize()', () => {
       };
 
       await expect(async () =>
-        authorize(ctx as CTX)
+        commonAuthorize(ctx as CTX)
           .throwIfUser()
           .cannot('do' as any, 'something' as any)
           .where({ clientId: ANY_VALUE })
@@ -79,10 +88,25 @@ describe('authorize()', () => {
       };
 
       await expect(async () =>
-        authorize(ctx as CTX)
+        commonAuthorize(ctx as CTX)
           .throwIfUser()
           .cannot('do' as any, 'something_else' as any)
           .where({})
+      ).rejects.toMatchObject({ code: 403 });
+    });
+
+    test('Undefined permissions', async () => {
+      const ctx: PartialDeep<CTX> = {
+        meta: {
+          auth: {}
+        }
+      };
+
+      await expect(async () =>
+        commonAuthorize(ctx as any)
+          .throwIfUser()
+          .cannot('do' as any, 'something' as any)
+          .where({ clientId: '1' })
       ).rejects.toMatchObject({ code: 403 });
     });
   });
@@ -92,7 +116,7 @@ describe('authorize()', () => {
       const ctx = {} as any;
 
       await expect(async () =>
-        authorize(ctx).doesUser().can('manage', 'all').where({ clientId: '1' })
+        commonAuthorize(ctx).doesUser().can('manage', 'all').where({ clientId: '1' })
       ).rejects.toMatchObject({ code: 401 });
     });
 
@@ -106,7 +130,7 @@ describe('authorize()', () => {
       };
 
       expect(
-        authorize(ctx as any)
+        commonAuthorize(ctx as any)
           .doesUser()
           .can('do' as any, 'something' as any)
           .where({ clientId: '1' })
@@ -123,7 +147,7 @@ describe('authorize()', () => {
       };
 
       expect(
-        authorize(ctx as any)
+        commonAuthorize(ctx as any)
           .doesUser()
           .can('do' as any, 'something' as any)
           .where({ clientId: '2' })
@@ -138,7 +162,7 @@ describe('authorize()', () => {
       };
 
       expect(
-        authorize(ctx as any)
+        commonAuthorize(ctx as any)
           .doesUser()
           .can('do' as any, 'something' as any)
           .where({ clientId: '1' })

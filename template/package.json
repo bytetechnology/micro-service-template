@@ -65,14 +65,14 @@
     "@bytetech/authz-api": "*",
     "@casl/ability": "5.2.2",
 {{#if needDb}} 
-    "@mikro-orm/cli": "4.0.7",   
-    "@mikro-orm/core": "4.4.4",
+    "@mikro-orm/cli": "4.4.3",
+    "@mikro-orm/core": "4.4.3",
   {{#if mongo}}
     "@mikro-orm/mongodb": "4.0.7",
   {{/if}}
   {{#if sql}}
-    "@mikro-orm/postgresql": "4.0.7",
-    "@mikro-orm/sqlite": "4.0.7",
+    "@mikro-orm/postgresql": "4.4.3",
+    "@mikro-orm/sqlite": "4.4.3",
   {{/if}}
 {{/if}}
     "amqplib": "0.6.0",
@@ -127,7 +127,7 @@
     "testRegex": ".*\\.(test|spec).(ts|js)$",
     "globals": {
       "ts-jest": {
-        "tsConfig": "tsconfig.json"
+        "tsconfig": "tsconfig.json"
       }
     },
     "testTimeout": 60000,

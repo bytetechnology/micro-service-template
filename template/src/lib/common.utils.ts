@@ -12,7 +12,6 @@ import { inspect } from 'util';
 import { Collection } from '@mikro-orm/core';
 {{/if}}
 import * as AuthzApi from '@bytetech/authz-api';
-import { CTX } from './moleculer/broker';
 
 export const { MoleculerError } = Errors;
 
@@ -73,13 +72,13 @@ export const sudoAuth: AuthzApi.Auth = {
   }
 };
 
-export function userCall(ctx: AuthzApi.ResolverContext) {
+export function userCall(ctx: { meta: { auth: AuthzApi.Auth }}) {
   const callOpts: CallingOptions & {
     meta?: AuthzApi.ContextMeta;
   } = {
     caller: serviceName,
     meta: {
-      auth: ctx.auth
+      auth: ctx.meta.auth
     }
   };
 
@@ -121,7 +120,7 @@ export function commonAuthorize<T_ABILITY extends PureAbility>(ctx: {
           const subject = actionAndSubject[1];
           return {
             where(conditions: Conditions): void {
-              const { auth } = ctx.meta as Required<AuthzApi.ContextMeta>; // At this point, we should be authorized
+              const { auth } = ctx.meta || {}; // At this point, we should be authorized
 
               if (!auth) {
                 throw new MoleculerError(`Unauthorized`, 401);
@@ -171,7 +170,7 @@ export function commonAuthorize<T_ABILITY extends PureAbility>(ctx: {
           const subject = actionAndSubject[1];
           return {
             where(conditions: T): boolean {
-              const { auth } = ctx.meta as Required<AuthzApi.ContextMeta>; // At this point, we should be authorized
+              const { auth } = ctx.meta || {}; // At this point, we should be authorized
 
               if (!auth) {
                 throw new MoleculerError(`Unauthorized`, 401);

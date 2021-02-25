@@ -62,7 +62,7 @@ describe('{{capitalizedCamelCaseServiceName}} unit tests', () => {
       },
       sudoCall
     );
-    const expectedResponse: WelcomeResponse = { greetings: 'Welcome John Doe; caller: jest!' };
+    const expectedResponse: WelcomeResponse = { greetings: `Welcome John Doe; caller: ${sudoCall.caller}!` };
 
     expect(response).toStrictEqual(expectedResponse);
     done();
