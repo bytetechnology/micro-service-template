@@ -7,7 +7,7 @@ import * as jf from 'joiful';
 import { Auth } from '@bytetech/authz-api';
 
 import { CTX } from '../lib/moleculer/broker';
-import { MoleculerError } from '../lib/common.utils';
+import { MoleculerError } from '../common.utils';
 
 export const authenticateMoleculerContext = (ctx: CTX): void => {
   if (!ctx.meta.auth) {
