@@ -8,12 +8,11 @@
   ],
   "scripts": {
     "build": "tsc -p src/tsconfig.json",
-    "check": "npm run lint && npm run format && npm run build && npm run test && npm run docs && npm run cli-test",
+    "check": "npm run lint && npm run format && npm run build && npm run test && npm run cli-test",
     "cli-test": "cross-env ENV_FILE=envs/local.test.env BLUEBIRD_W_FORGOTTEN_RETURN=0  ts-node --files src/main.ts",
     "dev": "cross-env ENV_FILE=envs/local.dev.env  BLUEBIRD_W_FORGOTTEN_RETURN=0  ts-node --files src/main.ts",
-    "ui": "ts-node-dev src/main.ts",
+    "ui": "ts-node src/main.ts",
     "debug": "cross-env ENV_FILE=envs/local.dev.env TS_NODE_FILES=true node --inspect-brk -r ts-node/register src/main.ts",
-    "docs": "typedoc --theme markdown --out apidocs src",
     "format": "prettier --write \"{src,{tests,mocks}}/**/*.{js,ts}\"",
     "lint": "eslint --fix \"{src,{tests,mocks}}/**/*.{js,ts}\"",
     "prepublishOnly": "echo 'Please run ./npm-publish.sh   Require prior update of package.json->version.' && exit 1",
@@ -62,8 +61,6 @@
     "prettier": "2.2.1",
     "ts-jest": "26.5.1",
     "ts-node": "9.1.1",
-    "typedoc": "0.20.27",
-    "typedoc-plugin-markdown": "3.5.0",
     "typescript": "4.1.5",
     "utility-types": "3.10.0"
   },

@@ -4,3 +4,4 @@
 coverage
 envs/local.*.env
 node_modules
+dist
