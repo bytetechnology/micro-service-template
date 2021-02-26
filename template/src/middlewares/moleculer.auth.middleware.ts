@@ -29,7 +29,7 @@ export function getAuthMiddleware(authenticator: (ctx: CTX) => void) {
   const AuthMiddleware: Moleculer.Middleware = {
     localAction(
       next: Moleculer.ActionHandler,
-      action: Moleculer.ServiceActionsSchema
+      action: Moleculer.ServiceActionssSchema
     ) {
       // If action is restricted, authenticate
       if (action.restricted === true) {

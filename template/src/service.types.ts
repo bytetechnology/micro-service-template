@@ -10,15 +10,15 @@
  */
 import {
   ServiceName,
-  ServiceAction as {{capitalizedCamelCaseServiceName}}Actions,
-  ServiceEvent as {{capitalizedCamelCaseServiceName}}Events
+  ServiceActions as {{capitalizedCamelCaseServiceName}}Actions,
+  ServiceEvents as {{capitalizedCamelCaseServiceName}}Events
 } from './api';
 
 export type { ServiceName };
 
 // Add other services types here, eg;
-// export type ServiceAction = DiscountActions | UserActions | IotActions;
-export type ServiceAction = {{capitalizedCamelCaseServiceName}}Actions;
+// export type ServiceActions = DiscountActions | UserActions | IotActions;
+export type ServiceActions = {{capitalizedCamelCaseServiceName}}Actions;
 
 // These are the events ONLY we emit (not related to what we listen for)
-export type ServiceEvent = {{capitalizedCamelCaseServiceName}}Events;
+export type ServiceEvents = {{capitalizedCamelCaseServiceName}}Events;

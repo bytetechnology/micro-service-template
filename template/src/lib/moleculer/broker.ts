@@ -11,11 +11,11 @@ import { Context as MCTX } from 'moleculer';
 {{/unless}}
 
 import { brokerConfig } from './broker.config';
-import { ServiceAction, ServiceEvent, ServiceName } from '../../service.types';
+import { ServiceActions, ServiceEvents, ServiceName } from '../../service.types';
 
 export const broker: TypedServiceBroker<
-  ServiceAction,
-  ServiceEvent,
+  ServiceActions,
+  ServiceEvents,
   ServiceName,
   ContextMeta
 > = new TypedServiceBroker(brokerConfig);

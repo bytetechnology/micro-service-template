@@ -13,7 +13,7 @@ import { AddTestEntityParams, AddTestEntityResponse } from './params/add.test.en
 import { EditTestEntityParams, EditTestEntityResponse } from './params/edit.test.entity.params';
 {{/if}}
 
-export type ServiceAction =
+export type ServiceActions =
   | ActionNoParams<'{{serviceName}}.ping', string>
   | ActionNoParams<'{{serviceName}}.pingAuth', string>
   | Action<'{{serviceName}}.welcome', WelcomeParams, WelcomeResponse>
@@ -26,7 +26,7 @@ export type ServiceAction =
 export type ServiceName = '{{serviceName}}';
 export const serviceName: ServiceName = '{{serviceName}}';
 
-export type ServiceEvent = never;
+export type ServiceEvents = never;
 
 // CASL permissions
 export type AppActions = 'manage' | 'welcome';

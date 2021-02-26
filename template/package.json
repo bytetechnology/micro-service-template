@@ -1,6 +1,6 @@
 {
   "name": "@bytetech/micro-{{serviceName}}",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "{{serviceName}} microservice",
   "main": "dist/api",
   "files": [
@@ -22,6 +22,12 @@
     "start": "NODE_ENV=${NODE_ENV:-production} node dist/main.js",
     "test": "cross-env  ENV_FILE=envs/local.test.env  jest --coverage --runInBand --no-cache",
     "setup:local": "ts-node dev/setup.local.ts",
+    "pub:patch": "npm version patch  &&  ./npm-publish.sh",
+    "pub:prepatch": "npm version prepatch --preid dev  &&  ./npm-publish.sh",
+    "pub:minor": "npm version minor  &&  ./npm-publish.sh",
+    "pub:preminor": "npm version preminor --preid dev  &&  ./npm-publish.sh",
+    "pub:major": "npm version major  &&  ./npm-publish.sh",
+    "pub:premajor": "npm version premajor --preid dev  &&  ./npm-publish.sh",
     "update:all": "npm i  @bytetech/authz-api@latest"
   },
   "keywords": [

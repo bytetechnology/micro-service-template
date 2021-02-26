@@ -13,14 +13,14 @@ import { sudoAuth } from '../src/lib/common.utils';
 import { broker } from '../src/lib/moleculer/broker';
 
 export async function pingAuth(auth: Auth = sudoAuth): Promise<string> {
-  return broker.call('test-tpl.pingAuth', undefined, { meta: { auth } });
+  return broker.call('{{serviceName}}.pingAuth', undefined, { meta: { auth } });
 }
 
 export async function welcome(
   data: WelcomeParams,
   auth: Auth = sudoAuth
 ): Promise<WelcomeResponse> {
-  return broker.call('test-tpl.welcome', data, { meta: { auth } });
+  return broker.call('{{serviceName}}.welcome', data, { meta: { auth } });
 }
 {{#if needDb}}
 

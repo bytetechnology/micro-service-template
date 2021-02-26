@@ -1,3 +1,0 @@
-#!/bin/sh
-
-npm run build && git add dist && git commit -m 'BUILD' || echo 'pre-push done'
