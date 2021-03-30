@@ -8,7 +8,7 @@
 import Moleculer from 'moleculer';
 
 import { EventEmitter } from 'events';
-import { {{capitalizedServiceName}}Service as Service } from '../{{serviceName}}.service';
+import { {{capitalizedCamelCaseServiceName}}Service as Service } from '../{{serviceName}}.service';
 import { broker } from './moleculer/broker';
 import { serviceName } from '../api';
 

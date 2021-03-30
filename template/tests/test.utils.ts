@@ -1,25 +1,17 @@
 /**
  * Copyright Byte Technology 2020. All rights reserved.
  */
-import { AbilityBuilder } from '@casl/ability';
+import { AbilityBuilder, PureAbility } from '@casl/ability';
 {{#if needDb}}
 import { EntityManager } from '@mikro-orm/core';
 {{/if}}
 import moment from 'moment';
 
-import { Auth } from '@bytetech/micro-authz';
+import { Auth } from '@bytetech/authz-api';
 {{#if needDb}}
 import { getDbConnector } from '../src/db.connector';
 {{/if}}
 
-export const managerAuth: Auth = {
-  primaryClientId: 'TEST-CLIENT-ID',
-  currentClientId: 'TEST-CLIENT-ID',
-  userId: 'TEST-USER-ID',
-  permissions: {
-    rules: [{ action: 'manage', subject: 'all' }]
-  }
-};
 {{#if needDb}}
 export async function getEm(): Promise<EntityManager> {
   const dbc = await getDbConnector();
@@ -40,7 +32,7 @@ export function createAuth(
   abilitiesFn: (abilityBuilder: AbilityBuilder<any>) => void,
   opts?: { userId?: string; clientId?: string; roles?: string[] }
 ): Auth {
-  const abilityBuilder = new AbilityBuilder<any>();
+  const abilityBuilder = new AbilityBuilder<any>(PureAbility);
 
   abilitiesFn(abilityBuilder);
 

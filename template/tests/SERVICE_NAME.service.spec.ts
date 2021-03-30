@@ -15,9 +15,9 @@ import { resetServiceDB } from './utils';
 import { startAll, stopAll } from '../src/start.stop.all';
 import { getService } from '../src/lib/start.service.and.broker';
 import { broker } from '../src/lib/moleculer/broker';
-import { managerAuth } from './test.utils';
+import { sudoCall } from '../src/lib/common.utils';
 
-describe('{{capitalizedServiceName}} unit tests', () => {
+describe('{{capitalizedCamelCaseServiceName}} unit tests', () => {
   let service: MoleculerService;
 
   beforeAll(async done => {
@@ -60,9 +60,9 @@ describe('{{capitalizedServiceName}} unit tests', () => {
       {
         name: 'John Doe'
       },
-      { caller: 'jest', meta: { auth: managerAuth } }
+      sudoCall
     );
-    const expectedResponse: WelcomeResponse = { greetings: 'Welcome John Doe; caller: jest!' };
+    const expectedResponse: WelcomeResponse = { greetings: `Welcome John Doe; caller: ${sudoCall.caller}!` };
 
     expect(response).toStrictEqual(expectedResponse);
     done();
@@ -117,7 +117,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
         aKey: 'A Key',
         aValue: 'A Value'
       },
-      { caller: 'jest', meta: { auth: managerAuth } }
+      sudoCall
     );
 
     expect(entityId).toBeTruthy();
@@ -132,7 +132,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
         aKey: 'A Key',
         aValue: 'A Value'
       },
-      { caller: 'jest', meta: { auth: managerAuth } }
+      sudoCall
     );
 
     expect(responseWithId).toMatchObject({ id: expect.stringMatching(/\w+/) });
@@ -144,7 +144,7 @@ describe('{{capitalizedServiceName}} unit tests', () => {
         aKey: 'Another Key',
         aValue: 'Another Value'
       },
-      { caller: 'jest', meta: { auth: managerAuth } }
+      sudoCall
     );
 
     expect(updatedEntityId).toStrictEqual({ ok: true });

@@ -1,0 +1,7 @@
+{
+  "name": "@bytetech/{{serviceName}}-api",
+  "version": "VERSION",
+  "description": "Bytetech {{serviceName}} microservice public API",
+  "main": "api",
+  "author": "Byte Technology"
+}

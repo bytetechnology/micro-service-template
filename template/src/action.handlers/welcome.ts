@@ -4,7 +4,7 @@
  * Copyright Byte Technology 2020. All rights reserved.
  */
 import { CTX } from '../lib/moleculer/broker';
-import { authorize } from '../lib/common.utils';
+import { authorize } from '../service.utils';
 import { WelcomeParams, WelcomeResponse } from '../api/params/welcome.params';
 import { exact } from '../lib/type.utils';
 

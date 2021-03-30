@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 /**
- * {{capitalizedServiceName}} service for the Byte Technology cloud backend.
+ * {{capitalizedCamelCaseServiceName}} service for the Byte Technology cloud backend.
  * Uses the moleculer microservices framework.
  *
  * Copyright Byte Technology 2020. All rights reserved.
@@ -32,7 +32,7 @@ import { CTX } from './lib/moleculer/broker';
   version: process.env.npm_package_version,
   settings: { $noVersionPrefix: true }
 })
-export class {{capitalizedServiceName}}Service extends moleculer.Service {
+export class {{capitalizedCamelCaseServiceName}}Service extends moleculer.Service {
   // Our actions
   @Action()
   async ping(ctx: CTX): Promise<string> {

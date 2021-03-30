@@ -1,6 +1,6 @@
 {
   "name": "@bytetech/micro-{{serviceName}}",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "{{serviceName}} microservice",
   "main": "dist/api",
   "files": [
@@ -8,22 +8,26 @@
   ],
   "scripts": {
     "build": "tsc -p src/tsconfig.json",
-    "check": "npm run lint && npm run format && npm run build && npm run test && npm run docs && npm run cli-test",
+    "check": "npm run lint && npm run format && npm run build && npm run test && npm run cli-test",
     "cli-test": "cross-env ENV_FILE=envs/local.test.env BLUEBIRD_W_FORGOTTEN_RETURN=0  ts-node --files src/main.ts",
     "dev": "cross-env ENV_FILE=envs/local.dev.env  BLUEBIRD_W_FORGOTTEN_RETURN=0  ts-node --files src/main.ts",
+    "ui": "ts-node src/main.ts",
     "debug": "cross-env ENV_FILE=envs/local.dev.env TS_NODE_FILES=true node --inspect-brk -r ts-node/register src/main.ts",
-    "docs": "typedoc --theme markdown --out apidocs src",
     "format": "prettier --write \"{src,{tests,mocks}}/**/*.{js,ts}\"",
     "lint": "eslint --fix \"{src,{tests,mocks}}/**/*.{js,ts}\"",
-    "prepublishOnly": "npm run check",
+    "prepublishOnly": "echo 'Please run ./npm-publish.sh   Require prior update of package.json->version.' && exit 1",
     "preversion": "npm run lint",
     "postversion": "git push && git push --tags",
     "start": "NODE_ENV=${NODE_ENV:-production} node dist/main.js",
     "test": "cross-env  ENV_FILE=envs/local.test.env  jest --coverage --runInBand --no-cache",
     "setup:local": "ts-node dev/setup.local.ts",
-    "publish:patch": "npm version patch && npm publish",
-    "publish:minor": "npm version patch && npm publish",
-    "publish:major": "npm version patch && npm publish"
+    "pub:patch": "npm version patch  &&  ./npm-publish.sh",
+    "pub:prepatch": "npm version prepatch --preid dev  &&  ./npm-publish.sh",
+    "pub:minor": "npm version minor  &&  ./npm-publish.sh",
+    "pub:preminor": "npm version preminor --preid dev  &&  ./npm-publish.sh",
+    "pub:major": "npm version major  &&  ./npm-publish.sh",
+    "pub:premajor": "npm version premajor --preid dev  &&  ./npm-publish.sh",
+    "update:all": "npm i  @bytetech/authz-api@latest"
   },
   "keywords": [
     "microservices",
@@ -31,73 +35,71 @@
   ],
   "author": "Byte Technology",
   "devDependencies": {
-    "@types/jest": "26.0.14",
+    "@types/jest": "26.0.20",
     "@types/jsonwebtoken": "8.5.0",
-    "@types/lodash": "4.14.161",
+    "@types/lodash": "4.14.168",
     "@types/mongodb": "3.5.27",
-    "@types/node": "14.11.8",
+    "@types/node": "12.20.4",
 {{#if sql}}
     "@types/uuid": "8.3.0",
 {{/if}}
-    "@typescript-eslint/eslint-plugin": "4.4.0",
-    "@typescript-eslint/parser": "4.4.0",
-    "cross-env": "7.0.2",
-    "eslint": "7.10.0",
-    "eslint-config-airbnb-base": "14.2.0",
-    "eslint-config-prettier": "6.12.0",
+    "@typescript-eslint/eslint-plugin": "4.15.2",
+    "@typescript-eslint/parser": "4.15.2",
+    "cross-env": "7.0.3",
+    "eslint": "7.20.0",
+    "eslint-config-airbnb-base": "14.2.1",
+    "eslint-config-prettier": "8.0.0",
     "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-prettier": "3.1.4",
-    "husky": "4.3.0",
-    "jest": "26.5.2",
+    "eslint-plugin-prettier": "3.3.1",
+    "husky": "4.3.8",
+    "jest": "26.6.3",
     "jest-extended": "0.11.5",
     "moleculer-repl": "0.6.4",
 {{#if mongo}}
     "mongodb-memory-server": "6.9.2",
 {{/if}}
-    "prettier": "2.1.2",
-    "ts-jest": "26.4.1",
-    "ts-node": "9.0.0",
-    "typedoc": "0.19.2",
-    "typedoc-plugin-markdown": "3.0.7",
-    "typescript": "4.0.3",
+    "prettier": "2.2.1",
+    "ts-jest": "26.5.1",
+    "ts-node": "9.1.1",
+    "typescript": "4.1.5",
     "utility-types": "3.10.0"
   },
   "dependencies": {
-    "@bytetech/micro-authz": "*",
-    "@casl/ability": "4.1.6",
+    "@bytetech/authz-api": "*",
+    "@casl/ability": "5.2.2",
 {{#if needDb}} 
-    "@mikro-orm/cli": "4.0.7",   
-    "@mikro-orm/core": "4.0.7",
+    "@mikro-orm/cli": "4.4.3",
+    "@mikro-orm/core": "4.4.3",
   {{#if mongo}}
     "@mikro-orm/mongodb": "4.0.7",
   {{/if}}
   {{#if sql}}
-    "@mikro-orm/postgresql": "4.0.7",
-    "@mikro-orm/sqlite": "4.0.7",
+    "@mikro-orm/postgresql": "4.4.3",
+    "@mikro-orm/sqlite": "4.4.3",
   {{/if}}
 {{/if}}
     "amqplib": "0.6.0",
     "dotenv": "8.2.0",
     "joiful": "2.0.1",
     "jsonwebtoken": "8.5.1",
-    "lodash": "4.17.20",
-    "moleculer": "0.14.11",
-    "moleculer-context-db": "1.1.8",
+    "lodash": "4.17.21",
+    "moleculer": "0.14.12",
+    "moleculer-context-db": "1.2.3",
     "moleculer-decorators": "1.3.0",
-    "moleculer-service-ts": "1.0.8",
+    "moleculer-service-ts": "1.0.10",
     "moment": "2.29.1",    
     "notepack.io": "2.3.0",
     "pkg-dir": "4.2.0",
     "reflect-metadata": "0.1.13",
     "thunky": "1.1.0",
 {{#if sql}}
-    "uuid": "8.3.1",
+    "uuid": "8.3.2",
 {{/if}}
     "winston": "3.3.3",
     "winston-gelf-transporter": "1.0.2"
   },
   "engines": {
-    "node": ">= 10.x.x"
+    "node": ">= 12.x.x"
   },
 {{#if mongo}}
   "config": {
@@ -128,7 +130,7 @@
     "testRegex": ".*\\.(test|spec).(ts|js)$",
     "globals": {
       "ts-jest": {
-        "tsConfig": "tsconfig.json"
+        "tsconfig": "tsconfig.json"
       }
     },
     "testTimeout": 60000,

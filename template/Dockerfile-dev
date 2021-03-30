@@ -1,0 +1,12 @@
+# Dockerfile for local UI development
+#
+# Copyright 2020 Byte Technology. All rights reserved.
+FROM bytetechnology/node-dev:12.16.2
+
+WORKDIR /home/node/micro-{{serviceName}}
+
+COPY . .
+
+RUN npm install
+
+CMD ["npm", "run", "ui"]

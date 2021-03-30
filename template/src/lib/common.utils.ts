@@ -1,17 +1,21 @@
 /**
  * Copyright Byte Technology 2020. All rights reserved.
  */
-import { Ability, subject as createCaslSubject } from '@casl/ability';
-import { Errors } from 'moleculer';
+import {
+  Ability,
+  subject as createCaslSubject,
+  PureAbility
+} from '@casl/ability';
+import { Errors, CallingOptions } from 'moleculer';
 import { inspect } from 'util';
 {{#if needDb}}
 import { Collection } from '@mikro-orm/core';
 {{/if}}
-import { RuleCondition, Auth } from '@bytetech/micro-authz';
-import { AppActions, AppSubjects, serviceName } from '../api';
-import { CTX } from './moleculer/broker';
+import * as AuthzApi from '@bytetech/authz-api';
 
 export const { MoleculerError } = Errors;
+
+const serviceName = '{{serviceName}}';
 
 {{#if needDb}}
 type StringOnly<T> = T extends string ? T : never;
@@ -57,19 +61,63 @@ export function getDbPagination(args: { page: number; pageLength: number }) {
 // }
 
 // -----------------------------------------------------
+const sudoCaller = `${serviceName.toUpperCase()}-SERVICE`
+
+export const sudoAuth: AuthzApi.Auth = {
+  primaryClientId: sudoCaller,
+  currentClientId: sudoCaller,
+  userId: sudoCaller,
+  permissions: {
+    rules: [{ action: 'manage', subject: 'all' }]
+  }
+};
+
+export function userCall(ctx: { meta: { auth: AuthzApi.Auth }}) {
+  const callOpts: CallingOptions & {
+    meta?: AuthzApi.ContextMeta;
+  } = {
+    caller: serviceName,
+    meta: {
+      auth: ctx.meta.auth
+    }
+  };
+
+  return callOpts;
+}
+
+export const sudoCall: CallingOptions & {
+  meta?: AuthzApi.ContextMeta;
+} = {
+  caller: sudoCaller,
+  meta: {
+    auth: sudoAuth
+  }
+};
 
 export const ANY_VALUE = Symbol('ANY_VALUE');
 
 type Conditions = {
-  [K in keyof RuleCondition]: RuleCondition[K] | undefined | typeof ANY_VALUE;
+  [K in keyof AuthzApi.RuleCondition]:
+    | AuthzApi.RuleCondition[K]
+    | undefined
+    | typeof ANY_VALUE;
 };
 
-// eslint-disable-next-line import/export
-export function authorize(ctx: CTX) {
+type GetAbilityTuples<
+  TCustomPureAbility
+> = TCustomPureAbility extends PureAbility<infer TCustomAbilities>
+  ? TCustomAbilities
+  : never;
+
+export function commonAuthorize<T_ABILITY extends PureAbility>(ctx: {
+  meta: { auth: AuthzApi.Auth };
+}) {
   return {
     throwIfUser() {
       return {
-        cannot(action: AppActions, subject: AppSubjects) {
+        cannot(...actionAndSubject: GetAbilityTuples<T_ABILITY>) {
+          const action = actionAndSubject[0];
+          const subject = actionAndSubject[1];
           return {
             where(conditions: Conditions): void {
               const { auth } = ctx.meta || {}; // At this point, we should be authorized
@@ -78,8 +126,7 @@ export function authorize(ctx: CTX) {
                 throw new MoleculerError(`Unauthorized`, 401);
               }
 
-              const ability = new Ability<[AppActions, AppSubjects]>(
-                /* istanbul ignore next */
+              const ability = new Ability<[any, any]>(
                 auth.permissions?.rules as any
               );
 
@@ -91,12 +138,12 @@ export function authorize(ctx: CTX) {
                 }
               }
 
-              const caslSubject = createCaslSubject<AppSubjects, Conditions>(
+              const subjectWithConditions = createCaslSubject<any, any>(
                 subject,
                 normalizedConditions
               );
 
-              if (ability.cannot(action, caslSubject as any)) {
+              if (ability.cannot(action, subjectWithConditions as any)) {
                 const where = Object.entries(conditions)
                   .map(
                     ([key, value]) =>
@@ -106,7 +153,7 @@ export function authorize(ctx: CTX) {
 
                 throw new MoleculerError(
                   `User not allowed to "${action}" "${subject}"${
-                    where ? ` where "${inspect(where)}"` : ``
+                    where ? ` where ${inspect(where)}` : ``
                   }.`,
                   403
                 );
@@ -118,7 +165,9 @@ export function authorize(ctx: CTX) {
     },
     doesUser<T extends object>() {
       return {
-        can(action: AppActions, subject: AppSubjects) {
+        can(...actionAndSubject: GetAbilityTuples<T_ABILITY>) {
+          const action = actionAndSubject[0];
+          const subject = actionAndSubject[1];
           return {
             where(conditions: T): boolean {
               const { auth } = ctx.meta || {}; // At this point, we should be authorized
@@ -127,16 +176,16 @@ export function authorize(ctx: CTX) {
                 throw new MoleculerError(`Unauthorized`, 401);
               }
 
-              const ability = new Ability<[AppActions, AppSubjects]>(
+              const ability = new Ability<[any, any]>(
                 auth.permissions?.rules as any
               );
 
-              const caslDiscount = createCaslSubject<AppSubjects, T>(
+              const subjectWithConditions = createCaslSubject<any, T>(
                 subject,
                 conditions
               );
 
-              return ability.can(action, caslDiscount as any);
+              return ability.can(action, subjectWithConditions as any);
             }
           };
         }
@@ -144,12 +193,3 @@ export function authorize(ctx: CTX) {
     }
   };
 }
-
-export const sudoAuth: Auth = {
-  primaryClientId: `${serviceName.toUpperCase()}-SERVICE`,
-  currentClientId: `${serviceName.toUpperCase()}-SERVICE`,
-  userId: `${serviceName.toUpperCase()}-SERVICE`,
-  permissions: {
-    rules: [{ action: 'manage', subject: 'all' }]
-  }
-};
